@@ -1,0 +1,7 @@
+parameters:
+    level: 5
+    paths:
+        - app/
+        - config/
+        # routes/ excluded: scaffold console.php uses runtime-bound $this
+        # which PHPStan flags; API routes covered by Pest instead
