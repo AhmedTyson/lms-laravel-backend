@@ -1,6 +1,7 @@
 # AGENTS.md — LMS Laravel
 
-Init-phase repo (Laravel 13, PHP ^8.4 enforced, Windows pwsh). Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` v2.1. Baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md`. Tracker: `tasks/plan.md`, `tasks/todo.md`. Developer policies (workflow, standards, testing, review, security, governance, DoD, runbook): `docs/handbook/01–08` — follow them, cite them in PRs.
+Init-phase repo (Laravel 13, PHP ^8.4 enforced, Windows pwsh). Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` v2.1. Baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md`. Tracker: `tasks/plan.md`, `tasks/todo.md`. Developer policies (workflow, standards, testing, review, security, governance, DoD, runbook, module guide): `docs/handbook/01–09` — follow them, cite them in PRs.
+Generate module classes only with `php artisan module:make-*` (never root `make:`); plain `php artisan migrate` covers `Modules/*/database/migrations` (verified by probe). Root `app/` = kernel only (User, providers); behavior lives in modules. Telescope `/telescope` local-only.
 PHP floor is 8.4 (`composer.json` + `config.platform.php` pin): locked Symfony 8 / activitylog need >= 8.4.1. Never lower CI (`ci.yml` runs 8.4) or the lock below it.
 
 ## Commands (run from repo root)

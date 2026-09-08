@@ -10,6 +10,7 @@
         "dedoc/scramble": "^0.13.42",
         "filament/filament": "5.*",
         "laravel/framework": "^13.0",
+        "laravel/telescope": "^5.24",
         "laravel/tinker": "^3.0",
         "nwidart/laravel-modules": "^13.0",
         "spatie/laravel-activitylog": "^5.1",

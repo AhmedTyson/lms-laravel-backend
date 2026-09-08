@@ -20,6 +20,7 @@ Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architect
 | Style | Pint | ^1.31 |
 | Static analysis | Larastan (level 5) | ^3.11 |
 | Admin panel | Filament (`/admin`, session auth) | ^5 |
+| Debug | Telescope (`/telescope`, local only) | ^5.24 |
 | DB (dev) | SQLite | — |
 | DB (prod) | MySQL | — |
 | Queue/Cache | sync (dev) → Redis (staging/prod) | — |
@@ -86,4 +87,4 @@ Planned module internals: `Domain/` `Application/` `Infrastructure/` `Http/` `Da
 
 ## Contributing
 
-Developer policies (mandatory): `docs/handbook/` — workflow, coding standards, testing, code review, security, architecture governance, definition of done, build & release runbook. Branch per phase/slice, keep CI green, run Pint before push. Decisions that add packages or patterns go in `docs/adr/` (Decision / Reason / Alternatives / Impact / Status).
+Developer policies (mandatory): `docs/handbook/` — workflow, coding standards, testing, code review, security, architecture governance, definition of done, build & release runbook, **module development guide (09)**. Branch per phase/slice, keep CI green, run Pint before push. Decisions that add packages or patterns go in `docs/adr/` (Decision / Reason / Alternatives / Impact / Status).
