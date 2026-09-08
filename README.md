@@ -86,4 +86,4 @@ Planned module internals: `Domain/` `Application/` `Infrastructure/` `Http/` `Da
 
 ## Contributing
 
-Branch per phase/slice, keep CI green, run Pint before push. Decisions that add packages or patterns go in `docs/adr/` (Decision / Reason / Alternatives / Impact / Status).
+Developer policies (mandatory): `docs/handbook/` — workflow, coding standards, testing, code review, security, architecture governance, definition of done, build & release runbook. Branch per phase/slice, keep CI green, run Pint before push. Decisions that add packages or patterns go in `docs/adr/` (Decision / Reason / Alternatives / Impact / Status).
