@@ -1,0 +1,11 @@
+{
+    "name": "AccessManagement",
+    "alias": "accessmanagement",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AccessManagement\\Providers\\AccessManagementServiceProvider"
+    ],
+    "files": []
+}

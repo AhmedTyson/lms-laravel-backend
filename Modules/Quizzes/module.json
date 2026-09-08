@@ -1,0 +1,11 @@
+{
+    "name": "Quizzes",
+    "alias": "quizzes",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Quizzes\\Providers\\QuizzesServiceProvider"
+    ],
+    "files": []
+}

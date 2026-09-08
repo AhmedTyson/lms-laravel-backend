@@ -1,0 +1,11 @@
+{
+    "Auth": true,
+    "AccessManagement": true,
+    "Courses": true,
+    "Enrollment": true,
+    "Assignments": true,
+    "Quizzes": true,
+    "Progress": true,
+    "Notifications": true,
+    "Reporting": true
+}

@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/assignments",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Assignments\\": "app/",
+            "Modules\\Assignments\\Database\\Factories\\": "database/factories/",
+            "Modules\\Assignments\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Assignments\\Tests\\": "tests/"
+        }
+    }
+}

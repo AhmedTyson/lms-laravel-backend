@@ -2,7 +2,7 @@
 
 Learning Management System backend: instructors author structured courses (lessons, assignments, quizzes), students enroll and progress with reliable tracking, admins retain platform oversight — plus a general-purpose Access Management subsystem (hierarchical permission delegation, groups). All exposed through a versioned REST API.
 
-> Status: **Phase 1 complete** (project init, env, tooling, CI). Business modules land in later phases per `tasks/plan.md`. No auth endpoints, grants, or course tables exist yet — by design.
+> Status: **Phases 1–2 complete** (init, env, tooling, CI, nine module shells, DB kit). Business logic lands in later phases per `tasks/plan.md`. No auth endpoints, grants, or course tables exist yet — by design.
 
 Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architecture baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md`
 
@@ -19,13 +19,14 @@ Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architect
 | Tests | Pest | ^4.7 |
 | Style | Pint | ^1.31 |
 | Static analysis | Larastan (level 5) | ^3.11 |
+| Admin panel | Filament (`/admin`, session auth) | ^5 |
 | DB (dev) | SQLite | — |
 | DB (prod) | MySQL | — |
 | Queue/Cache | sync (dev) → Redis (staging/prod) | — |
 
 ## Prerequisites
 
-- PHP ^8.3, Composer 2.x
+- PHP ^8.3 with `ext-intl` enabled, Composer 2.x
 - No local MySQL/Redis needed for dev (SQLite + sync queue)
 
 ## Quickstart
@@ -36,10 +37,11 @@ cp .env.example .env
 php artisan key:generate
 php artisan jwt:secret
 php artisan migrate --seed
+php artisan make:filament-user   # panel login at /admin (session auth)
 php artisan serve
 ```
 
-Health: `GET /api/health` → `{"ok": true}` · API docs: `/docs/api`
+Health: `GET /api/health` → `{"ok": true}` · API docs: `/docs/api` · Admin panel: `/admin`
 
 ## Environment
 
@@ -66,10 +68,11 @@ CI (`.github/workflows/ci.yml`) runs the same four checks on push/PR.
 ## Layout
 
 ```text
-Modules/            # Phase 2+: Auth, AccessManagement, Courses, Enrollment,
-                    # Assignments, Quizzes, Progress, Notifications, Reporting
-app/ config/ routes/ database/   # standard Laravel (thin until modules land)
-docs/               # BRD/PRD spec, architecture baseline, ADRs (Phase 2), conventions
+Modules/            # Auth, AccessManagement, Courses, Enrollment, Assignments,
+                    # Quizzes, Progress, Notifications, Reporting (shells: providers
+                    # + config + database stubs + empty routes + tests)
+app/ config/ routes/ database/   # standard Laravel (thin; logic lives in modules)
+docs/               # BRD/PRD spec, architecture baseline, ADRs, conventions
 tasks/              # plan.md + todo.md (phase tracker)
 ```
 
@@ -78,7 +81,7 @@ Planned module internals: `Domain/` `Application/` `Infrastructure/` `Http/` `Da
 ## Roadmap
 
 - [x] Phase 1 — scaffold, env, packages, tooling, CI
-- [ ] Phase 2 — nine module shells + DB init kit for developers
+- [x] Phase 2 — nine module shells + DB init kit + JWT api guard + Filament
 - [ ] Later — schema → Auth → AccessManagement → teaching modules → reviews (code/arch/patterns)
 
 ## Contributing
