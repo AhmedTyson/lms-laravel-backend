@@ -26,7 +26,7 @@ Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architect
 
 ## Prerequisites
 
-- PHP ^8.3 with `ext-intl` enabled, Composer 2.x
+- PHP ^8.4 with `ext-intl` enabled, Composer 2.x (locked deps need >= 8.4; CI runs 8.4)
 - No local MySQL/Redis needed for dev (SQLite + sync queue)
 
 ## Quickstart

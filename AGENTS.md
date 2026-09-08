@@ -1,6 +1,7 @@
 # AGENTS.md — LMS Laravel
 
-Init-phase repo (Laravel 13.31, PHP 8.5, Windows pwsh). Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` v2.1. Baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md`. Tracker: `tasks/plan.md`, `tasks/todo.md`.
+Init-phase repo (Laravel 13, PHP ^8.4 enforced, Windows pwsh). Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` v2.1. Baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md`. Tracker: `tasks/plan.md`, `tasks/todo.md`.
+PHP floor is 8.4 (`composer.json` + `config.platform.php` pin): locked Symfony 8 / activitylog need >= 8.4.1. Never lower CI (`ci.yml` runs 8.4) or the lock below it.
 
 ## Commands (run from repo root)
 
