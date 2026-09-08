@@ -20,6 +20,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      - name: App key (.env is git-ignored)
+        run: |
+          cp .env.example .env
+          php artisan key:generate --no-interaction
+
       - name: Pint
         run: ./vendor/bin/pint --test
 
