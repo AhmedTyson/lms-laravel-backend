@@ -4,7 +4,7 @@ Learning Management System backend: instructors author structured courses (lesso
 
 > Status: **Phases 1–2 complete** (init, env, tooling, CI, nine module shells, DB kit). Business logic lands in later phases per `tasks/plan.md`. No auth endpoints, grants, or course tables exist yet — by design.
 
-Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architecture baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md` · Interactive DB diagram: `docs/erd.html` (open in browser — dark mode, click tables for stories + rules)
+Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architecture baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md` · Database docs: `docs/DATABASE.md` (Mermaid ERD, renders on GitHub) · `docs/schema.dbml` (paste into dbdiagram.io) · `docs/erd.html` (offline interactive explorer — crow's-foot, click tables for stories + rules)
 
 ## Stack
 

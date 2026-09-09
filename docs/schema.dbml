@@ -1,0 +1,374 @@
+// LMS database — spec v2.1 (Laravel/MySQL). Source of truth for diagrams.
+// Paste into https://dbdiagram.io to render. Migrations in Modules/*/database/migrations.
+// Conventions: auto-increment PKs (ARCH-005); thresholds are % of variable totals (RULE-018 rev).
+
+Project lms {
+  database_type: 'MySQL'
+  Note: 'LMS backend v2.1 — 19 tables. Reporting is read-only and owns no tables.'
+}
+
+Enum approval_status {
+  pending
+  approved
+}
+
+Enum course_status {
+  draft
+  published
+  archived
+}
+
+Enum enrollment_status {
+  active
+  completed
+}
+
+Enum grant_action {
+  granted
+  revoked
+}
+
+Enum question_type {
+  single_choice
+  multiple_choice
+  true_false
+  short_answer
+  numeric
+}
+
+Enum submission_status {
+  submitted
+  graded
+}
+
+Enum component_type {
+  lesson
+  assignment
+  quiz
+}
+
+Table users {
+  id bigint [pk, increment]
+  name varchar(255) [not null]
+  email varchar(255) [not null, unique]
+  email_verified_at timestamp
+  password varchar(255) [not null]
+  manager_id bigint [ref: > users.id, null, note: 'RULE-002 strict tree, cycle-checked in service (ADR-007)']
+  approval_status approval_status [null, note: 'RULE-010 set at approval, instructor-only']
+
+  indexes {
+    manager_id
+  }
+
+  Note: 'Population registry: who you are, not what you may do. Students sit outside the tree (manager_id always NULL).'
+}
+
+Table groups {
+  id bigint [pk, increment, note: 'Also the Spatie team_id for group-scoped permissions']
+  owner_id bigint [not null, ref: > users.id]
+  name varchar(255) [not null, note: 'RULE-011 no uniqueness — groups are rooms, not identities']
+
+  indexes {
+    owner_id
+  }
+
+  Note: 'Scope for permissions, not a rank. Membership grants nothing (RULE-009).'
+}
+
+Table group_members {
+  id bigint [pk, increment]
+  group_id bigint [not null, ref: > groups.id]
+  user_id bigint [not null, ref: > users.id]
+  joined_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (group_id, user_id) [unique]
+    user_id
+  }
+
+  Note: 'Guest list only. RULE-009: membership grants zero capabilities.'
+}
+
+Table permission_grants {
+  id bigint [pk, increment]
+  granter_id bigint [not null, ref: > users.id]
+  grantee_id bigint [not null, ref: > users.id]
+  group_id bigint [null, ref: > groups.id, note: 'NULL = global grant (RULE-007/008)']
+  permission_name varchar(255) [not null]
+  action grant_action [not null]
+  granted_at timestamp
+  revoked_at timestamp
+  created_at timestamp [not null, default: `now()`, note: 'No updated_at — append-only (RULE-005)']
+
+  indexes {
+    grantee_id
+    (granter_id, grantee_id)
+    group_id
+  }
+
+  Note: 'Court record of power: RULE-003 subordinate-only, RULE-004 ceiling, explicit team context (ADR-008).'
+}
+
+Table courses {
+  id bigint [pk, increment]
+  instructor_id bigint [not null, ref: > users.id]
+  title varchar(255) [not null]
+  category varchar(255) [not null]
+  description text
+  status course_status [not null, default: 'draft', note: 'RULE-013 linear: draft > published > archived']
+  published_at timestamp
+  archived_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp
+
+  indexes {
+    (instructor_id, title) [unique]
+    status
+    instructor_id
+  }
+
+  Note: 'Published content is a contract: structural edits need elevated permission (RULE-001).'
+}
+
+Table lessons {
+  id bigint [pk, increment]
+  course_id bigint [not null, ref: > courses.id]
+  title varchar(255) [not null]
+  content_reference text [note: 'External content pointer — videos hosted outside']
+  `order` int [not null]
+
+  indexes {
+    (course_id, `order`) [unique, note: 'RULE-014']
+    course_id
+  }
+
+  Note: 'Progress points at lesson IDs, never positions — reorder-safe.'
+}
+
+Table enrollments {
+  id bigint [pk, increment]
+  student_id bigint [not null, ref: > users.id]
+  course_id bigint [not null, ref: > courses.id]
+  status enrollment_status [not null, default: 'active']
+  enrolled_at timestamp
+  completed_at timestamp
+
+  indexes {
+    (student_id, course_id) [unique, note: 'Closes concurrent-enrollment race at DB level']
+    course_id
+    student_id
+  }
+
+  Note: 'One seat per student per course. Everything a student does hangs off this row.'
+}
+
+Table assignments {
+  id bigint [pk, increment]
+  course_id bigint [not null, ref: > courses.id]
+  title varchar(255) [not null]
+  description text [note: 'Doubles as submission instructions (file vs text vs both) — prose, no type column']
+  due_date timestamp [not null, note: 'Required, future-dated at creation (app-validated)']
+  resubmission_allowed boolean [not null, default: false]
+  max_score decimal(6,2) [not null, note: 'v2.1 free-form ceiling, any scale']
+  passing_threshold decimal(5,2) [not null, note: 'Percentage of max_score (RULE-018 rev)']
+
+  indexes {
+    course_id
+    due_date
+  }
+}
+
+Table submissions {
+  id bigint [pk, increment]
+  assignment_id bigint [not null, ref: > assignments.id]
+  enrollment_id bigint [not null, ref: > enrollments.id]
+  attempt_number int [not null]
+  file_path varchar(255) [note: 'Both content columns nullable — either, both, or neither']
+  content text
+  submitted_at timestamp [not null, default: `now()`]
+  is_late boolean [not null, default: false, note: 'Stamped per attempt']
+  grade decimal(5,2)
+  graded_by bigint [ref: > users.id]
+  graded_at timestamp
+  status submission_status [not null, default: 'submitted']
+
+  indexes {
+    (assignment_id, enrollment_id, attempt_number) [unique, note: 'RULE-015 stops race duplicates']
+    assignment_id
+    enrollment_id
+  }
+
+  Note: 'RULE-016: all attempts preserved, independently gradable — no grade-of-record.'
+}
+
+Table quizzes {
+  id bigint [pk, increment]
+  course_id bigint [not null, ref: > courses.id]
+  title varchar(255) [not null]
+  opens_at timestamp [not null]
+  closes_at timestamp [not null, note: 'Window checked at attempt-start']
+  max_attempts int [not null, default: 1]
+  passing_threshold decimal(5,2) [not null, note: '% of live SUM(questions.points), never cached']
+
+  indexes {
+    course_id
+    (opens_at, closes_at)
+  }
+}
+
+Table questions {
+  id bigint [pk, increment]
+  quiz_id bigint [not null, ref: > quizzes.id]
+  prompt text [not null]
+  type question_type [not null]
+  `order` int [not null]
+  points decimal(6,2) [not null, default: 1.00, note: 'v2.1 per-question weight — mixed scoring']
+  correct_boolean boolean
+  correct_number decimal(10,4)
+  numeric_tolerance decimal(10,4) [default: 0]
+
+  indexes {
+    quiz_id
+    (quiz_id, `order`)
+  }
+}
+
+Table question_options {
+  id bigint [pk, increment]
+  question_id bigint [not null, ref: > questions.id]
+  label varchar(255) [not null]
+  is_correct boolean [not null, default: false]
+  `order` int [not null, default: 0]
+
+  indexes {
+    question_id
+  }
+}
+
+Table question_accepted_answers {
+  id bigint [pk, increment]
+  question_id bigint [not null, ref: > questions.id, note: 'short_answer only (RULE-017)']
+  answer_text varchar(255) [not null]
+
+  indexes {
+    question_id
+  }
+}
+
+Table attempts {
+  id bigint [pk, increment]
+  quiz_id bigint [not null, ref: > quizzes.id]
+  enrollment_id bigint [not null, ref: > enrollments.id]
+  attempt_number int [not null]
+  score decimal(5,2)
+  started_at timestamp [not null, default: `now()`]
+  submitted_at timestamp
+
+  indexes {
+    (quiz_id, enrollment_id, attempt_number) [unique]
+    enrollment_id
+  }
+}
+
+Table attempt_answers {
+  id bigint [pk, increment]
+  attempt_id bigint [not null, ref: > attempts.id]
+  question_id bigint [not null, ref: > questions.id]
+  selected_option_ids json [note: 'Exactly one answer column set per row (service-enforced)']
+  answer_boolean boolean
+  answer_text varchar(255)
+  answer_number decimal(10,4)
+  is_correct boolean [not null, default: false]
+
+  indexes {
+    attempt_id
+    (attempt_id, question_id) [unique]
+  }
+}
+
+Table progress_records {
+  enrollment_id bigint [pk, ref: > enrollments.id, note: 'Strict 1-to-1 with enrollment']
+  percent_complete decimal(5,2) [not null, default: 0]
+  completed_at timestamp
+  updated_at timestamp
+}
+
+Table component_completions {
+  id bigint [pk, increment]
+  enrollment_id bigint [not null, ref: > enrollments.id]
+  component_type component_type [not null, note: 'Polymorphic discriminator (ADR-010)']
+  component_id bigint [not null, note: 'Target in lessons|assignments|quizzes — no cross-table FK']
+  completed_at timestamp
+  is_override boolean [not null, default: false, note: 'RULE-019 instructor override']
+  overridden_by bigint [ref: > users.id]
+
+  indexes {
+    (enrollment_id, component_type, component_id) [unique]
+    enrollment_id
+  }
+
+  Note: 'Gold stars via Eloquent morphTo — $completion->component, no type-switches.'
+}
+
+Table notifications {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > users.id]
+  type varchar(255) [not null, note: 'Maps to domain events']
+  data json [not null]
+  read_at timestamp
+  created_at timestamp [not null, default: `now()`]
+
+  indexes {
+    (user_id, read_at)
+  }
+
+  Note: 'Queued delivery only — never sent inside the request cycle.'
+}
+
+Table activity_log {
+  id bigint [pk, increment, note: 'Package-owned (spatie/laravel-activitylog), ADR-006']
+  log_name varchar(255)
+  description text [not null]
+  subject_type varchar(255)
+  subject_id bigint
+  causer_type varchar(255)
+  causer_id bigint
+  event varchar(255)
+  properties json
+  batch_uuid varchar(36)
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'CCTV trail for everything; permission_grants stays the court record for power moves.'
+}
+
+TableGroup identity {
+  users
+}
+
+TableGroup access {
+  groups
+  group_members
+  permission_grants
+}
+
+TableGroup teaching {
+  courses
+  lessons
+  enrollments
+  assignments
+  submissions
+  quizzes
+  questions
+  question_options
+  question_accepted_answers
+  attempts
+  attempt_answers
+  progress_records
+  component_completions
+  notifications
+}
+
+TableGroup platform {
+  activity_log
+}

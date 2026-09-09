@@ -3,248 +3,308 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LMS Database — Interactive Diagram (v2.1)</title>
+<title>LMS Database · ERD v2.1</title>
 <style>
   :root{
-    --bg:#0b0e14; --bg2:#11151f; --panel:#151b29; --line:#232c42;
-    --txt:#e6e9f2; --mut:#8b93a9; --acc:#6ea8fe;
-    --auth:#7dd3a8; --access:#e5b567; --course:#6ea8fe; --assign:#c792ea;
-    --quiz:#ff7a93; --prog:#63d6e2; --sys:#8b93a9;
+    --bg:#0a0d13; --bg2:#0f1420; --card:#131a2a; --card2:#0f1524;
+    --line:#222c46; --grid:#161d31;
+    --txt:#e8ebf4; --mut:#8f97b0; --faint:#5b6378;
+    --acc:#7aa2ff; --pk:#8fd6ff; --fk:#a9e8bd; --uq:#ffd479;
+    --auth:#4ade9e; --access:#e8b34b; --teach:#7aa2ff; --engage:#4fd6e0; --plat:#8f97b0;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);font:14px/1.55 "Segoe UI",system-ui,sans-serif}
-  header{padding:22px 28px;border-bottom:1px solid var(--line);background:var(--bg2)}
-  header h1{margin:0 0 4px;font-size:22px}
-  header p{margin:0;color:var(--mut);max-width:1000px}
-  .stats{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 14px;font-size:13px}
-  .stat b{color:var(--acc);font-size:16px;margin-right:6px}
-  .why{margin:18px 28px 0;background:linear-gradient(180deg,#141b2e,#101524);border:1px solid #2c3a5e;border-left:4px solid var(--acc);border-radius:12px;padding:16px 20px;max-width:1180px}
-  .why h2{margin:0 0 6px;font-size:16px;color:var(--acc)}
-  .why p{margin:6px 0;color:#c9d1e6}
-  .why code{background:#0b0e14;padding:1px 6px;border-radius:6px;color:#9fd0ff;font-size:12.5px}
-  .toolbar{display:flex;gap:8px;align-items:center;margin:16px 28px 0;flex-wrap:wrap}
-  .toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 12px;width:280px}
-  .toolbar button{background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 14px;cursor:pointer}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--txt);font:14px/1.6 -apple-system,"Segoe UI",Inter,Roboto,sans-serif;display:flex;flex-direction:column}
+  header{padding:26px 32px 18px;background:linear-gradient(180deg,#0e1322,#0a0d13);border-bottom:1px solid var(--line)}
+  .kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+  h1{margin:0;font-size:26px;font-weight:650;letter-spacing:-.01em}
+  h1 .v{font-size:13px;font-weight:500;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:3px 12px;margin-left:10px;vertical-align:middle}
+  header p.sub{margin:8px 0 0;color:var(--mut);max-width:1050px}
+  .stats{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 15px;font-size:12.5px;color:var(--mut)}
+  .stat b{color:var(--txt);font-size:15px;margin-right:7px;font-variant-numeric:tabular-nums}
+  .band{display:flex;gap:22px;margin:0;padding:0 32px;flex:0 0 auto}
+  .why{flex:1;margin:18px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;max-width:860px}
+  .why h2{margin:0 0 6px;font-size:14.5px;color:var(--acc)}
+  .why p{margin:6px 0;color:#c6cde2;font-size:13.5px}
+  .why code{background:#0a0d13;padding:1px 7px;border-radius:6px;color:var(--pk);font-size:12.5px}
+  .key{flex:0 0 auto;margin:18px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 20px;font-size:12.5px;color:var(--mut)}
+  .key h2{margin:0 0 8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .key .row{display:flex;align-items:center;gap:10px;margin:5px 0}
+  .key svg{flex:0 0 64px}
+  .badge{font:700 10px/1 Consolas,monospace;padding:3px 6px;border-radius:5px;letter-spacing:.04em}
+  .b-pk{background:#12314a;color:var(--pk);border:1px solid #1f4d73}
+  .b-fk{background:#12352a;color:var(--fk);border:1px solid #1f5c40}
+  .b-uq{background:#3a2f14;color:var(--uq);border:1px solid #6b551f}
+  .toolbar{display:flex;gap:8px;align-items:center;padding:14px 32px 0}
+  .toolbar input{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 13px;width:300px;font-size:13px}
+  .toolbar input:focus{outline:none;border-color:var(--acc)}
+  .toolbar button{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:13px}
   .toolbar button:hover{border-color:var(--acc);color:var(--acc)}
-  .legend{display:flex;gap:12px;margin:10px 28px 0;flex-wrap:wrap;color:var(--mut);font-size:12.5px}
-  .legend span{display:flex;align-items:center;gap:6px}
-  .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
-  main{display:flex;gap:0;margin-top:12px;height:calc(100vh - 380px);min-height:560px}
-  #wrap{flex:1;overflow:auto;border-top:1px solid var(--line);position:relative;background:
-    radial-gradient(circle at 1px 1px, #1b2338 1px, transparent 1px);background-size:26px 26px}
+  .toolbar .hint{margin-left:auto;color:var(--faint);font-size:12px}
+  main{flex:1;display:flex;min-height:0;margin-top:12px;border-top:1px solid var(--line)}
+  #wrap{flex:1;overflow:auto;position:relative;background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px);background-size:28px 28px}
   #canvas{position:relative;transform-origin:0 0}
-  #edges{position:absolute;top:0;left:0;pointer-events:none}
-  .node{position:absolute;width:252px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--mut);border-radius:10px;padding:0;cursor:pointer;transition:opacity .15s, box-shadow .15s}
-  .node:hover{box-shadow:0 0 0 1px var(--acc)}
-  .node.sel{box-shadow:0 0 0 2px var(--acc)}
-  .node.dim{opacity:.18}
-  .node h3{margin:0;padding:9px 12px 7px;font-size:13.5px;font-family:Consolas,monospace;display:flex;justify-content:space-between;align-items:center}
-  .node h3 .mod{font-family:"Segoe UI";font-size:10.5px;color:var(--mut);font-weight:400}
-  .node ul{list-style:none;margin:0;padding:0 12px 6px;font-size:12px;color:#c2c9dd}
-  .node li{padding:1.5px 0;font-family:Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .node li.pk{color:#9fd0ff}.node li.fk{color:#b7f0c9}.node li.more{color:var(--mut);font-family:"Segoe UI"}
-  .node .rel{padding:0 12px 10px;font-size:11.5px;color:var(--mut)}
-  aside{width:400px;min-width:400px;border-left:1px solid var(--line);background:var(--bg2);overflow:auto;padding:20px 22px}
-  aside h2{margin:0;font-family:Consolas,monospace;font-size:19px}
-  aside .mchip{display:inline-block;font-size:11.5px;padding:2px 10px;border-radius:20px;margin:8px 0;color:#0b0e14;font-weight:700}
-  aside h4{margin:16px 0 6px;font-size:13px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em}
-  aside p{margin:6px 0;color:#c9d1e6}
+  #edges{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+  .tbl{position:absolute;width:264px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:opacity .15s,border-color .15s,box-shadow .15s}
+  .tbl:hover{border-color:#3b4a73}
+  .tbl.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 12px 32px rgba(0,0,0,.45)}
+  .tbl.dim{opacity:.15}
+  .tbl header{padding:10px 14px 9px;background:var(--card2);border-bottom:1px solid var(--line);border-left:4px solid var(--faint)}
+  .tbl header .t{font:650 13.5px Consolas,monospace;display:block}
+  .tbl header .m{font-size:10.5px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
+  .tbl ul{list-style:none;margin:0;padding:7px 0}
+  .tbl li{display:flex;justify-content:space-between;gap:8px;padding:3.5px 14px;font:12px Consolas,monospace;color:#c2c9dd}
+  .tbl li .ct{color:var(--faint);font-size:11px;white-space:nowrap}
+  .tbl li.is-pk{background:rgba(143,214,255,.06)}
+  .tbl li.is-fk .cn{color:var(--fk)}
+  .tbl li.is-pk .cn{color:var(--pk);font-weight:700}
+  .tbl li .keys{display:flex;gap:4px;align-items:center}
+  .tbl .nn{color:var(--faint);font-size:10.5px}
+  aside{width:410px;min-width:410px;border-left:1px solid var(--line);background:var(--bg2);overflow-y:auto;padding:22px 24px 40px}
+  aside h2{margin:0;font:650 20px Consolas,monospace}
+  aside .mchip{display:inline-block;font-size:11px;font-weight:700;padding:3px 11px;border-radius:20px;margin:9px 0;color:#0a0d13}
+  aside h4{margin:18px 0 7px;font-size:11.5px;color:var(--acc);text-transform:uppercase;letter-spacing:.09em}
+  aside p{margin:6px 0;color:#c6cde2;font-size:13.5px}
   aside table{width:100%;border-collapse:collapse;font-size:12.5px}
   aside td{border-bottom:1px solid var(--line);padding:5px 4px;vertical-align:top}
-  aside td.c{font-family:Consolas,monospace;color:#9fd0ff;white-space:nowrap}
+  aside td.c{font-family:Consolas,monospace;color:var(--pk);white-space:nowrap}
   aside td.t{color:var(--mut);font-size:11.5px}
-  .rule{background:#101828;border:1px solid #2c3a5e;border-radius:8px;padding:7px 10px;margin:6px 0;font-size:12.5px}
-  .rule b{color:#ffd479}
-  footer{padding:14px 28px;color:var(--mut);font-size:12.5px;border-top:1px solid var(--line)}
+  .rule{background:#101a30;border:1px solid #26355a;border-radius:9px;padding:8px 11px;margin:6px 0;font-size:12.5px;color:#c6cde2}
+  .rule b{color:var(--uq)}
+  footer{padding:12px 32px;color:var(--faint);font-size:12px;border-top:1px solid var(--line)}
+  footer code{color:var(--mut)}
 </style>
 </head>
 <body>
 <header>
-  <h1>🗄️ LMS Database — Interactive Diagram <span style="color:var(--mut);font-size:14px">spec v2.1 · 19 tables · Laravel/MySQL</span></h1>
-  <p>Click any table to see its <b>columns</b>, the <b>human business story</b> behind it, and the <b>exact rules</b> it enforces. Hover a table to light up its relationships. Search to find anything instantly.</p>
+  <div class="kicker">Learning Management System · Laravel / MySQL · spec v2.1</div>
+  <h1>Entity–Relationship Diagram <span class="v">19 tables · IE / crow's-foot notation</span></h1>
+  <p class="sub">Read left → right: independent entities first, dependents later. Every connector runs from a foreign-key row to its parent's primary key — fork means <i>many</i>, bar means <i>one</i>, ring means <i>optional</i>. Click a table for its story, columns and rules.</p>
   <div class="stats">
     <div class="stat"><b>19</b>tables</div>
-    <div class="stat"><b>9</b>modules</div>
+    <div class="stat"><b>26</b>relationships</div>
     <div class="stat"><b>8</b>race-closing unique indexes</div>
-    <div class="stat"><b>0</b>tables for Reporting (read-only by design)</div>
-    <div class="stat"><b>1</b>append-only ledger (<span style="font-family:Consolas">permission_grants</span>)</div>
+    <div class="stat"><b>1</b>append-only ledger</div>
+    <div class="stat"><b>0</b>tables for Reporting — read-only</div>
   </div>
 </header>
 
-<div class="why">
-  <h2>❓ Why is <code>users</code> split? Base columns in root, <code>manager_id</code> + <code>approval_status</code> in the Auth module?</h2>
-  <p><b>Short answer: framework identity vs. LMS domain.</b> The root migration (<code>0001_…_create_users_table</code>) is pristine Laravel — name, email, password. Every Laravel app on earth has it. The Auth-module migration (<code>120000_add_manager_fields_to_users_table</code>) adds what makes a user <i>an LMS citizen</i>: a place in the authority tree (<code>manager_id</code>) and the instructor approval gate (<code>approval_status</code>).</p>
-  <p>We did it this way for three reasons: <b>1)</b> root stays stock Laravel — upgrades, packages (Filament reads the base table) and new developers all see familiar ground; <b>2)</b> domain evolution lives with its owner — if the hierarchy rules change, the diff is in <code>Modules/Auth</code>, not in a framework file; <b>3)</b> migration order tells the story — base identity first, domain meaning layered on top, exactly how the system itself boots. Putting everything in one migration would weld LMS concepts into framework scaffolding and make both harder to change.</p>
+<div class="band">
+  <div class="why">
+    <h2>Why <code>users</code> is split across two migrations</h2>
+    <p><b>Framework identity vs. LMS domain.</b> Root <code>0001_…_create_users_table</code> is pristine Laravel — name, email, password. Auth-module <code>120000_add_manager_fields…</code> adds LMS citizenship: <code>manager_id</code> (authority tree, RULE-002) and <code>approval_status</code> (instructor gate, RULE-010).</p>
+    <p>Root stays stock (upgrades, Filament, familiar ground) · domain diffs live with their owner in <code>Modules/Auth</code> · migration order narrates boot order. One combined migration would weld LMS concepts into framework scaffolding.</p>
+  </div>
+  <div class="key">
+    <h2>Notation key</h2>
+    <div class="row"><svg width="64" height="14"><line x1="4" y1="7" x2="40" y2="7" stroke="#7aa2ff" stroke-width="1.6"/><path d="M40,2 L52,7 L40,12" fill="none" stroke="#7aa2ff" stroke-width="1.6"/><line x1="56" y1="2" x2="56" y2="12" stroke="#7aa2ff" stroke-width="1.8"/></svg><span>one → many (FK row to parent PK)</span></div>
+    <div class="row"><svg width="64" height="14"><line x1="4" y1="7" x2="34" y2="7" stroke="#7aa2ff" stroke-width="1.6"/><circle cx="42" cy="7" r="5" fill="none" stroke="#7aa2ff" stroke-width="1.6"/><line x1="50" y1="2" x2="50" y2="12" stroke="#7aa2ff" stroke-width="1.8"/></svg><span>optional FK (nullable) → one</span></div>
+    <div class="row"><span class="badge b-pk">PK</span><span>primary key</span><span class="badge b-fk">FK</span><span>foreign key</span><span class="badge b-uq">UQ</span><span>unique</span></div>
+    <div class="row"><span class="nn" style="color:var(--faint)">∗ = NOT NULL column</span></div>
+  </div>
 </div>
 
 <div class="toolbar">
-  <input id="q" placeholder="🔍 search tables, columns, rules… (e.g. threshold, FK, RULE-014)">
-  <button onclick="zoom(1.2)">＋ zoom</button>
-  <button onclick="zoom(0.83)">－ zoom</button>
+  <input id="q" placeholder="Search tables, columns, rules — e.g. threshold, morph, RULE-014">
+  <button onclick="zoom(1.2)">+ zoom</button>
+  <button onclick="zoom(0.83)">− zoom</button>
   <button onclick="resetZoom()">reset</button>
+  <span class="hint">hover highlights relations · click pins details · Esc clears</span>
 </div>
-<div class="legend" id="legend"></div>
 
 <main>
   <div id="wrap"><div id="canvas"><svg id="edges"></svg></div></div>
   <aside id="panel"></aside>
 </main>
-<footer>Generated from <code>docs/LMS_Laravel_BRD_PRD_v2_1_full.md</code> v2.1 · IDs auto-increment everywhere (ARCH-005) · thresholds are percentages of variable totals (RULE-018 rev) · Reporting intentionally table-less</footer>
+<footer>Sources: <code>docs/schema.dbml</code> (paste into dbdiagram.io) · <code>docs/DATABASE.md</code> (GitHub-native Mermaid) · spec <code>docs/LMS_Laravel_BRD_PRD_v2_1_full.md</code> v2.1</footer>
 
 <script>
-const MOD = {
-  auth:{label:"Auth / Identity",color:"#7dd3a8"},
-  access:{label:"AccessManagement",color:"#e5b567"},
-  courses:{label:"Courses",color:"#6ea8fe"},
-  enroll:{label:"Enrollment",color:"#6ea8fe"},
-  assign:{label:"Assignments",color:"#c792ea"},
-  quiz:{label:"Quizzes",color:"#ff7a93"},
-  prog:{label:"Progress",color:"#63d6e2"},
-  notif:{label:"Notifications",color:"#63d6e2"},
-  sys:{label:"Package-owned",color:"#8b93a9"},
-};
-const T = [
-{n:"users",m:"auth",x:40,y:40,cols:[["id","bigint PK","pk"],["name","varchar",""],["email","varchar UQ",""],["password","varchar",""],["manager_id","FK → users NULL","fk"],["approval_status","pending|approved NULL",""],["email_verified_at","timestamp NULL",""]],
- story:"Every human in the system starts here — student, instructor, manager, admin. Think of it as the population registry: it proves <i>who you are</i> (login) but says nothing about what you may do. The clever bit is the single <b>manager_id</b> column: each person points at exactly one boss, forming one strict family tree with the Admin at the root. Students sit outside the tree (always NULL) — they learn, they don't govern.",
- rules:[["RULE-002","One manager per user — a strict tree rooted at Admin, never a web."],["RULE-010","An instructor's manager is set at <b>approval</b> time, not registration."],["ADR-007","No cycles allowed — enforced by a transactional service check, because MySQL physically cannot police a tree."],["ARCH-005","Auto-increment IDs everywhere — simple, portable, no UUID plumbing."]]},
-{n:"groups",m:"access",x:40,y:400,cols:[["id","bigint PK (also Spatie team_id)","pk"],["owner_id","FK → users","fk"],["name","varchar, NOT unique",""]],
- story:"A group is a <i>room</i>, not a rank. 'Math Teachers 2026' can exist three times with the same name and nobody cares (RULE-011) — because a group grants nothing by itself. Its job is to be a <b>scope</b>: permissions can be global, or valid only inside one room. The owner is just the person holding the key; if they leave, the key passes on.",
- rules:[["RULE-007/008","Permissions are global <b>or</b> scoped to one group."],["RULE-011","Group names have no uniqueness — rooms, not identities."],["RULE-012","Owner removed → ownership passes to their manager, else any Admin."]]},
-{n:"group_members",m:"access",x:40,y:640,cols:[["id","bigint PK","pk"],["group_id","FK → groups","fk"],["user_id","FK → users","fk"],["joined_at","timestamp",""],["UQ","(group_id, user_id)",""]],
- story:"The guest list of each room. Being on the list gets you through the door — and <i>absolutely nothing else</i>. This is the table that kills the most common permission bug in the world: 'they're in the group, so they must be allowed.' Here, membership and permission are two different facts, stored in two different places.",
- rules:[["RULE-009","Membership ≠ permission. Joining a group grants zero capabilities."]]},
-{n:"permission_grants",m:"access",x:40,y:880,cols:[["id","bigint PK","pk"],["granter_id","FK → users","fk"],["grantee_id","FK → users","fk"],["group_id","FK → groups NULL (=global)","fk"],["permission_name","varchar",""],["action","granted | revoked",""],["granted_at / revoked_at","timestamps",""]],
- story:"The court stenographer of power. Every time someone hands a capability to someone else — or takes it back — a permanent row is written here, <b>never edited, never deleted</b>. Revoking writes a <i>new</i> row. Years later you can replay exactly who gave what to whom. Two laws govern every row: you may only give downward (to your subordinates), and you may only give what you hold yourself (the ceiling rule).",
- rules:[["RULE-003","Grant/revoke only to direct or indirect subordinates."],["RULE-004","Ceiling rule — you cannot give a permission you don't hold (global or in that group)."],["RULE-005","Append-only ledger — the authoritative audit trail for delegation."],["ADR-008","Ceiling checks use <b>explicit</b> group context, never ambient middleware state."]]},
-{n:"courses",m:"courses",x:330,y:40,cols:[["id","bigint PK","pk"],["instructor_id","FK → users","fk"],["title / category","varchar",""],["description","text NULL",""],["status","draft|published|archived",""],["published_at / archived_at","timestamps NULL",""],["UQ","(instructor_id, title)",""]],
- story:"An instructor's promise to students: a structured container of lessons, assignments and quizzes. A course is born as a <b>draft</b> (private sketchpad), goes <b>published</b> (students inside — now it's a commitment), and ends <b>archived</b> (read-only history). The lifecycle runs one direction only, because un-publishing a live course would strand enrolled students. Touching a published course's structure needs a special elevated permission — published content is a contract.",
- rules:[["RULE-013","Lifecycle strictly Draft → Published → Archived."],["RULE-001","Editing published content needs an elevated permission instructors lack by default."],["Archive-guard","Cannot archive while active enrollments exist."]]},
-{n:"lessons",m:"courses",x:330,y:380,cols:[["id","bigint PK","pk"],["course_id","FK → courses","fk"],["title","varchar",""],["content_reference","text NULL (external pointer)",""],["order","uint, UQ per course",""],["UQ","(course_id, order)",""]],
- story:"The chapters of a course, in a fixed numbered order — lesson 3 is lesson 3 forever, even if the instructor renumbers everything later. That's because student progress points at the lesson's <b>ID</b>, not its position: reordering never corrupts anyone's progress. Videos themselves live outside (YouTube, hosting); this table only holds the pointer.",
- rules:[["RULE-014","Lesson order unique per course, DB-enforced."],["Progress-safe","Completions reference component_id, never position."]]},
-{n:"enrollments",m:"enroll",x:330,y:640,cols:[["id","bigint PK","pk"],["student_id","FK → users","fk"],["course_id","FK → courses","fk"],["status","active | completed",""],["enrolled_at / completed_at","timestamps",""],["UQ","(student_id, course_id)",""]],
- story:"The handshake between a student and a course: one row, one seat, exactly once. The unique index is a bouncer — even if a student double-clicks enroll on two servers at the same millisecond, the database itself refuses the second row. Everything a student ever does (submissions, attempts, progress) hangs off this row, so deleting it is never casual.",
- rules:[["Once-only","Unique (student, course) — closes the concurrent-enrollment race at the database level."]]},
-{n:"assignments",m:"assign",x:620,y:40,cols:[["id","bigint PK","pk"],["course_id","FK → courses","fk"],["title / description","varchar / text",""],["due_date","timestamp REQUIRED",""],["resubmission_allowed","bool",""],["max_score","decimal(6,2) — any scale",""],["passing_threshold","decimal — % of max",""]],
- story:"The instructor's challenge to students — an essay, a file upload, a project. Two v2.1 breakthroughs live here: scores are <b>free-form</b> (an assignment can be out of 20, 150, anything — like Google Forms, not a 0–100 straitjacket), and passing is a <b>percentage of that assignment's own maximum</b>. The description doubles as the submission instructions ('upload PDF + 200 words') — deliberately prose, not a rigid type column, because instructors explain expectations in words.",
- rules:[["RULE-018 rev","Completion = best attempt ≥ threshold % of this assignment's max_score."],["due_date","Required and future-dated at creation (app-validated, not DB)."],["No-type-column","Submission format communicated in prose, by design."]]},
-{n:"submissions",m:"assign",x:620,y:400,cols:[["id","bigint PK","pk"],["assignment_id / enrollment_id","FKs","fk"],["attempt_number","uint",""],["file_path / content","both NULL-able",""],["submitted_at / is_late","timestamp / bool",""],["grade / graded_by / graded_at","nullable",""],["status","submitted | graded",""],["UQ","(assignment, enrollment, attempt)",""]],
- story:"Every attempt a student ever makes, kept forever. Submit three drafts? All three survive, each graded independently — there is deliberately <b>no single 'grade of record'</b>, so no teacher can accidentally lose a student's work and no dispute ends in 'the system ate it'. Lateness is stamped per attempt against the due date. The attempt-number unique index is another bouncer: with resubmission off, a racing double-submit can't create attempt 2 twice.",
- rules:[["RULE-015","Resubmit only if allowed; attempt_number unique composite stops race duplicates."],["RULE-016","No grade-of-record — all attempts preserved and independently gradable."]]},
-{n:"quizzes",m:"quiz",x:910,y:40,cols:[["id","bigint PK","pk"],["course_id","FK → courses","fk"],["title","varchar",""],["opens_at / closes_at","timestamps",""],["max_attempts","uint",""],["passing_threshold","decimal — % of live point sum",""]],
- story:"The exam room with a timer on the door: it opens and closes on schedule, allows a set number of sittings, and passes you on a <b>percentage of the quiz's live total points</b> — computed fresh from the questions every time, so an instructor adding a question never silently breaks the pass mark. Starting after closing time is refused at the door (checked at attempt-start, not submit).",
- rules:[["RULE-018 rev","Threshold = % of SUM(questions.points), computed dynamically, never cached."],["Window","Attempt-start inside [opens_at, closes_at] or rejected."]]},
-{n:"questions",m:"quiz",x:910,y:360,cols:[["id","bigint PK","pk"],["quiz_id","FK → quizzes","fk"],["prompt","text",""],["type","5 auto-scorable types",""],["order","uint",""],["points","decimal(6,2) default 1",""],["correct_boolean/number/tolerance","type-specific NULL-able",""]],
- story:"One scorable moment inside a quiz — and each carries its own <b>weight</b>. A 50-question quiz can total 150 points with questions worth 0.5, 2 or 5: the easy warm-up counts little, the killer question counts a lot. Five machine-gradable flavors (single/multi choice, true-false, short answer, numeric) cover nearly everything without a human in the loop; the type-specific columns stay NULL unless their type needs them.",
- rules:[["v2.1 points","Per-question weight; mixed scoring inside one quiz."],["SCOPE-005","Five auto-scorable types."],["RULE-017","Short answers accept multiple variants."]]},
-{n:"question_options",m:"quiz",x:910,y:700,cols:[["id","bigint PK","pk"],["question_id","FK → questions","fk"],["label","varchar",""],["is_correct","bool",""],["order","uint",""]],
- story:"The A/B/C/D checkboxes of choice questions, each pre-marked right or wrong. Grading is then pure comparison — no judgment calls, no partial-credit debates at this layer.",
- rules:[["Choice grading","Auto-scored by comparing selections to is_correct flags."]]},
-{n:"question_accepted_answers",m:"quiz",x:910,y:920,cols:[["id","bigint PK","pk"],["question_id","FK → questions","fk"],["answer_text","varchar",""]],
- story:"The list of 'yes, that counts' phrasings for short-answer questions — 'photosynthesis', 'Photosynthesis', 'photo-synthesis'. Language is messy; this table absorbs the mess so grading stays fair without a human reading every answer.",
- rules:[["RULE-017","Multiple accepted variants per short-answer question."]]},
-{n:"attempts",m:"quiz",x:910,y:1100,cols:[["id","bigint PK","pk"],["quiz_id / enrollment_id","FKs","fk"],["attempt_number","uint",""],["score","decimal NULL",""],["started_at / submitted_at","timestamps",""],["UQ","(quiz, enrollment, attempt)",""]],
- story:"One sitting of one quiz by one student. The score lands here once the machine finishes grading; NULL means 'still in progress'. The unique triple is the third bouncer in this schema — two 'attempt 2' rows can never exist however furiously a student retries.",
- rules:[["Attempt-cap","max_attempts enforced; window checked at start."],["Race-proof","Unique (quiz, enrollment, attempt_number)."]]},
-{n:"attempt_answers",m:"quiz",x:1200,y:700,cols:[["id","bigint PK","pk"],["attempt_id / question_id","FKs","fk"],["selected_option_ids","json NULL",""],["answer_boolean/text/number","NULL-able",""],["is_correct","bool",""],["UQ","(attempt_id, question_id)",""]],
- story:"What the student actually answered, question by question — checkbox picks as JSON, typed text, or a number — each pre-judged right or wrong at grading time. Storing the verdict per answer (not just the total) is what makes score review, appeals and analytics possible later.",
- rules:[["One row","Unique (attempt, question) — exactly one answer per question per sitting."]]},
-{n:"progress_records",m:"prog",x:1200,y:40,cols:[["id","bigint PK","pk"],["enrollment_id","FK UQ (1-to-1)","fk"],["percent_complete","decimal default 0",""],["completed_at","timestamp NULL",""]],
- story:"The student's dashboard number: 'you are 64% through this course.' Exactly one row per enrollment — a cache of a computation, refreshed whenever anything completes. When every component flips to done, the course flips to done with it. Students check this obsessively; that's the point.",
- rules:[["1-to-1","Unique enrollment_id — one progress row per seat."]]},
-{n:"component_completions",m:"prog",x:1200,y:250,cols:[["id","bigint PK","pk"],["enrollment_id","FK → enrollments","fk"],["component_type","lesson|assignment|quiz",""],["component_id","bigint (morph target)",""],["completed_at","timestamp NULL",""],["is_override / overridden_by","bool / FK → users",""],["UQ","(enrollment, type, id)",""]],
- story:"The gold stars chart: which lessons/assignments/quizzes this enrollment has finished. One table points at three different parents via a <b>polymorphic relation</b> (`$completion->component`, no type-switch code — ADR-010). A star is earned by beating the percentage threshold — or pinned on manually by an instructor override, which is recorded as an override (not faked as a pass) with the overrider's name attached.",
- rules:[["RULE-018 rev","Completed = best attempt ≥ % threshold of that component's own total."],["RULE-019","Instructor/Admin manual override, attributed via overridden_by."],["ADR-010","Native Eloquent morphTo/morphMany — DB integrity stays app-enforced."]]},
-{n:"notifications",m:"notif",x:1200,y:520,cols:[["id","bigint PK","pk"],["user_id","FK → users","fk"],["type","varchar (domain event)",""],["data","json",""],["read_at","timestamp NULL",""]],
- story:"The mailbox. Domain events (graded! approved! published!) become queued rows here — never sent synchronously inside the request, so a slow mail server can't freeze a grading click. Read/unread is a timestamp, so 'mark all read' and unread badges are trivial. You only ever see your own mail.",
- rules:[["Queued","Notifications dispatch via queue, never inline."],["Privacy","Indexed (user_id, read_at); users see only their rows."]]},
-{n:"activity_log",m:"sys",x:40,y:1120,cols:[["id","bigint PK","pk"],["log_name / description","varchar / text",""],["subject/causer","polymorphic (type+id)",""],["event / properties","varchar / json",""],["batch_uuid","uuid NULL",""]],
- story:"The building's CCTV — a general-purpose trail of everything that happened to anything, by whom, with before/after payloads. Owned by the Spatie package (its migration is published, never hand-written), so it never drifts from the library. Note the division of labor: <b>permission_grants is the court record for power moves</b> (queryable, rule-checkable); this is the security camera for everything else.",
- rules:[["ADR-006","Package-owned table, reproduced in the spec so it never looks undocumented."],["RULE-005","Satisfies the audit ledger jointly with permission_grants."]]},
+// [table, module, depth, columns:[name,type,flags,note], story, rules:[id,text]]
+// flags: P=pk F=fk U=unique-part *=notnull
+const D = [
+["users","auth",0,[["id","bigint","P*"],["name","varchar(255)","*"],["email","varchar(255)","*U"],["email_verified_at","timestamp",""],["password","varchar(255)","*"],["manager_id","bigint→users","F"],["approval_status","varchar(20)","","pending|approved, instructor-only"]],
+ "Population registry: proves <i>who you are</i>, says nothing about what you may do. One <b>manager_id</b> per person forms a strict Admin-rooted tree; students sit outside it (always NULL).",
+ [["RULE-002","One manager each — a strict tree, never a web."],["RULE-010","Instructor's manager set at <b>approval</b>, not registration."],["ADR-007","Acyclicity enforced by transactional service check — MySQL cannot police a tree."],["ARCH-005","Auto-increment IDs, no UUIDs."]]],
+["activity_log","plat",0,[["id","bigint","P*"],["log_name","varchar(255)",""],["description","text","*"],["subject_type/id","varchar/bigint",""],["causer_type/id","varchar/bigint",""],["event","varchar(255)",""],["properties","json",""],["batch_uuid","uuid",""]],
+ "Building CCTV: what happened to what, by whom, with before/after payloads. Package-owned (Spatie) so it never drifts. Division of labor: <b>permission_grants is the court record</b> for power moves; this films everything else.",
+ [["ADR-006","Published migration, never hand-written — reproduced in spec so it never looks undocumented."],["RULE-005","Audit ledger jointly with permission_grants."]]],
+["groups","access",1,[["id","bigint","P*"],["owner_id","bigint→users","F*"],["name","varchar(255)","*"]],
+ "A room, not a rank. Names may repeat (rooms, not identities) because a group grants nothing — it is a <b>scope</b> permissions can live inside. The owner holds the key; on removal it passes to their manager, else any Admin.",
+ [["RULE-007/008","Permissions global <b>or</b> scoped to one group."],["RULE-011","No name uniqueness."],["RULE-012","Ownership succession on owner removal."]]],
+["courses","courses",1,[["id","bigint","P*"],["instructor_id","bigint→users","F*"],["title","varchar(255)","*"],["category","varchar(255)","*"],["description","text",""],["status","varchar(20)","*"],["published_at","timestamp",""],["archived_at","timestamp",""]],
+ "Instructor's promise: draft (private sketchpad) → published (commitment, students inside) → archived (history). One direction only — un-publishing would strand students. Touching published structure needs an elevated permission most instructors lack.",
+ [["RULE-013","Strictly linear lifecycle."],["RULE-001","Published-content edits need elevated permission."],["Archive-guard","Blocked while active enrollments exist."],["UQ","(instructor_id, title)."]]],
+["notifications","notif",1,[["id","bigint","P*"],["user_id","bigint→users","F*"],["type","varchar(255)","*"],["data","json","*"],["read_at","timestamp",""]],
+ "Mailbox. Domain events become queued rows — never sent inside the request, so slow mail can't freeze a grading click. Read/unread is a timestamp; you only ever see your own mail.",
+ [["Queued","Delivery via queue, never inline."],["Privacy","(user_id, read_at) index; row-level ownership."]]],
+["group_members","access",2,[["id","bigint","P*"],["group_id","bigint→groups","F*"],["user_id","bigint→users","F*"],["joined_at","timestamp","*"]],
+ "Guest list of each room — door entry and <i>nothing else</i>. Kills the classic bug 'in the group ⇒ allowed': membership and permission are different facts in different tables.",
+ [["RULE-009","Membership ≠ permission. Zero capabilities granted."],["UQ","(group_id, user_id)."]]],
+["permission_grants","access",2,[["id","bigint","P*"],["granter_id","bigint→users","F*"],["grantee_id","bigint→users","F*"],["group_id","bigint→groups","F"],["permission_name","varchar(255)","*"],["action","varchar(20)","*"],["granted_at","timestamp",""],["revoked_at","timestamp",""]],
+ "Court stenographer of power: every grant/revoke a permanent row — <b>never edited, never deleted</b>; revokes are new rows. Two laws per row: give only downward, give only what you hold. Years later the full chain replays exactly.",
+ [["RULE-003","Subordinate-only delegation."],["RULE-004","Ceiling rule, global and group-scoped."],["RULE-005","Append-only, no updated_at."],["ADR-008","Explicit group context per check — ambient state banned."]]],
+["lessons","courses",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["content_reference","text",""],["order","uint","*"]],
+ "Numbered chapters; lesson 3 stays lesson 3 even after renumbering, because progress points at <b>IDs, not positions</b>. Videos live outside (external pointer); this table holds structure.",
+ [["RULE-014","(course_id, order) unique, DB-enforced."],["Reorder-safe","Completions reference component_id."]]],
+["enrollments","enroll",2,[["id","bigint","P*"],["student_id","bigint→users","F*"],["course_id","bigint→courses","F*"],["status","varchar(20)","*"],["enrolled_at","timestamp",""],["completed_at","timestamp",""]],
+ "One seat per student per course — the handshake everything hangs off (submissions, attempts, progress). The unique index is a bouncer: double-clicks on two servers the same millisecond still yield one row.",
+ [["Once-only","(student_id, course_id) unique closes the race at DB level."]]],
+["assignments","assign",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["description","text",""],["due_date","timestamp","*"],["resubmission_allowed","bool","*"],["max_score","decimal(6,2)","*"],["passing_threshold","decimal(5,2)","*"]],
+ "Free-form challenges: out of 20, 150, anything — like Google Forms, not a 0–100 straitjacket. Passing = percentage of <b>this assignment's own max</b>. Submission format lives in prose description, deliberately not a rigid type column.",
+ [["RULE-018 rev","Best attempt ≥ threshold % of max_score."],["due_date","Required, future-dated (app-validated)."]]],
+["quizzes","quiz",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["opens_at","timestamp","*"],["closes_at","timestamp","*"],["max_attempts","uint","*"],["passing_threshold","decimal(5,2)","*"]],
+ "Exam room with a timer: opens/closes on schedule, capped sittings, pass mark = percentage of <b>live total points</b> recomputed from questions — adding a question never silently breaks the bar. Late arrivals refused at the door (checked at start).",
+ [["RULE-018 rev","% of SUM(questions.points), dynamic, never cached."],["Window","Enforced at attempt-start."]]],
+["submissions","assign",3,[["id","bigint","P*"],["assignment_id","bigint→assign","F*"],["enrollment_id","bigint→enroll","F*"],["attempt_number","uint","*"],["file_path","varchar(255)",""],["content","text",""],["submitted_at","timestamp","*"],["is_late","bool","*"],["grade","decimal(5,2)",""],["graded_by","bigint→users","F"],["graded_at","timestamp",""],["status","varchar(20)","*"]],
+ "Every attempt kept forever, graded independently — deliberately <b>no grade-of-record</b>, so nothing is ever lost and disputes end with evidence. Lateness stamped per attempt. With resubmission off, the attempt-number unique is the bouncer against racing double-submits.",
+ [["RULE-015","Resubmit only if allowed; unique triple stops duplicates."],["RULE-016","All attempts preserved, independently gradable."]]],
+["questions","quiz",3,[["id","bigint","P*"],["quiz_id","bigint→quizzes","F*"],["prompt","text","*"],["type","varchar(30)","*"],["order","uint","*"],["points","decimal(6,2)","*"],["correct_boolean","bool",""],["correct_number","decimal(10,4)",""],["numeric_tolerance","decimal(10,4)",""]],
+ "Weighted scorable moments: a 50-question quiz can total 150 points (0.5, 2, 5). Five machine-gradable flavors; type-specific columns stay NULL unless needed. Warm-ups count little, killers count a lot.",
+ [["v2.1 points","Mixed weights inside one quiz."],["SCOPE-005","Five auto-scorable types."],["RULE-017","Short answers accept variants."]]],
+["attempts","quiz",3,[["id","bigint","P*"],["quiz_id","bigint→quizzes","F*"],["enrollment_id","bigint→enroll","F*"],["attempt_number","uint","*"],["score","decimal(5,2)",""],["started_at","timestamp","*"],["submitted_at","timestamp",""]],
+ "One sitting, one student, one quiz. NULL score = still in progress. The unique triple is the third bouncer — no duplicate attempt numbers however furiously students retry.",
+ [["Cap","max_attempts enforced."],["Race-proof","(quiz, enrollment, attempt) unique."]]],
+["progress_records","prog",3,[["enrollment_id","bigint→enroll","P*F"],["percent_complete","decimal(5,2)","*"],["completed_at","timestamp",""]],
+ "The dashboard number ('64% through') — a cached computation, one row per seat, refreshed on every completion. All components done ⇒ course done. Students check obsessively; that's the point.",
+ [["1-to-1","PK is the enrollment FK — exactly one row per seat."]]],
+["component_completions","prog",3,[["id","bigint","P*"],["enrollment_id","bigint→enroll","F*"],["component_type","varchar(30)","*"],["component_id","bigint","*"],["completed_at","timestamp",""],["is_override","bool","*"],["overridden_by","bigint→users","F"]],
+ "Gold stars via <b>polymorphism</b>: one table points at lessons, assignments and quizzes through <code>$completion-&gt;component</code> — no type-switches (ADR-010). Earned by beating the threshold, or pinned manually as a recorded override with the overrider named, never faked as a pass.",
+ [["RULE-018 rev","Best attempt ≥ component's own % total."],["RULE-019","Attributed instructor override."],["ADR-010","morphTo/morphMany; integrity app-enforced."]]],
+["question_options","quiz",4,[["id","bigint","P*"],["question_id","bigint→questions","F*"],["label","varchar(255)","*"],["is_correct","bool","*"],["order","uint","*"]],
+ "A/B/C/D checkboxes pre-marked right or wrong. Grading becomes pure comparison — no judgment calls at this layer.",
+ [["Auto-grade","Selections compared to is_correct flags."]]],
+["question_accepted_answers","quiz",4,[["id","bigint","P*"],["question_id","bigint→questions","F*"],["answer_text","varchar(255)","*"]],
+ "'Yes, that counts' phrasings for short answers — absorbing language messiness so grading stays fair without humans reading every response.",
+ [["RULE-017","Multiple variants per question."]]],
+["attempt_answers","quiz",4,[["id","bigint","P*"],["attempt_id","bigint→attempts","F*"],["question_id","bigint→questions","F*"],["selected_option_ids","json",""],["answer_boolean","bool",""],["answer_text","varchar(255)",""],["answer_number","decimal(10,4)",""],["is_correct","bool","*"]],
+ "What was actually answered, question by question, each pre-judged right or wrong. Per-answer verdicts (not just totals) power score review, appeals and analytics.",
+ [["One row","(attempt, question) unique — exactly one answer per sitting."]]],
 ];
+const MODC = {auth:"#4ade9e",access:"#e8b34b",courses:"#7aa2ff",enroll:"#9d7bff",assign:"#c792ea",quiz:"#ff7a93",prog:"#4fd6e0",notif:"#7bd88f",plat:"#8f97b0"};
+const MODL = {auth:"Auth · Identity",access:"AccessManagement",courses:"Courses",enroll:"Enrollment",assign:"Assignments",quiz:"Quizzes",prog:"Progress",notif:"Notifications",plat:"Platform"};
+// edges: [child, childCol, parent, verb, optionalParent, oneToOne]
 const E = [
-["groups","users","owner"],["group_members","groups","group"],["group_members","users","member"],["permission_grants","users","granter"],["permission_grants","users","grantee"],["permission_grants","groups","scope"],["courses","users","instructor"],["lessons","courses","course"],["enrollments","users","student"],["enrollments","courses","course"],["assignments","courses","course"],["submissions","assignments","assignment"],["submissions","enrollments","enrollment"],["submissions","users","grader"],["quizzes","courses","course"],["questions","quizzes","quiz"],["question_options","questions","question"],["question_accepted_answers","questions","question"],["attempts","quizzes","quiz"],["attempts","enrollments","enrollment"],["attempt_answers","attempts","attempt"],["attempt_answers","questions","question"],["progress_records","enrollments","enrollment"],["component_completions","enrollments","enrollment"],["component_completions","users","overrider"],["notifications","users","user"],
+["groups","owner_id","users","owned by",0,0],["group_members","group_id","groups","lists",0,0],
+["group_members","user_id","users","joins",0,0],["permission_grants","granter_id","users","delegates",0,0],
+["permission_grants","grantee_id","users","empowers",0,0],["permission_grants","group_id","groups","scoped in",1,0],
+["courses","instructor_id","users","authored by",0,0],["lessons","course_id","courses","chapters of",0,0],
+["enrollments","student_id","users","seats",0,0],["enrollments","course_id","courses","fills",0,0],
+["assignments","course_id","courses","set in",0,0],["submissions","assignment_id","assignments","answers",0,0],
+["submissions","enrollment_id","enrollments","files",0,0],["submissions","graded_by","users","graded by",1,0],
+["quizzes","course_id","courses","examines",0,0],["questions","quiz_id","quizzes","asks",0,0],
+["question_options","question_id","questions","offers",0,0],["question_accepted_answers","question_id","questions","accepts",0,0],
+["attempts","quiz_id","quizzes","sits",0,0],["attempts","enrollment_id","enrollments","taken by",0,0],
+["attempt_answers","attempt_id","attempts","records",0,0],["attempt_answers","question_id","questions","targets",0,0],
+["progress_records","enrollment_id","enrollments","summarises",0,1],["component_completions","enrollment_id","enrollments","stars",0,0],
+["component_completions","overridden_by","users","pinned by",1,0],["notifications","user_id","users","alerts",0,0],
 ];
-let scale = 1;
-const canvas = document.getElementById('canvas');
-const svg = document.getElementById('edges');
-const panel = document.getElementById('panel');
-const byName = Object.fromEntries(T.map(t=>[t.n,t]));
-// legend
-document.getElementById('legend').innerHTML = Object.values(MOD).map(m=>
-  `<span><i class="dot" style="background:${m.color}"></i>${m.label}</span>`).join('');
+const W=264, GAPX=150, RH=25, HH=62, GAPY=30;
+const byName = Object.fromEntries(D.map(t=>[t[0],t]));
+let scale=1, selected=null;
+const canvas=document.getElementById('canvas'), svg=document.getElementById('edges'), panel=document.getElementById('panel');
+// layout: group by depth, stack vertically
+const depths=[...new Set(D.map(t=>t[2]))].sort();
+const pos={};
+depths.forEach(d=>{
+  const col=D.filter(t=>t[2]===d);
+  let y=40;
+  col.forEach(t=>{
+    const h=HH+t[3].length*RH+8;
+    pos[t[0]]={x:40+d*(W+GAPX),y,w:W,h};
+    y+=h+GAPY;
+  });
+});
+const maxY=Math.max(...Object.values(pos).map(p=>p.y+p.h))+40;
+const maxX=40+Math.max(...depths)*(W+GAPX)+W+40;
+canvas.style.width=maxX+'px'; canvas.style.height=maxY+'px';
+svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
 // nodes
-T.forEach(t=>{
-  const d = document.createElement('div');
-  d.className='node'; d.id='n-'+t.n;
-  d.style.left=t.x+'px'; d.style.top=t.y+'px';
-  d.style.borderLeftColor = MOD[t.m].color;
-  const shown = t.cols.slice(0,6).map(c=>`<li class="${c[2]}">${c[0]} <span style="color:var(--mut)">· ${c[1]}</span></li>`).join('');
-  const more = t.cols.length>6?`<li class="more">… +${t.cols.length-6} more — click for all</li>`:'';
-  const outs = E.filter(e=>e[0]===t.n).length;
-  d.innerHTML = `<h3>${t.n}<span class="mod">${MOD[t.m].label}</span></h3><ul>${shown}${more}</ul><div class="rel">⤴ ${outs} outgoing relation${outs===1?'':'s'}</div>`;
-  d.onclick = ()=>select(t.n);
-  d.onmouseenter = ()=>highlight(t.n,true);
-  d.onmouseleave = ()=>highlight(t.n,false);
+D.forEach(t=>{
+  const [n,m,,cols]=t, p=pos[n];
+  const d=document.createElement('div');
+  d.className='tbl'; d.id='n-'+n; d.style.left=p.x+'px'; d.style.top=p.y+'px';
+  const rows=cols.map(c=>{
+    const k=c[2], pk=k.includes('P'), fk=k.includes('F'), uq=k.includes('U'), nn=k.includes('*');
+    const badges=`<span class="keys">${pk?'<span class="badge b-pk">PK</span>':''}${fk?'<span class="badge b-fk">FK</span>':''}${uq?'<span class="badge b-uq">UQ</span>':''}</span>`;
+    return `<li data-col="${c[0]}" class="${pk?'is-pk':''} ${fk?'is-fk':''}"><span class="cn">${c[0]}${nn?'<span class="nn"> ∗</span>':''}</span><span class="ct">${c[1].split('→')[0].trim()}</span>${badges}</li>`;
+  }).join('');
+  d.innerHTML=`<header style="border-left-color:${MODC[m]}"><span class="t">${n}</span><span class="m">${MODL[m]}</span></header><ul>${rows}</ul>`;
+  d.onclick=()=>select(n);
+  d.onmouseenter=()=>hl(n,true);
+  d.onmouseleave=()=>hl(n,false);
   canvas.appendChild(d);
 });
-function box(n){ const el=document.getElementById('n-'+n);
-  return {x:el.offsetLeft, y:el.offsetTop, w:el.offsetWidth, h:el.offsetHeight}; }
+const rowY=(n,col)=>{ const p=pos[n], t=byName[n];
+  const i=t[3].findIndex(c=>c[0]===col);
+  return p.y+HH+(i<0?0:i)*RH+RH/2; };
+// glyph painters (drawn pointing along +x, rotated into place)
+function glyph(g,x,y,ang,color){
+  if(g==='bar') return `<line x1="${x}" y1="${y-7}" x2="${x}" y2="${y+7}" stroke="${color}" stroke-width="2" transform="rotate(${ang} ${x} ${y})"/>`;
+  if(g==='ring') return `<circle cx="${x}" cy="${y}" r="5.5" fill="none" stroke="${color}" stroke-width="1.8"/>`;
+  if(g==='fork'){ const a=(ang*Math.PI)/180, L=14;
+    const t=(deg)=>{const r=((ang+deg)*Math.PI)/180;return [x+L*Math.cos(r),y+L*Math.sin(r)];};
+    const [x1,y1]=t(-28),[x2,y2]=t(0),[x3,y3]=t(28);
+    return `<path d="M${x},${y} L${x1},${y1} M${x},${y} L${x2},${y2} M${x},${y} L${x3},${y3}" stroke="${color}" stroke-width="1.8" fill="none"/>`; }
+  return '';
+}
 function draw(){
-  const W=1560,H=1420; svg.setAttribute('width',W); svg.setAttribute('height',H);
-  canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  let s = `<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#4d5d85" stroke-width="1.4"/></marker></defs>`;
-  E.forEach(([a,b,label])=>{
-    const A=box(a),B=box(b);
-    const x1=A.x+A.w/2, y1=A.y+A.h/2, x2=B.x+B.w/2, y2=B.y+B.h/2;
+  let s='';
+  E.forEach(([a,col,b,verb,opt,oto])=>{
+    const A=pos[a],B=pos[b];
+    const x1=A.x, y1=rowY(a,col);
+    const x2=B.x+B.w, y2=B.y+HH+RH/2; // parent PK row
     const mx=(x1+x2)/2;
-    s+=`<path data-a="${a}" data-b="${b}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#4d5d85" stroke-width="1.4" marker-end="url(#ar)"/>`;
+    s+=`<path data-a="${a}" data-b="${b}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#3a4a75" stroke-width="1.5"/>`;
+    // child end: many-fork (or single bar for 1-1)
+    s+=glyph(oto?'bar':'fork',x1-2,y1,180,'#7aa2ff');
+    // parent end: optional ring + one bar
+    const px=x2+2;
+    s+=glyph('bar',opt?px+11:px,y2,0,'#7aa2ff');
+    if(opt) s+=glyph('ring',px,y2,0,'#7aa2ff');
+    // verb pill
+    const lx=(x1+x2)/2, ly=(y1+y2)/2;
+    const w=verb.length*6.4+16;
+    s+=`<g data-a="${a}" data-b="${b}"><rect x="${lx-w/2}" y="${ly-10}" width="${w}" height="20" rx="10" fill="#0f1524" stroke="#2c3a5e"/><text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="10.5" fill="#8f97b0" font-family="Segoe UI">${verb}</text></g>`;
   });
   svg.innerHTML=s;
 }
-function neighbors(n){
-  const s=new Set([n]);
-  E.forEach(([a,b])=>{ if(a===n)s.add(b); if(b===n)s.add(a); });
-  return s;
-}
-function highlight(n,on){
-  const keep=neighbors(n);
-  document.querySelectorAll('.node').forEach(el=>{
-    el.classList.toggle('dim', on && !keep.has(el.id.slice(2)));
-  });
-  svg.querySelectorAll('path[data-a]').forEach(p=>{
-    const hot = (p.dataset.a===n||p.dataset.b===n);
-    p.setAttribute('stroke', on&&hot ? '#6ea8fe' : '#4d5d85');
-    p.setAttribute('stroke-width', on&&hot ? '2.4' : '1.4');
+function rel(n){ const s=new Set([n]); E.forEach(e=>{if(e[0]===n)s.add(e[2]); if(e[2]===n)s.add(e[0]);}); return s; }
+function hl(n,on){
+  const keep=rel(n);
+  document.querySelectorAll('.tbl').forEach(el=>el.classList.toggle('dim',on&&!keep.has(el.id.slice(2))));
+  svg.querySelectorAll('[data-a]').forEach(p=>{
+    const hot=p.dataset.a===n||p.dataset.b===n;
+    if(p.tagName==='path'){p.setAttribute('stroke',on&&hot?'#7aa2ff':'#3a4a75');p.setAttribute('stroke-width',on&&hot?'2.4':'1.5');}
+    else p.style.opacity=on&&!hot?'.12':'1';
   });
 }
 function select(n){
-  document.querySelectorAll('.node').forEach(el=>el.classList.remove('sel'));
-  document.getElementById('n-'+n).classList.add('sel');
-  const t=byName[n], m=MOD[t.m];
-  const ins=E.filter(e=>e[1]===n).map(e=>`<div class="rule">⤵ <b>${e[0]}</b> points here <span style="color:var(--mut)">(${e[2]})</span></div>`).join('');
-  const outs=E.filter(e=>e[0]===n).map(e=>`<div class="rule">⤴ points at <b>${e[1]}</b> <span style="color:var(--mut)">(${e[2]})</span></div>`).join('');
-  panel.innerHTML = `<h2>${t.n}</h2><span class="mchip" style="background:${m.color}">${m.label}</span>
-    <h4>📖 Business story</h4><p>${t.story}</p>
-    <h4>🧱 Columns (${t.cols.length})</h4><table>${t.cols.map(c=>`<tr><td class="c">${c[0]}</td><td class="t">${c[1]}</td></tr>`).join('')}</table>
-    <h4>⚖️ Rules enforced</h4>${t.rules.map(r=>`<div class="rule"><b>${r[0]}</b> — ${r[1]}</div>`).join('')}
-    <h4>🔗 Relationships</h4>${outs||ins||'<p style="color:var(--mut)">Package-owned trail — referenced polymorphically.</p>'}`;
+  selected=n;
+  document.querySelectorAll('.tbl').forEach(el=>el.classList.toggle('sel',el.id==='n-'+n));
+  const t=byName[n];
+  const ins=E.filter(e=>e[2]===n).map(e=>`<div class="rule">⤵ <b>${e[0]}.${e[1]}</b> → here <span style="color:var(--mut)">(${e[3]})</span></div>`).join('');
+  const outs=E.filter(e=>e[0]===n).map(e=>`<div class="rule">⤴ <b>${e[1]}</b> → <b>${e[2]}</b> <span style="color:var(--mut)">(${e[3]}${e[4]?', optional':''})</span></div>`).join('');
+  panel.innerHTML=`<h2>${n}</h2><span class="mchip" style="background:${MODC[t[1]]}">${MODL[t[1]]}</span>
+    <h4>Business story</h4><p>${t[4]}</p>
+    <h4>Columns (${t[3].length})</h4><table>${t[3].map(c=>`<tr><td class="c">${c[0]}</td><td class="t">${c[1]}${c[3]?' — '+c[3]:''}</td></tr>`).join('')}</table>
+    <h4>Rules</h4>${t[5].map(r=>`<div class="rule"><b>${r[0]}</b> — ${r[1]}</div>`).join('')}
+    <h4>Relationships</h4>${outs}${ins||''}`;
   panel.scrollTop=0;
 }
-function zoom(f){ scale=Math.min(2,Math.max(.4,scale*f)); canvas.style.transform=`scale(${scale})`; }
-function resetZoom(){ scale=1; canvas.style.transform='scale(1)'; }
+function zoom(f){scale=Math.min(2.2,Math.max(.35,scale*f));canvas.style.transform=`scale(${scale})`;}
+function resetZoom(){scale=1;canvas.style.transform='scale(1)';}
 document.getElementById('q').addEventListener('input',ev=>{
   const q=ev.target.value.toLowerCase().trim();
-  document.querySelectorAll('.node').forEach(el=>{
+  document.querySelectorAll('.tbl').forEach(el=>{
     if(!q){el.classList.remove('dim');return;}
     const t=byName[el.id.slice(2)];
-    const hay=(t.n+' '+t.cols.map(c=>c.join(' ')).join(' ')+' '+t.rules.map(r=>r.join(' ')).join(' ')+' '+t.story.replace(/<[^>]+>/g,'')).toLowerCase();
-    el.classList.toggle('dim', !hay.includes(q));
+    const hay=(t[0]+' '+t[3].map(c=>c.join(' ')).join(' ')+' '+t[5].map(r=>r.join(' ')).join(' ')+' '+t[4].replace(/<[^>]+>/g,'')).toLowerCase();
+    el.classList.toggle('dim',!hay.includes(q));
   });
 });
-window.addEventListener('load',()=>{ draw(); select('users'); });
-if(document.readyState==='complete'){ draw(); select('users'); }
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){selected=null;document.querySelectorAll('.tbl').forEach(el=>el.classList.remove('sel','dim'));}});
+draw(); select('users');
 </script>
 </body>
 </html>
