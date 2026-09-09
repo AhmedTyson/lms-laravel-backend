@@ -6,305 +6,732 @@
 <title>LMS Database · ERD v2.1</title>
 <style>
   :root{
-    --bg:#0a0d13; --bg2:#0f1420; --card:#131a2a; --card2:#0f1524;
-    --line:#222c46; --grid:#161d31;
-    --txt:#e8ebf4; --mut:#8f97b0; --faint:#5b6378;
-    --acc:#7aa2ff; --pk:#8fd6ff; --fk:#a9e8bd; --uq:#ffd479;
-    --auth:#4ade9e; --access:#e8b34b; --teach:#7aa2ff; --engage:#4fd6e0; --plat:#8f97b0;
+    --bg:#0a0c11; --bg2:#0d1017; --card:#12151f; --card2:#0e111a; --raised:#171b27;
+    --line:#232838; --line2:#2b3145; --grid:#141824;
+    --txt:#e6e8f0; --mut:#8a90a6; --faint:#565c72;
+    --acc:#6ea8fe; --pk:#7fd1ff; --fk:#8fe0b0; --uq:#f0c674; --danger:#f2777a;
+    --auth:#4fd18a; --access:#e0a83f; --courses:#6ea8fe; --enroll:#a685ff;
+    --assign:#d78fef; --quiz:#f27793; --prog:#3fcbd6; --notif:#7fcf8f; --plat:#8a90a6;
+    --radius-lg:16px; --radius-md:10px; --radius-sm:6px;
+    --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --font-mono:"JetBrains Mono","SF Mono",Consolas,"Liberation Mono",monospace;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%}
-  body{background:var(--bg);color:var(--txt);font:14px/1.6 -apple-system,"Segoe UI",Inter,Roboto,sans-serif;display:flex;flex-direction:column}
-  header{padding:26px 32px 18px;background:linear-gradient(180deg,#0e1322,#0a0d13);border-bottom:1px solid var(--line)}
-  .kicker{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
-  h1{margin:0;font-size:26px;font-weight:650;letter-spacing:-.01em}
-  h1 .v{font-size:13px;font-weight:500;color:var(--mut);border:1px solid var(--line);border-radius:20px;padding:3px 12px;margin-left:10px;vertical-align:middle}
-  header p.sub{margin:8px 0 0;color:var(--mut);max-width:1050px}
-  .stats{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 15px;font-size:12.5px;color:var(--mut)}
-  .stat b{color:var(--txt);font-size:15px;margin-right:7px;font-variant-numeric:tabular-nums}
-  .band{display:flex;gap:22px;margin:0;padding:0 32px;flex:0 0 auto}
-  .why{flex:1;margin:18px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;max-width:860px}
-  .why h2{margin:0 0 6px;font-size:14.5px;color:var(--acc)}
-  .why p{margin:6px 0;color:#c6cde2;font-size:13.5px}
-  .why code{background:#0a0d13;padding:1px 7px;border-radius:6px;color:var(--pk);font-size:12.5px}
-  .key{flex:0 0 auto;margin:18px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 20px;font-size:12.5px;color:var(--mut)}
-  .key h2{margin:0 0 8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  .key .row{display:flex;align-items:center;gap:10px;margin:5px 0}
-  .key svg{flex:0 0 64px}
-  .badge{font:700 10px/1 Consolas,monospace;padding:3px 6px;border-radius:5px;letter-spacing:.04em}
-  .b-pk{background:#12314a;color:var(--pk);border:1px solid #1f4d73}
-  .b-fk{background:#12352a;color:var(--fk);border:1px solid #1f5c40}
-  .b-uq{background:#3a2f14;color:var(--uq);border:1px solid #6b551f}
-  .toolbar{display:flex;gap:8px;align-items:center;padding:14px 32px 0}
-  .toolbar input{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 13px;width:300px;font-size:13px}
+  html,body{margin:0;min-height:100%}
+  body{background:var(--bg);color:var(--txt);font:14px/1.55 var(--font-ui);display:flex;flex-direction:column;min-height:100vh}
+  ::selection{background:#2a4a8a;color:#fff}
+  scrollbar,*{scrollbar-width:thin;scrollbar-color:#333a52 transparent}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#2a3044;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#3a4260}
+
+  header{padding:18px 28px 14px;background:linear-gradient(180deg,#0e121b,#0a0c11);border-bottom:1px solid var(--line);flex:0 0 auto}
+  .kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--auth);box-shadow:0 0 0 3px rgba(79,209,138,.15)}
+  h1{margin:0;font-size:23px;font-weight:650;letter-spacing:-.01em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  h1 .v{font-size:12.5px;font-weight:500;color:var(--mut);border:1px solid var(--line2);border-radius:20px;padding:3px 12px}
+  header p.sub{margin:8px 0 0;color:var(--mut);max-width:980px;font-size:13.5px}
+  .stats{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 13px;font-size:12px;color:var(--mut);display:flex;align-items:baseline;gap:6px}
+  .stat b{color:var(--txt);font-size:15px;font-variant-numeric:tabular-nums}
+
+  .band{display:flex;gap:14px;padding:14px 28px 0;flex:0 0 auto;flex-wrap:wrap}
+  .infocard{flex:1 1 300px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 18px;min-width:260px}
+  .infocard h2{margin:0 0 7px;font-size:12.5px;color:var(--acc);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+  .infocard h2 .car{font-size:11px;color:var(--faint);transition:transform .15s}
+  .infocard.collapsed h2 .car{transform:rotate(-90deg)}
+  .infocard .body{overflow:hidden}
+  .infocard.collapsed .body{display:none}
+  .infocard p{margin:6px 0;color:#c4cade;font-size:13px}
+  .infocard code{background:var(--card2);padding:1px 6px;border-radius:5px;color:var(--pk);font-family:var(--font-mono);font-size:12px}
+  .key .row{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12.5px;color:var(--mut)}
+  .key svg{flex:0 0 60px}
+  .badge{font:700 10px/1 var(--font-mono);padding:3px 6px;border-radius:5px;letter-spacing:.03em}
+  .b-pk{background:#0f2c3f;color:var(--pk);border:1px solid #1a4a63}
+  .b-fk{background:#0f2e22;color:var(--fk);border:1px solid #1c5138}
+  .b-uq{background:#332811;color:var(--uq);border:1px solid #5a4a1c}
+  .enumgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;font-size:12px}
+  .enumgrid .en{color:var(--mut)}
+  .enumgrid .en b{color:var(--txt);font-family:var(--font-mono);font-weight:600}
+  .enumgrid .vals{color:var(--faint)}
+
+  .toolbar{display:flex;gap:8px;align-items:center;padding:12px 28px;flex:0 0 auto;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+  .toolbar input{background:var(--card);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:8px 13px 8px 32px;width:250px;font-size:13px;background-image:none}
+  .searchwrap{position:relative}
+  .searchwrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.5}
   .toolbar input:focus{outline:none;border-color:var(--acc)}
-  .toolbar button{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:13px}
+  .toolbar button{background:var(--card);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:8px 12px;cursor:pointer;font-size:12.5px;display:flex;align-items:center;gap:6px;transition:border-color .12s,color .12s}
   .toolbar button:hover{border-color:var(--acc);color:var(--acc)}
-  .toolbar .hint{margin-left:auto;color:var(--faint);font-size:12px}
-  main{flex:1;display:flex;min-height:0;margin-top:12px;border-top:1px solid var(--line)}
-  #wrap{flex:1;overflow:auto;position:relative;background-image:radial-gradient(circle,var(--grid) 1px,transparent 1px);background-size:28px 28px}
-  #canvas{position:relative;transform-origin:0 0}
+  .toolbar button.active{border-color:var(--acc);color:var(--acc);background:#12203a}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line2);border-radius:20px;padding:5px 12px 5px 10px;font-size:11.5px;color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .12s;background:var(--card)}
+  .chip .sw{width:8px;height:8px;border-radius:50%}
+  .chip.on{color:var(--txt);border-color:var(--chipc,var(--acc));background:color-mix(in srgb, var(--chipc,var(--acc)) 14%, var(--card))}
+  .toolbar .sep{width:1px;height:22px;background:var(--line2);margin:0 2px}
+  .toolbar .hint{margin-left:auto;color:var(--faint);font-size:11.5px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+  .toolbar .hint kbd{background:var(--card);border:1px solid var(--line2);border-radius:4px;padding:1px 5px;font-family:var(--font-mono);font-size:10.5px;color:var(--mut)}
+  #focusBanner{display:none;align-items:center;gap:8px;background:#1b2a1c;border:1px solid #2f5a33;color:#a9e8bd;border-radius:9px;padding:7px 13px;font-size:12.5px}
+  #focusBanner button{background:transparent;border:1px solid #2f5a33;color:#a9e8bd;border-radius:7px;padding:3px 9px;cursor:pointer;font-size:11.5px}
+
+  main{flex:1 0 auto;display:flex;min-height:760px;height:84vh;max-height:1150px;position:relative}
+  #wrap{flex:1;overflow:hidden;position:relative;background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1.2px,transparent 1.2px);background-size:26px 26px;cursor:grab}
+  #wrap.grabbing{cursor:grabbing}
+  #canvas{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
   #edges{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
-  .tbl{position:absolute;width:264px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:opacity .15s,border-color .15s,box-shadow .15s}
-  .tbl:hover{border-color:#3b4a73}
-  .tbl.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 12px 32px rgba(0,0,0,.45)}
-  .tbl.dim{opacity:.15}
-  .tbl header{padding:10px 14px 9px;background:var(--card2);border-bottom:1px solid var(--line);border-left:4px solid var(--faint)}
-  .tbl header .t{font:650 13.5px Consolas,monospace;display:block}
-  .tbl header .m{font-size:10.5px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
-  .tbl ul{list-style:none;margin:0;padding:7px 0}
-  .tbl li{display:flex;justify-content:space-between;gap:8px;padding:3.5px 14px;font:12px Consolas,monospace;color:#c2c9dd}
-  .tbl li .ct{color:var(--faint);font-size:11px;white-space:nowrap}
-  .tbl li.is-pk{background:rgba(143,214,255,.06)}
+  .tbl{position:absolute;width:258px;background:var(--card);border:1px solid var(--line2);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;transition:opacity .18s,border-color .15s,box-shadow .15s,transform .15s}
+  .tbl:hover{border-color:#42537d;transform:translateY(-1px)}
+  .tbl.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 14px 34px rgba(0,0,0,.5)}
+  .tbl.dim{opacity:.12;pointer-events:none}
+  .tbl.match{box-shadow:0 0 0 1px var(--uq)}
+  .tbl .thead{padding:10px 13px 8px;background:var(--card2);border-bottom:1px solid var(--line);border-left:4px solid var(--faint);display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .tbl .thead .t{font:650 13px var(--font-mono);display:block}
+  .tbl .thead .m{font-size:10px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+  .tbl ul{list-style:none;margin:0;padding:6px 0}
+  .tbl li{display:flex;justify-content:space-between;gap:8px;padding:3.5px 13px;font:12px var(--font-mono);color:#bcc3d8}
+  .tbl li .ct{color:var(--faint);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tbl li.is-pk{background:rgba(127,209,255,.055)}
   .tbl li.is-fk .cn{color:var(--fk)}
   .tbl li.is-pk .cn{color:var(--pk);font-weight:700}
-  .tbl li .keys{display:flex;gap:4px;align-items:center}
-  .tbl .nn{color:var(--faint);font-size:10.5px}
-  aside{width:410px;min-width:410px;border-left:1px solid var(--line);background:var(--bg2);overflow-y:auto;padding:22px 24px 40px}
-  aside h2{margin:0;font:650 20px Consolas,monospace}
-  aside .mchip{display:inline-block;font-size:11px;font-weight:700;padding:3px 11px;border-radius:20px;margin:9px 0;color:#0a0d13}
-  aside h4{margin:18px 0 7px;font-size:11.5px;color:var(--acc);text-transform:uppercase;letter-spacing:.09em}
-  aside p{margin:6px 0;color:#c6cde2;font-size:13.5px}
-  aside table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .tbl li .keys{display:flex;gap:3px;align-items:center;flex:0 0 auto}
+  .tbl .nn{color:var(--faint);font-size:10px}
+  mark{background:#4a3a10;color:var(--uq);border-radius:3px;padding:0 1px}
+
+  aside{width:400px;min-width:400px;border-left:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column}
+  aside .ph{padding:18px 20px 0}
+  aside h2{margin:0;font:650 19px var(--font-mono)}
+  aside .mchip{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 11px;border-radius:20px;margin:8px 0 4px;color:#0a0c11}
+  .tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--line);margin-top:10px}
+  .tab{background:transparent;border:none;color:var(--faint);padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;font-family:var(--font-ui)}
+  .tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+  .tabpanels{flex:1;overflow-y:auto;padding:16px 20px 40px}
+  .tabpanel{display:none}
+  .tabpanel.on{display:block}
+  aside h4{margin:0 0 7px;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em}
+  aside p{margin:6px 0;color:#c4cade;font-size:13.5px}
+  aside table{width:100%;border-collapse:collapse;font-size:12px}
   aside td{border-bottom:1px solid var(--line);padding:5px 4px;vertical-align:top}
-  aside td.c{font-family:Consolas,monospace;color:var(--pk);white-space:nowrap}
-  aside td.t{color:var(--mut);font-size:11.5px}
-  .rule{background:#101a30;border:1px solid #26355a;border-radius:9px;padding:8px 11px;margin:6px 0;font-size:12.5px;color:#c6cde2}
+  aside td.c{font-family:var(--font-mono);color:var(--pk);white-space:nowrap}
+  aside td.t{color:var(--mut);font-size:11px}
+  aside td.dflt{color:var(--faint);font-size:10.5px;font-family:var(--font-mono)}
+  .rule{background:#0f1626;border:1px solid #202a44;border-radius:9px;padding:8px 11px;margin:6px 0;font-size:12.5px;color:#c4cade}
   .rule b{color:var(--uq)}
-  footer{padding:12px 32px;color:var(--faint);font-size:12px;border-top:1px solid var(--line)}
+  .idxrow{display:flex;justify-content:space-between;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:5px 0;font-size:11.5px}
+  .idxrow .cols{font-family:var(--font-mono);color:var(--txt)}
+  .idxrow .note{color:var(--faint);font-size:10.5px;text-align:right}
+  .actionrow{display:flex;gap:8px;margin:14px 0 4px}
+  .actionrow button{flex:1;background:var(--card2);border:1px solid var(--line2);color:var(--txt);border-radius:8px;padding:8px;font-size:12px;cursor:pointer}
+  .actionrow button:hover{border-color:var(--acc);color:var(--acc)}
+  .empty{color:var(--faint);font-size:13px;padding:40px 6px;text-align:center;line-height:1.7}
+  pre.snippet{background:#080a0f;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11.5px;color:#b6bdd4;overflow-x:auto;white-space:pre}
+
+  #minimap{position:absolute;right:14px;bottom:14px;width:190px;height:130px;background:rgba(13,16,23,.9);border:1px solid var(--line2);border-radius:10px;backdrop-filter:blur(3px);overflow:hidden;cursor:pointer}
+  #minimap svg{width:100%;height:100%}
+  #minimap .mv{fill:rgba(110,168,254,.12);stroke:var(--acc);stroke-width:1.5}
+  #minimap .mn{fill:#3a4260}
+
+  footer{padding:9px 28px;color:var(--faint);font-size:11.5px;border-top:1px solid var(--line);flex:0 0 auto}
   footer code{color:var(--mut)}
+
+  @media (max-width:1000px){ aside{display:none} #minimap{display:none} }
 </style>
 </head>
 <body>
 <header>
-  <div class="kicker">Learning Management System · Laravel / MySQL · spec v2.1</div>
-  <h1>Entity–Relationship Diagram <span class="v">19 tables · IE / crow's-foot notation</span></h1>
-  <p class="sub">Read left → right: independent entities first, dependents later. Every connector runs from a foreign-key row to its parent's primary key — fork means <i>many</i>, bar means <i>one</i>, ring means <i>optional</i>. Click a table for its story, columns and rules.</p>
-  <div class="stats">
-    <div class="stat"><b>19</b>tables</div>
-    <div class="stat"><b>26</b>relationships</div>
-    <div class="stat"><b>8</b>race-closing unique indexes</div>
-    <div class="stat"><b>1</b>append-only ledger</div>
-    <div class="stat"><b>0</b>tables for Reporting — read-only</div>
-  </div>
+  <div class="kicker"><span class="dot"></span>Learning Management System · Laravel / MySQL · spec v2.1</div>
+  <h1 id="titleLine">Entity–Relationship Diagram <span class="v" id="titleTag">— tables · crow's-foot notation</span></h1>
+  <p class="sub">Read left → right: independent entities first, dependents later. Each connector runs from a foreign key to its parent's primary key — fork = many, single bar = one, ring = optional (nullable FK). Hover a table to trace its relations, click for full detail, double-click to isolate it with its neighbors.</p>
+  <div class="stats" id="statsRow"></div>
 </header>
 
 <div class="band">
-  <div class="why">
-    <h2>Why <code>users</code> is split across two migrations</h2>
-    <p><b>Framework identity vs. LMS domain.</b> Root <code>0001_…_create_users_table</code> is pristine Laravel — name, email, password. Auth-module <code>120000_add_manager_fields…</code> adds LMS citizenship: <code>manager_id</code> (authority tree, RULE-002) and <code>approval_status</code> (instructor gate, RULE-010).</p>
-    <p>Root stays stock (upgrades, Filament, familiar ground) · domain diffs live with their owner in <code>Modules/Auth</code> · migration order narrates boot order. One combined migration would weld LMS concepts into framework scaffolding.</p>
+  <div class="infocard why">
+    <h2 onclick="toggleCard(this)">Why <code>users</code> is split across two migrations <span class="car">▾</span></h2>
+    <div class="body">
+      <p><b>Framework identity vs. LMS domain.</b> Root <code>0001_…_create_users_table</code> is pristine Laravel — name, email, password. Auth-module <code>120000_add_manager_fields…</code> layers on LMS citizenship: <code>manager_id</code> (authority tree, RULE-002) and <code>approval_status</code> (instructor gate, RULE-010).</p>
+      <p>Root stays stock (framework upgrades, Filament reads it, familiar to new devs) · domain diffs live with their owner in <code>Modules/Auth</code> · migration order narrates boot order. One combined migration would weld LMS concepts into framework scaffolding.</p>
+    </div>
   </div>
-  <div class="key">
-    <h2>Notation key</h2>
-    <div class="row"><svg width="64" height="14"><line x1="4" y1="7" x2="40" y2="7" stroke="#7aa2ff" stroke-width="1.6"/><path d="M40,2 L52,7 L40,12" fill="none" stroke="#7aa2ff" stroke-width="1.6"/><line x1="56" y1="2" x2="56" y2="12" stroke="#7aa2ff" stroke-width="1.8"/></svg><span>one → many (FK row to parent PK)</span></div>
-    <div class="row"><svg width="64" height="14"><line x1="4" y1="7" x2="34" y2="7" stroke="#7aa2ff" stroke-width="1.6"/><circle cx="42" cy="7" r="5" fill="none" stroke="#7aa2ff" stroke-width="1.6"/><line x1="50" y1="2" x2="50" y2="12" stroke="#7aa2ff" stroke-width="1.8"/></svg><span>optional FK (nullable) → one</span></div>
-    <div class="row"><span class="badge b-pk">PK</span><span>primary key</span><span class="badge b-fk">FK</span><span>foreign key</span><span class="badge b-uq">UQ</span><span>unique</span></div>
-    <div class="row"><span class="nn" style="color:var(--faint)">∗ = NOT NULL column</span></div>
+  <div class="infocard key">
+    <h2 onclick="toggleCard(this)">Notation key <span class="car">▾</span></h2>
+    <div class="body">
+      <div class="row"><svg width="60" height="14"><line x1="4" y1="7" x2="36" y2="7" stroke="#6ea8fe" stroke-width="1.6"/><path d="M36,2 L48,7 L36,12" fill="none" stroke="#6ea8fe" stroke-width="1.6"/><line x1="52" y1="2" x2="52" y2="12" stroke="#6ea8fe" stroke-width="1.8"/></svg><span>one → many</span></div>
+      <div class="row"><svg width="60" height="14"><line x1="4" y1="7" x2="30" y2="7" stroke="#6ea8fe" stroke-width="1.6"/><circle cx="38" cy="7" r="5" fill="none" stroke="#6ea8fe" stroke-width="1.6"/><line x1="46" y1="2" x2="46" y2="12" stroke="#6ea8fe" stroke-width="1.8"/></svg><span>optional (nullable) FK</span></div>
+      <div class="row"><span class="badge b-pk">PK</span><span>primary&nbsp;key</span><span class="badge b-fk">FK</span><span>foreign&nbsp;key</span><span class="badge b-uq">UQ</span><span>part of unique index</span></div>
+      <div class="row" style="color:var(--faint)">∗ column is NOT NULL · loop-shaped edge on a table = self-reference</div>
+    </div>
+  </div>
+  <div class="infocard enums">
+    <h2 onclick="toggleCard(this)">Enum reference <span class="car">▾</span></h2>
+    <div class="body"><div class="enumgrid" id="enumGrid"></div></div>
   </div>
 </div>
 
 <div class="toolbar">
-  <input id="q" placeholder="Search tables, columns, rules — e.g. threshold, morph, RULE-014">
-  <button onclick="zoom(1.2)">+ zoom</button>
-  <button onclick="zoom(0.83)">− zoom</button>
-  <button onclick="resetZoom()">reset</button>
-  <span class="hint">hover highlights relations · click pins details · Esc clears</span>
+  <div class="searchwrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a90a6" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="q" placeholder="Search tables, columns, rules… (/)">
+  </div>
+  <div class="chips" id="moduleChips"></div>
+  <div class="sep"></div>
+  <button onclick="zoomBy(1.2)" title="Zoom in">+</button>
+  <button onclick="zoomBy(0.83)" title="Zoom out">−</button>
+  <button onclick="fitToView()" title="Fit all tables">⤢ fit</button>
+  <button onclick="resetView()" title="Reset zoom">reset</button>
+  <div id="focusBanner"><span>🔎 Focused on <b id="focusName"></b></span><button onclick="exitFocus()">Exit focus</button></div>
+  <span class="hint"><kbd>/</kbd> search &nbsp;<kbd>Esc</kbd> clear &nbsp;drag to pan &nbsp;scroll to zoom</span>
 </div>
 
 <main>
-  <div id="wrap"><div id="canvas"><svg id="edges"></svg></div></div>
-  <aside id="panel"></aside>
+  <div id="wrap">
+    <div id="canvas"><svg id="edges"></svg></div>
+    <div id="minimap"><svg id="mmsvg"></svg></div>
+  </div>
+  <aside>
+    <div class="ph" id="panelHead"></div>
+    <div class="tabs" id="panelTabs"></div>
+    <div class="tabpanels" id="panelBody"></div>
+  </aside>
 </main>
-<footer>Sources: <code>docs/schema.dbml</code> (paste into dbdiagram.io) · <code>docs/DATABASE.md</code> (GitHub-native Mermaid) · spec <code>docs/LMS_Laravel_BRD_PRD_v2_1_full.md</code> v2.1</footer>
+<footer>Sources cross-checked: <code>docs/schema.dbml</code> (source of truth) · <code>docs/DATABASE.md</code> (Mermaid) · <code>docs/erd.html</code> — 19 tables, 27 foreign-key relationships, 8 composite race-closing unique indexes.</footer>
 
 <script>
-// [table, module, depth, columns:[name,type,flags,note], story, rules:[id,text]]
-// flags: P=pk F=fk U=unique-part *=notnull
-const D = [
-["users","auth",0,[["id","bigint","P*"],["name","varchar(255)","*"],["email","varchar(255)","*U"],["email_verified_at","timestamp",""],["password","varchar(255)","*"],["manager_id","bigint→users","F"],["approval_status","varchar(20)","","pending|approved, instructor-only"]],
- "Population registry: proves <i>who you are</i>, says nothing about what you may do. One <b>manager_id</b> per person forms a strict Admin-rooted tree; students sit outside it (always NULL).",
- [["RULE-002","One manager each — a strict tree, never a web."],["RULE-010","Instructor's manager set at <b>approval</b>, not registration."],["ADR-007","Acyclicity enforced by transactional service check — MySQL cannot police a tree."],["ARCH-005","Auto-increment IDs, no UUIDs."]]],
-["activity_log","plat",0,[["id","bigint","P*"],["log_name","varchar(255)",""],["description","text","*"],["subject_type/id","varchar/bigint",""],["causer_type/id","varchar/bigint",""],["event","varchar(255)",""],["properties","json",""],["batch_uuid","uuid",""]],
- "Building CCTV: what happened to what, by whom, with before/after payloads. Package-owned (Spatie) so it never drifts. Division of labor: <b>permission_grants is the court record</b> for power moves; this films everything else.",
- [["ADR-006","Published migration, never hand-written — reproduced in spec so it never looks undocumented."],["RULE-005","Audit ledger jointly with permission_grants."]]],
-["groups","access",1,[["id","bigint","P*"],["owner_id","bigint→users","F*"],["name","varchar(255)","*"]],
- "A room, not a rank. Names may repeat (rooms, not identities) because a group grants nothing — it is a <b>scope</b> permissions can live inside. The owner holds the key; on removal it passes to their manager, else any Admin.",
- [["RULE-007/008","Permissions global <b>or</b> scoped to one group."],["RULE-011","No name uniqueness."],["RULE-012","Ownership succession on owner removal."]]],
-["courses","courses",1,[["id","bigint","P*"],["instructor_id","bigint→users","F*"],["title","varchar(255)","*"],["category","varchar(255)","*"],["description","text",""],["status","varchar(20)","*"],["published_at","timestamp",""],["archived_at","timestamp",""]],
- "Instructor's promise: draft (private sketchpad) → published (commitment, students inside) → archived (history). One direction only — un-publishing would strand students. Touching published structure needs an elevated permission most instructors lack.",
- [["RULE-013","Strictly linear lifecycle."],["RULE-001","Published-content edits need elevated permission."],["Archive-guard","Blocked while active enrollments exist."],["UQ","(instructor_id, title)."]]],
-["notifications","notif",1,[["id","bigint","P*"],["user_id","bigint→users","F*"],["type","varchar(255)","*"],["data","json","*"],["read_at","timestamp",""]],
- "Mailbox. Domain events become queued rows — never sent inside the request, so slow mail can't freeze a grading click. Read/unread is a timestamp; you only ever see your own mail.",
- [["Queued","Delivery via queue, never inline."],["Privacy","(user_id, read_at) index; row-level ownership."]]],
-["group_members","access",2,[["id","bigint","P*"],["group_id","bigint→groups","F*"],["user_id","bigint→users","F*"],["joined_at","timestamp","*"]],
- "Guest list of each room — door entry and <i>nothing else</i>. Kills the classic bug 'in the group ⇒ allowed': membership and permission are different facts in different tables.",
- [["RULE-009","Membership ≠ permission. Zero capabilities granted."],["UQ","(group_id, user_id)."]]],
-["permission_grants","access",2,[["id","bigint","P*"],["granter_id","bigint→users","F*"],["grantee_id","bigint→users","F*"],["group_id","bigint→groups","F"],["permission_name","varchar(255)","*"],["action","varchar(20)","*"],["granted_at","timestamp",""],["revoked_at","timestamp",""]],
- "Court stenographer of power: every grant/revoke a permanent row — <b>never edited, never deleted</b>; revokes are new rows. Two laws per row: give only downward, give only what you hold. Years later the full chain replays exactly.",
- [["RULE-003","Subordinate-only delegation."],["RULE-004","Ceiling rule, global and group-scoped."],["RULE-005","Append-only, no updated_at."],["ADR-008","Explicit group context per check — ambient state banned."]]],
-["lessons","courses",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["content_reference","text",""],["order","uint","*"]],
- "Numbered chapters; lesson 3 stays lesson 3 even after renumbering, because progress points at <b>IDs, not positions</b>. Videos live outside (external pointer); this table holds structure.",
- [["RULE-014","(course_id, order) unique, DB-enforced."],["Reorder-safe","Completions reference component_id."]]],
-["enrollments","enroll",2,[["id","bigint","P*"],["student_id","bigint→users","F*"],["course_id","bigint→courses","F*"],["status","varchar(20)","*"],["enrolled_at","timestamp",""],["completed_at","timestamp",""]],
- "One seat per student per course — the handshake everything hangs off (submissions, attempts, progress). The unique index is a bouncer: double-clicks on two servers the same millisecond still yield one row.",
- [["Once-only","(student_id, course_id) unique closes the race at DB level."]]],
-["assignments","assign",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["description","text",""],["due_date","timestamp","*"],["resubmission_allowed","bool","*"],["max_score","decimal(6,2)","*"],["passing_threshold","decimal(5,2)","*"]],
- "Free-form challenges: out of 20, 150, anything — like Google Forms, not a 0–100 straitjacket. Passing = percentage of <b>this assignment's own max</b>. Submission format lives in prose description, deliberately not a rigid type column.",
- [["RULE-018 rev","Best attempt ≥ threshold % of max_score."],["due_date","Required, future-dated (app-validated)."]]],
-["quizzes","quiz",2,[["id","bigint","P*"],["course_id","bigint→courses","F*"],["title","varchar(255)","*"],["opens_at","timestamp","*"],["closes_at","timestamp","*"],["max_attempts","uint","*"],["passing_threshold","decimal(5,2)","*"]],
- "Exam room with a timer: opens/closes on schedule, capped sittings, pass mark = percentage of <b>live total points</b> recomputed from questions — adding a question never silently breaks the bar. Late arrivals refused at the door (checked at start).",
- [["RULE-018 rev","% of SUM(questions.points), dynamic, never cached."],["Window","Enforced at attempt-start."]]],
-["submissions","assign",3,[["id","bigint","P*"],["assignment_id","bigint→assign","F*"],["enrollment_id","bigint→enroll","F*"],["attempt_number","uint","*"],["file_path","varchar(255)",""],["content","text",""],["submitted_at","timestamp","*"],["is_late","bool","*"],["grade","decimal(5,2)",""],["graded_by","bigint→users","F"],["graded_at","timestamp",""],["status","varchar(20)","*"]],
- "Every attempt kept forever, graded independently — deliberately <b>no grade-of-record</b>, so nothing is ever lost and disputes end with evidence. Lateness stamped per attempt. With resubmission off, the attempt-number unique is the bouncer against racing double-submits.",
- [["RULE-015","Resubmit only if allowed; unique triple stops duplicates."],["RULE-016","All attempts preserved, independently gradable."]]],
-["questions","quiz",3,[["id","bigint","P*"],["quiz_id","bigint→quizzes","F*"],["prompt","text","*"],["type","varchar(30)","*"],["order","uint","*"],["points","decimal(6,2)","*"],["correct_boolean","bool",""],["correct_number","decimal(10,4)",""],["numeric_tolerance","decimal(10,4)",""]],
- "Weighted scorable moments: a 50-question quiz can total 150 points (0.5, 2, 5). Five machine-gradable flavors; type-specific columns stay NULL unless needed. Warm-ups count little, killers count a lot.",
- [["v2.1 points","Mixed weights inside one quiz."],["SCOPE-005","Five auto-scorable types."],["RULE-017","Short answers accept variants."]]],
-["attempts","quiz",3,[["id","bigint","P*"],["quiz_id","bigint→quizzes","F*"],["enrollment_id","bigint→enroll","F*"],["attempt_number","uint","*"],["score","decimal(5,2)",""],["started_at","timestamp","*"],["submitted_at","timestamp",""]],
- "One sitting, one student, one quiz. NULL score = still in progress. The unique triple is the third bouncer — no duplicate attempt numbers however furiously students retry.",
- [["Cap","max_attempts enforced."],["Race-proof","(quiz, enrollment, attempt) unique."]]],
-["progress_records","prog",3,[["enrollment_id","bigint→enroll","P*F"],["percent_complete","decimal(5,2)","*"],["completed_at","timestamp",""]],
- "The dashboard number ('64% through') — a cached computation, one row per seat, refreshed on every completion. All components done ⇒ course done. Students check obsessively; that's the point.",
- [["1-to-1","PK is the enrollment FK — exactly one row per seat."]]],
-["component_completions","prog",3,[["id","bigint","P*"],["enrollment_id","bigint→enroll","F*"],["component_type","varchar(30)","*"],["component_id","bigint","*"],["completed_at","timestamp",""],["is_override","bool","*"],["overridden_by","bigint→users","F"]],
- "Gold stars via <b>polymorphism</b>: one table points at lessons, assignments and quizzes through <code>$completion-&gt;component</code> — no type-switches (ADR-010). Earned by beating the threshold, or pinned manually as a recorded override with the overrider named, never faked as a pass.",
- [["RULE-018 rev","Best attempt ≥ component's own % total."],["RULE-019","Attributed instructor override."],["ADR-010","morphTo/morphMany; integrity app-enforced."]]],
-["question_options","quiz",4,[["id","bigint","P*"],["question_id","bigint→questions","F*"],["label","varchar(255)","*"],["is_correct","bool","*"],["order","uint","*"]],
- "A/B/C/D checkboxes pre-marked right or wrong. Grading becomes pure comparison — no judgment calls at this layer.",
- [["Auto-grade","Selections compared to is_correct flags."]]],
-["question_accepted_answers","quiz",4,[["id","bigint","P*"],["question_id","bigint→questions","F*"],["answer_text","varchar(255)","*"]],
- "'Yes, that counts' phrasings for short answers — absorbing language messiness so grading stays fair without humans reading every response.",
- [["RULE-017","Multiple variants per question."]]],
-["attempt_answers","quiz",4,[["id","bigint","P*"],["attempt_id","bigint→attempts","F*"],["question_id","bigint→questions","F*"],["selected_option_ids","json",""],["answer_boolean","bool",""],["answer_text","varchar(255)",""],["answer_number","decimal(10,4)",""],["is_correct","bool","*"]],
- "What was actually answered, question by question, each pre-judged right or wrong. Per-answer verdicts (not just totals) power score review, appeals and analytics.",
- [["One row","(attempt, question) unique — exactly one answer per sitting."]]],
+/* ============================== DATA ==============================
+   Cross-checked column-by-column against schema.dbml (the declared
+   source of truth) and DATABASE.md. Every FK, unique index, default
+   value and nullability below matches the DBML file, including the
+   users.manager_id self-reference the original static diagram omitted. */
+
+const MODULES = {
+  auth:{label:'Auth · Identity', color:'var(--auth)'},
+  access:{label:'Access Mgmt', color:'var(--access)'},
+  courses:{label:'Courses', color:'var(--courses)'},
+  enroll:{label:'Enrollment', color:'var(--enroll)'},
+  assign:{label:'Assignments', color:'var(--assign)'},
+  quiz:{label:'Quizzes', color:'var(--quiz)'},
+  prog:{label:'Progress', color:'var(--prog)'},
+  notif:{label:'Notifications', color:'var(--notif)'},
+  plat:{label:'Platform', color:'var(--plat)'},
+};
+
+const ENUMS = [
+  ['approval_status', ['pending','approved']],
+  ['course_status', ['draft','published','archived']],
+  ['enrollment_status', ['active','completed']],
+  ['grant_action', ['granted','revoked']],
+  ['question_type', ['single_choice','multiple_choice','true_false','short_answer','numeric']],
+  ['submission_status', ['submitted','graded']],
+  ['component_type', ['lesson','assignment','quiz']],
 ];
-const MODC = {auth:"#4ade9e",access:"#e8b34b",courses:"#7aa2ff",enroll:"#9d7bff",assign:"#c792ea",quiz:"#ff7a93",prog:"#4fd6e0",notif:"#7bd88f",plat:"#8f97b0"};
-const MODL = {auth:"Auth · Identity",access:"AccessManagement",courses:"Courses",enroll:"Enrollment",assign:"Assignments",quiz:"Quizzes",prog:"Progress",notif:"Notifications",plat:"Platform"};
-// edges: [child, childCol, parent, verb, optionalParent, oneToOne]
-const E = [
-["groups","owner_id","users","owned by",0,0],["group_members","group_id","groups","lists",0,0],
-["group_members","user_id","users","joins",0,0],["permission_grants","granter_id","users","delegates",0,0],
-["permission_grants","grantee_id","users","empowers",0,0],["permission_grants","group_id","groups","scoped in",1,0],
-["courses","instructor_id","users","authored by",0,0],["lessons","course_id","courses","chapters of",0,0],
-["enrollments","student_id","users","seats",0,0],["enrollments","course_id","courses","fills",0,0],
-["assignments","course_id","courses","set in",0,0],["submissions","assignment_id","assignments","answers",0,0],
-["submissions","enrollment_id","enrollments","files",0,0],["submissions","graded_by","users","graded by",1,0],
-["quizzes","course_id","courses","examines",0,0],["questions","quiz_id","quizzes","asks",0,0],
-["question_options","question_id","questions","offers",0,0],["question_accepted_answers","question_id","questions","accepts",0,0],
-["attempts","quiz_id","quizzes","sits",0,0],["attempts","enrollment_id","enrollments","taken by",0,0],
-["attempt_answers","attempt_id","attempts","records",0,0],["attempt_answers","question_id","questions","targets",0,0],
-["progress_records","enrollment_id","enrollments","summarises",0,1],["component_completions","enrollment_id","enrollments","stars",0,0],
-["component_completions","overridden_by","users","pinned by",1,0],["notifications","user_id","users","alerts",0,0],
+
+// col: [name, type, pk, fk, nn, default, note]
+function c(name,type,opts={}){ return {n:name,t:type,pk:!!opts.pk,fk:!!opts.fk,nn:!!opts.nn,def:opts.def||null,note:opts.note||null}; }
+
+const TABLES = [
+{name:'users', module:'auth', depth:0,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('name','varchar(255)',{nn:1}), c('email','varchar(255)',{nn:1,note:'unique'}),
+    c('email_verified_at','timestamp'), c('password','varchar(255)',{nn:1}),
+    c('manager_id','bigint → users.id',{fk:1,note:'RULE-002, self-ref'}), c('approval_status','enum: approval_status',{note:'RULE-010, instructor-only'}) ],
+  idx:[ {cols:['email'],unique:true}, {cols:['manager_id'],unique:false} ],
+  story:"Population registry: proves <b>who you are</b>, says nothing about what you may do. One <b>manager_id</b> per person forms a strict Admin-rooted tree; students sit outside it (always NULL).",
+  rules:[['RULE-002','One manager each — a strict tree, never a web.'],['RULE-010',"Instructor's manager is set at approval, not registration."],['ADR-007','Acyclicity is enforced by a transactional service check — MySQL cannot police a tree.'],['ARCH-005','Auto-increment IDs, no UUIDs.']]},
+
+{name:'activity_log', module:'plat', depth:0,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('log_name','varchar(255)'), c('description','text',{nn:1}),
+    c('subject_type','varchar(255)'), c('subject_id','bigint'), c('causer_type','varchar(255)'), c('causer_id','bigint'),
+    c('event','varchar(255)'), c('properties','json'), c('batch_uuid','varchar(36)'), c('created_at','timestamp'), c('updated_at','timestamp') ],
+  idx:[],
+  story:"CCTV for everything: what happened, to what, by whom, with before/after payloads. Package-owned (spatie/laravel-activitylog) so it never drifts. Division of labor: <b>permission_grants</b> stays the court record for power moves; this films everything else.",
+  rules:[['ADR-006','Published migration, never hand-written — reproduced in spec so it never looks undocumented.'],['RULE-005','Audit ledger jointly with permission_grants.']]},
+
+{name:'groups', module:'access', depth:1,
+  cols:[ c('id','bigint',{pk:1,nn:1,note:'also the Spatie team_id'}), c('owner_id','bigint → users.id',{fk:1,nn:1}), c('name','varchar(255)',{nn:1,note:'RULE-011, not unique'}) ],
+  idx:[ {cols:['owner_id'],unique:false} ],
+  story:"A room, not a rank. Names may repeat because a group grants nothing — it is a <b>scope</b> permissions can live inside. The owner holds the key; on removal it passes to their manager, else any Admin.",
+  rules:[['RULE-007/008','Permissions are global or scoped to one group.'],['RULE-011','No name uniqueness.'],['RULE-012','Ownership succession on owner removal.']]},
+
+{name:'courses', module:'courses', depth:1,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('instructor_id','bigint → users.id',{fk:1,nn:1}), c('title','varchar(255)',{nn:1}),
+    c('category','varchar(255)',{nn:1}), c('description','text'), c('status','enum: course_status',{nn:1,def:'draft'}),
+    c('published_at','timestamp'), c('archived_at','timestamp'), c('created_at','timestamp',{nn:1}), c('updated_at','timestamp') ],
+  idx:[ {cols:['instructor_id','title'],unique:true}, {cols:['status'],unique:false}, {cols:['instructor_id'],unique:false} ],
+  story:"Instructor's promise: draft (private sketchpad) → published (commitment, students inside) → archived (history). One direction only — un-publishing would strand students. Touching published structure needs an elevated permission most instructors lack.",
+  rules:[['RULE-013','Strictly linear lifecycle.'],['RULE-001','Published-content edits need elevated permission.'],['Archive-guard','Blocked while active enrollments exist.']]},
+
+{name:'notifications', module:'notif', depth:1,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('user_id','bigint → users.id',{fk:1,nn:1}), c('type','varchar(255)',{nn:1,note:'maps to a domain event'}),
+    c('data','json',{nn:1}), c('read_at','timestamp'), c('created_at','timestamp',{nn:1,def:'now()'}) ],
+  idx:[ {cols:['user_id','read_at'],unique:false} ],
+  story:"Mailbox. Domain events become queued rows — never sent inside the request, so slow mail can't freeze a grading click. Read/unread is a timestamp; you only ever see your own mail.",
+  rules:[['Queued','Delivery via queue, never inline.'],['Privacy','(user_id, read_at) index; row-level ownership.']]},
+
+{name:'group_members', module:'access', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('group_id','bigint → groups.id',{fk:1,nn:1}), c('user_id','bigint → users.id',{fk:1,nn:1}), c('joined_at','timestamp',{nn:1,def:'now()'}) ],
+  idx:[ {cols:['group_id','user_id'],unique:true,note:'RULE-009 dedupe'}, {cols:['user_id'],unique:false} ],
+  story:"Guest list of each room — door entry and nothing else. Kills the classic bug 'in the group ⇒ allowed': membership and permission are different facts in different tables.",
+  rules:[['RULE-009','Membership ≠ permission. Zero capabilities granted.']]},
+
+{name:'permission_grants', module:'access', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('granter_id','bigint → users.id',{fk:1,nn:1}), c('grantee_id','bigint → users.id',{fk:1,nn:1}),
+    c('group_id','bigint → groups.id',{fk:1,note:'NULL = global grant'}), c('permission_name','varchar(255)',{nn:1}), c('action','enum: grant_action',{nn:1}),
+    c('granted_at','timestamp'), c('revoked_at','timestamp'), c('created_at','timestamp',{nn:1,def:'now()',note:'no updated_at'}) ],
+  idx:[ {cols:['grantee_id'],unique:false}, {cols:['granter_id','grantee_id'],unique:false}, {cols:['group_id'],unique:false} ],
+  story:"Court stenographer of power: every grant/revoke a permanent row — <b>never edited, never deleted</b>; revokes are new rows. Two laws per row: give only downward, give only what you hold.",
+  rules:[['RULE-003','Subordinate-only delegation.'],['RULE-004','Ceiling rule, global and group-scoped.'],['RULE-005','Append-only, no updated_at.'],['ADR-008','Explicit group context per check — ambient state banned.']]},
+
+{name:'lessons', module:'courses', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('course_id','bigint → courses.id',{fk:1,nn:1}), c('title','varchar(255)',{nn:1}),
+    c('content_reference','text',{note:'external pointer, video hosted elsewhere'}), c('order','int',{nn:1}) ],
+  idx:[ {cols:['course_id','order'],unique:true,note:'RULE-014'}, {cols:['course_id'],unique:false} ],
+  story:"Numbered chapters; lesson 3 stays lesson 3 even after renumbering, because progress points at <b>IDs, not positions</b>.",
+  rules:[['RULE-014','(course_id, order) unique, DB-enforced.'],['Reorder-safe','Completions reference component_id.']]},
+
+{name:'enrollments', module:'enroll', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('student_id','bigint → users.id',{fk:1,nn:1}), c('course_id','bigint → courses.id',{fk:1,nn:1}),
+    c('status','enum: enrollment_status',{nn:1,def:'active'}), c('enrolled_at','timestamp'), c('completed_at','timestamp') ],
+  idx:[ {cols:['student_id','course_id'],unique:true,note:'closes double-enroll race'}, {cols:['course_id'],unique:false}, {cols:['student_id'],unique:false} ],
+  story:"One seat per student per course — the handshake everything hangs off (submissions, attempts, progress). The unique index is a bouncer: double-clicks on two servers the same millisecond still yield one row.",
+  rules:[['Once-only','(student_id, course_id) unique closes the race at DB level.']]},
+
+{name:'assignments', module:'assign', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('course_id','bigint → courses.id',{fk:1,nn:1}), c('title','varchar(255)',{nn:1}),
+    c('description','text',{note:'doubles as submission instructions'}), c('due_date','timestamp',{nn:1}),
+    c('resubmission_allowed','boolean',{nn:1,def:'false'}), c('max_score','decimal(6,2)',{nn:1,note:'free-form ceiling'}), c('passing_threshold','decimal(5,2)',{nn:1,note:'% of max_score'}) ],
+  idx:[ {cols:['course_id'],unique:false}, {cols:['due_date'],unique:false} ],
+  story:"Free-form challenges: out of 20, 150, anything — like Google Forms, not a 0–100 straitjacket. Passing = percentage of <b>this assignment's own max</b>.",
+  rules:[['RULE-018 rev','Best attempt ≥ threshold % of max_score.'],['due_date','Required, future-dated (app-validated).']]},
+
+{name:'quizzes', module:'quiz', depth:2,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('course_id','bigint → courses.id',{fk:1,nn:1}), c('title','varchar(255)',{nn:1}),
+    c('opens_at','timestamp',{nn:1}), c('closes_at','timestamp',{nn:1,note:'window checked at attempt-start'}),
+    c('max_attempts','int',{nn:1,def:'1'}), c('passing_threshold','decimal(5,2)',{nn:1,note:'% of live SUM(points)'}) ],
+  idx:[ {cols:['course_id'],unique:false}, {cols:['opens_at','closes_at'],unique:false} ],
+  story:"Exam room with a timer: opens/closes on schedule, capped sittings, pass mark = percentage of <b>live total points</b> recomputed from questions — adding a question never silently breaks the bar.",
+  rules:[['RULE-018 rev','% of SUM(questions.points), dynamic, never cached.'],['Window','Enforced at attempt-start.']]},
+
+{name:'submissions', module:'assign', depth:3,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('assignment_id','bigint → assignments.id',{fk:1,nn:1}), c('enrollment_id','bigint → enrollments.id',{fk:1,nn:1}),
+    c('attempt_number','int',{nn:1}), c('file_path','varchar(255)'), c('content','text'), c('submitted_at','timestamp',{nn:1,def:'now()'}),
+    c('is_late','boolean',{nn:1,def:'false'}), c('grade','decimal(5,2)'), c('graded_by','bigint → users.id',{fk:1}), c('graded_at','timestamp'),
+    c('status','enum: submission_status',{nn:1,def:'submitted'}) ],
+  idx:[ {cols:['assignment_id','enrollment_id','attempt_number'],unique:true,note:'RULE-015'}, {cols:['assignment_id'],unique:false}, {cols:['enrollment_id'],unique:false} ],
+  story:"Every attempt kept forever, graded independently — deliberately <b>no grade-of-record</b>, so nothing is ever lost and disputes end with evidence.",
+  rules:[['RULE-015','Resubmit only if allowed; unique triple stops duplicates.'],['RULE-016','All attempts preserved, independently gradable.']]},
+
+{name:'questions', module:'quiz', depth:3,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('quiz_id','bigint → quizzes.id',{fk:1,nn:1}), c('prompt','text',{nn:1}), c('type','enum: question_type',{nn:1}),
+    c('order','int',{nn:1}), c('points','decimal(6,2)',{nn:1,def:'1.00',note:'per-question weight'}), c('correct_boolean','boolean'),
+    c('correct_number','decimal(10,4)'), c('numeric_tolerance','decimal(10,4)',{def:'0'}) ],
+  idx:[ {cols:['quiz_id'],unique:false}, {cols:['quiz_id','order'],unique:false} ],
+  story:"Weighted scorable moments: a 50-question quiz can total 150 points (0.5, 2, 5 mixed). Five machine-gradable flavors; type-specific columns stay NULL unless needed.",
+  rules:[['v2.1 points','Mixed weights inside one quiz.'],['SCOPE-005','Five auto-scorable types.'],['RULE-017','Short answers accept variants.']]},
+
+{name:'attempts', module:'quiz', depth:3,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('quiz_id','bigint → quizzes.id',{fk:1,nn:1}), c('enrollment_id','bigint → enrollments.id',{fk:1,nn:1}),
+    c('attempt_number','int',{nn:1}), c('score','decimal(5,2)'), c('started_at','timestamp',{nn:1,def:'now()'}), c('submitted_at','timestamp') ],
+  idx:[ {cols:['quiz_id','enrollment_id','attempt_number'],unique:true}, {cols:['enrollment_id'],unique:false} ],
+  story:"One sitting, one student, one quiz. NULL score = still in progress. The unique triple is a bouncer — no duplicate attempt numbers however furiously students retry.",
+  rules:[['Cap','max_attempts enforced.'],['Race-proof','(quiz, enrollment, attempt) unique.']]},
+
+{name:'progress_records', module:'prog', depth:3,
+  cols:[ c('enrollment_id','bigint → enrollments.id',{pk:1,fk:1,nn:1,note:'strict 1-to-1'}), c('percent_complete','decimal(5,2)',{nn:1,def:'0'}),
+    c('completed_at','timestamp'), c('updated_at','timestamp') ],
+  idx:[],
+  story:"The dashboard number ('64% through') — a cached computation, one row per seat, refreshed on every completion. All components done ⇒ course done.",
+  rules:[['1-to-1','PK is the enrollment FK — exactly one row per seat.']]},
+
+{name:'component_completions', module:'prog', depth:3,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('enrollment_id','bigint → enrollments.id',{fk:1,nn:1}), c('component_type','enum: component_type',{nn:1,note:'polymorphic discriminator'}),
+    c('component_id','bigint',{nn:1,note:'target in lessons|assignments|quizzes, no cross-table FK'}), c('completed_at','timestamp'),
+    c('is_override','boolean',{nn:1,def:'false'}), c('overridden_by','bigint → users.id',{fk:1}) ],
+  idx:[ {cols:['enrollment_id','component_type','component_id'],unique:true}, {cols:['enrollment_id'],unique:false} ],
+  story:"Gold stars via <b>polymorphism</b>: one table points at lessons, assignments and quizzes through <code>$completion-&gt;component</code> — no type switches. Earned by beating the threshold, or pinned manually as a recorded override.",
+  rules:[['RULE-018 rev',"Best attempt ≥ component's own % total."],['RULE-019','Attributed instructor override.'],['ADR-010','morphTo/morphMany; integrity app-enforced.']]},
+
+{name:'question_options', module:'quiz', depth:4,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('question_id','bigint → questions.id',{fk:1,nn:1}), c('label','varchar(255)',{nn:1}),
+    c('is_correct','boolean',{nn:1,def:'false'}), c('order','int',{nn:1,def:'0'}) ],
+  idx:[ {cols:['question_id'],unique:false} ],
+  story:"A/B/C/D checkboxes pre-marked right or wrong. Grading becomes pure comparison — no judgment calls at this layer.",
+  rules:[['Auto-grade','Selections compared to is_correct flags.']]},
+
+{name:'question_accepted_answers', module:'quiz', depth:4,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('question_id','bigint → questions.id',{fk:1,nn:1,note:'short_answer only'}), c('answer_text','varchar(255)',{nn:1}) ],
+  idx:[ {cols:['question_id'],unique:false} ],
+  story:"'Yes, that counts' phrasings for short answers — absorbing language messiness so grading stays fair without humans reading every response.",
+  rules:[['RULE-017','Multiple variants per question.']]},
+
+{name:'attempt_answers', module:'quiz', depth:4,
+  cols:[ c('id','bigint',{pk:1,nn:1}), c('attempt_id','bigint → attempts.id',{fk:1,nn:1}), c('question_id','bigint → questions.id',{fk:1,nn:1}),
+    c('selected_option_ids','json'), c('answer_boolean','boolean'), c('answer_text','varchar(255)'), c('answer_number','decimal(10,4)'),
+    c('is_correct','boolean',{nn:1,def:'false'}) ],
+  idx:[ {cols:['attempt_id'],unique:false}, {cols:['attempt_id','question_id'],unique:true} ],
+  story:"What was actually answered, question by question, each pre-judged right or wrong. Per-answer verdicts (not just totals) power score review, appeals and analytics.",
+  rules:[['One row','(attempt, question) unique — exactly one answer per sitting.']]},
 ];
-const W=264, GAPX=150, RH=25, HH=62, GAPY=30;
-const byName = Object.fromEntries(D.map(t=>[t[0],t]));
-let scale=1, selected=null;
-const canvas=document.getElementById('canvas'), svg=document.getElementById('edges'), panel=document.getElementById('panel');
-// layout: group by depth, stack vertically
-const depths=[...new Set(D.map(t=>t[2]))].sort();
+
+// edges: [fromTable, fromCol, toTable, verb, optional, oneToOne]
+const RELS = [
+  ['users','manager_id','users','reports to (self)',1,0],
+  ['groups','owner_id','users','owned by',0,0],
+  ['group_members','group_id','groups','lists',0,0],
+  ['group_members','user_id','users','joins',0,0],
+  ['permission_grants','granter_id','users','delegates',0,0],
+  ['permission_grants','grantee_id','users','empowers',0,0],
+  ['permission_grants','group_id','groups','scoped in',1,0],
+  ['courses','instructor_id','users','authored by',0,0],
+  ['lessons','course_id','courses','chapters of',0,0],
+  ['enrollments','student_id','users','seats',0,0],
+  ['enrollments','course_id','courses','fills',0,0],
+  ['assignments','course_id','courses','set in',0,0],
+  ['submissions','assignment_id','assignments','answers',0,0],
+  ['submissions','enrollment_id','enrollments','filed by',0,0],
+  ['submissions','graded_by','users','graded by',1,0],
+  ['quizzes','course_id','courses','examines',0,0],
+  ['questions','quiz_id','quizzes','asks',0,0],
+  ['question_options','question_id','questions','offers',0,0],
+  ['question_accepted_answers','question_id','questions','accepts',0,0],
+  ['attempts','quiz_id','quizzes','sits',0,0],
+  ['attempts','enrollment_id','enrollments','taken by',0,0],
+  ['attempt_answers','attempt_id','attempts','records',0,0],
+  ['attempt_answers','question_id','questions','targets',0,0],
+  ['progress_records','enrollment_id','enrollments','summarises',0,1],
+  ['component_completions','enrollment_id','enrollments','stars',0,0],
+  ['component_completions','overridden_by','users','pinned by',1,0],
+  ['notifications','user_id','users','alerts',0,0],
+];
+
+/* ============================== LAYOUT ============================== */
+const byName = Object.fromEntries(TABLES.map(t=>[t.name,t]));
+const W=250, GAPX=145, RH=24, HH=40, GAPY=26;
+const depths=[...new Set(TABLES.map(t=>t.depth))].sort((a,b)=>a-b);
 const pos={};
 depths.forEach(d=>{
-  const col=D.filter(t=>t[2]===d);
-  let y=40;
+  const col=TABLES.filter(t=>t.depth===d);
+  let y=30;
   col.forEach(t=>{
-    const h=HH+t[3].length*RH+8;
-    pos[t[0]]={x:40+d*(W+GAPX),y,w:W,h};
+    const h=HH+t.cols.length*RH+8;
+    pos[t.name]={x:30+d*(W+GAPX),y,w:W,h};
     y+=h+GAPY;
   });
 });
 const maxY=Math.max(...Object.values(pos).map(p=>p.y+p.h))+40;
-const maxX=40+Math.max(...depths)*(W+GAPX)+W+40;
+const maxX=30+Math.max(...depths)*(W+GAPX)+W+40;
+
+const canvas=document.getElementById('canvas'), svg=document.getElementById('edges'), wrap=document.getElementById('wrap');
 canvas.style.width=maxX+'px'; canvas.style.height=maxY+'px';
 svg.setAttribute('width',maxX); svg.setAttribute('height',maxY);
-// nodes
-D.forEach(t=>{
-  const [n,m,,cols]=t, p=pos[n];
-  const d=document.createElement('div');
-  d.className='tbl'; d.id='n-'+n; d.style.left=p.x+'px'; d.style.top=p.y+'px';
-  const rows=cols.map(c=>{
-    const k=c[2], pk=k.includes('P'), fk=k.includes('F'), uq=k.includes('U'), nn=k.includes('*');
-    const badges=`<span class="keys">${pk?'<span class="badge b-pk">PK</span>':''}${fk?'<span class="badge b-fk">FK</span>':''}${uq?'<span class="badge b-uq">UQ</span>':''}</span>`;
-    return `<li data-col="${c[0]}" class="${pk?'is-pk':''} ${fk?'is-fk':''}"><span class="cn">${c[0]}${nn?'<span class="nn"> ∗</span>':''}</span><span class="ct">${c[1].split('→')[0].trim()}</span>${badges}</li>`;
+svg.setAttribute('viewBox',`0 0 ${maxX} ${maxY}`);
+
+/* ============================== STATS (computed, not hardcoded) ============================== */
+const totalCols = TABLES.reduce((s,t)=>s+t.cols.length,0);
+const uniqueComposite = TABLES.reduce((s,t)=>s+t.idx.filter(i=>i.unique && i.cols.length>1).length,0);
+document.getElementById('titleTag').textContent = `${TABLES.length} tables · IE / crow's-foot notation`;
+document.getElementById('statsRow').innerHTML = `
+  <div class="stat"><b>${TABLES.length}</b>tables</div>
+  <div class="stat"><b>${RELS.length}</b>foreign-key relationships</div>
+  <div class="stat"><b>${uniqueComposite}</b>race-closing unique indexes</div>
+  <div class="stat"><b>${totalCols}</b>columns total</div>
+  <div class="stat"><b>1</b>append-only ledger (permission_grants)</div>
+  <div class="stat"><b>0</b>tables owned by Reporting — read-only</div>`;
+
+document.getElementById('enumGrid').innerHTML = ENUMS.map(([n,v])=>
+  `<div class="en">${n}</div><div class="vals">${v.join(' · ')}</div>`).join('');
+
+/* ============================== MODULE CHIPS ============================== */
+const activeModules = new Set();
+const chipsEl = document.getElementById('moduleChips');
+Object.entries(MODULES).forEach(([key,m])=>{
+  const n = TABLES.filter(t=>t.module===key).length;
+  const el = document.createElement('div');
+  el.className='chip'; el.style.setProperty('--chipc', m.color);
+  el.innerHTML = `<span class="sw" style="background:${m.color}"></span>${m.label} <span style="opacity:.6">${n}</span>`;
+  el.onclick=()=>{ el.classList.toggle('on'); activeModules.has(key)?activeModules.delete(key):activeModules.add(key); applyFilters(); };
+  chipsEl.appendChild(el);
+});
+
+/* ============================== RENDER NODES ============================== */
+TABLES.forEach(t=>{
+  const p = pos[t.name];
+  const d = document.createElement('div');
+  d.className='tbl'; d.id='n-'+t.name; d.style.left=p.x+'px'; d.style.top=p.y+'px';
+  const rows = t.cols.map(c=>{
+    const badges = `<span class="keys">${c.pk?'<span class="badge b-pk">PK</span>':''}${c.fk?'<span class="badge b-fk">FK</span>':''}</span>`;
+    const typeShort = c.t.split('→')[0].trim();
+    return `<li class="${c.pk?'is-pk':''} ${c.fk?'is-fk':''}" data-col="${c.n}"><span class="cn">${c.n}${c.nn?'<span class="nn"> ∗</span>':''}</span><span class="ct">${typeShort}</span>${badges}</li>`;
   }).join('');
-  d.innerHTML=`<header style="border-left-color:${MODC[m]}"><span class="t">${n}</span><span class="m">${MODL[m]}</span></header><ul>${rows}</ul>`;
-  d.onclick=()=>select(n);
-  d.onmouseenter=()=>hl(n,true);
-  d.onmouseleave=()=>hl(n,false);
+  d.innerHTML = `<div class="thead" style="border-left-color:${MODULES[t.module].color}"><span class="t">${t.name}</span><span class="m">${MODULES[t.module].label}</span></div><ul>${rows}</ul>`;
+  d.onmouseenter=()=>hoverHighlight(t.name,true);
+  d.onmouseleave=()=>hoverHighlight(t.name,false);
+  d.onclick=()=>select(t.name);
+  d.ondblclick=(e)=>{ e.stopPropagation(); enterFocus(t.name); };
   canvas.appendChild(d);
 });
-const rowY=(n,col)=>{ const p=pos[n], t=byName[n];
-  const i=t[3].findIndex(c=>c[0]===col);
-  return p.y+HH+(i<0?0:i)*RH+RH/2; };
-// glyph painters (drawn pointing along +x, rotated into place)
-function glyph(g,x,y,ang,color){
-  if(g==='bar') return `<line x1="${x}" y1="${y-7}" x2="${x}" y2="${y+7}" stroke="${color}" stroke-width="2" transform="rotate(${ang} ${x} ${y})"/>`;
-  if(g==='ring') return `<circle cx="${x}" cy="${y}" r="5.5" fill="none" stroke="${color}" stroke-width="1.8"/>`;
-  if(g==='fork'){ const a=(ang*Math.PI)/180, L=14;
-    const t=(deg)=>{const r=((ang+deg)*Math.PI)/180;return [x+L*Math.cos(r),y+L*Math.sin(r)];};
-    const [x1,y1]=t(-28),[x2,y2]=t(0),[x3,y3]=t(28);
-    return `<path d="M${x},${y} L${x1},${y1} M${x},${y} L${x2},${y2} M${x},${y} L${x3},${y3}" stroke="${color}" stroke-width="1.8" fill="none"/>`; }
+
+/* ============================== RENDER EDGES ============================== */
+function rowY(name,col){
+  const p=pos[name], t=byName[name];
+  const i=t.cols.findIndex(c=>c.n===col);
+  return p.y+HH+(i<0?0:i)*RH+RH/2;
+}
+function glyph(kind,x,y,ang,color){
+  if(kind==='bar') return `<line x1="${x}" y1="${y-6.5}" x2="${x}" y2="${y+6.5}" stroke="${color}" stroke-width="2" transform="rotate(${ang} ${x} ${y})"/>`;
+  if(kind==='ring') return `<circle cx="${x}" cy="${y}" r="5" fill="${'var(--bg)'}" stroke="${color}" stroke-width="1.7"/>`;
+  if(kind==='fork'){
+    const L=13, a=(deg)=>{const r=((ang+deg)*Math.PI)/180;return [x+L*Math.cos(r),y+L*Math.sin(r)];};
+    const [x1,y1]=a(-26),[x2,y2]=a(0),[x3,y3]=a(26);
+    return `<path d="M${x},${y} L${x1},${y1} M${x},${y} L${x2},${y2} M${x},${y} L${x3},${y3}" stroke="${color}" stroke-width="1.7" fill="none"/>`;
+  }
   return '';
 }
-function draw(){
+function pill(cx,cy,text,color){
+  const w = text.length*6.2+16;
+  return `<g><rect x="${cx-w/2}" y="${cy-9.5}" width="${w}" height="19" rx="9.5" fill="#0e1320" stroke="${color}" stroke-opacity=".55"/><text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="10" fill="#9aa2ba" font-family="Segoe UI, sans-serif">${text}</text></g>`;
+}
+function drawEdges(){
   let s='';
-  E.forEach(([a,col,b,verb,opt,oto])=>{
-    const A=pos[a],B=pos[b];
+  RELS.forEach(([a,col,b,verb,opt,oto])=>{
+    const A=pos[a];
+    if(a===b){
+      // self-reference: loop out to the right and back into the PK row
+      const x1=A.x+A.w, y1=rowY(a,col);
+      const yTop=A.y+HH+RH/2;
+      const loopX=A.x+A.w+52;
+      s += `<path data-a="${a}" data-b="${b}" d="M${x1},${y1} C${loopX},${y1} ${loopX},${yTop} ${x1},${yTop}" fill="none" stroke="#4a5a86" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+      s += glyph('fork', x1+2, y1, 0, '#8fa2d8');
+      const ringX = x1+2;
+      s += glyph('bar', yTop!==y1?ringX+11:ringX, yTop, 180, '#8fa2d8');
+      s += glyph('ring', ringX, yTop, 180, '#8fa2d8');
+      s += pill(loopX+10, (y1+yTop)/2, verb, '#8fa2d8');
+      return;
+    }
+    const B=pos[b];
     const x1=A.x, y1=rowY(a,col);
-    const x2=B.x+B.w, y2=B.y+HH+RH/2; // parent PK row
+    const x2=B.x+B.w, y2=B.y+HH+RH/2;
     const mx=(x1+x2)/2;
-    s+=`<path data-a="${a}" data-b="${b}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#3a4a75" stroke-width="1.5"/>`;
-    // child end: many-fork (or single bar for 1-1)
-    s+=glyph(oto?'bar':'fork',x1-2,y1,180,'#7aa2ff');
-    // parent end: optional ring + one bar
+    s += `<path data-a="${a}" data-b="${b}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#394275" stroke-width="1.4"/>`;
+    s += glyph(oto?'bar':'fork', x1-2, y1, 180, '#6ea8fe');
     const px=x2+2;
-    s+=glyph('bar',opt?px+11:px,y2,0,'#7aa2ff');
-    if(opt) s+=glyph('ring',px,y2,0,'#7aa2ff');
-    // verb pill
-    const lx=(x1+x2)/2, ly=(y1+y2)/2;
-    const w=verb.length*6.4+16;
-    s+=`<g data-a="${a}" data-b="${b}"><rect x="${lx-w/2}" y="${ly-10}" width="${w}" height="20" rx="10" fill="#0f1524" stroke="#2c3a5e"/><text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="10.5" fill="#8f97b0" font-family="Segoe UI">${verb}</text></g>`;
+    s += glyph('bar', opt?px+11:px, y2, 0, '#6ea8fe');
+    if(opt) s += glyph('ring', px, y2, 0, '#6ea8fe');
+    s += pill((x1+x2)/2, (y1+y2)/2, verb, '#394275');
   });
-  svg.innerHTML=s;
+  svg.innerHTML = s;
 }
-function rel(n){ const s=new Set([n]); E.forEach(e=>{if(e[0]===n)s.add(e[2]); if(e[2]===n)s.add(e[0]);}); return s; }
-function hl(n,on){
-  const keep=rel(n);
-  document.querySelectorAll('.tbl').forEach(el=>el.classList.toggle('dim',on&&!keep.has(el.id.slice(2))));
-  svg.querySelectorAll('[data-a]').forEach(p=>{
-    const hot=p.dataset.a===n||p.dataset.b===n;
-    if(p.tagName==='path'){p.setAttribute('stroke',on&&hot?'#7aa2ff':'#3a4a75');p.setAttribute('stroke-width',on&&hot?'2.4':'1.5');}
-    else p.style.opacity=on&&!hot?'.12':'1';
-  });
+function relatedSet(name){
+  const s=new Set([name]);
+  RELS.forEach(([a,,b])=>{ if(a===name)s.add(b); if(b===name)s.add(a); });
+  return s;
 }
-function select(n){
-  selected=n;
-  document.querySelectorAll('.tbl').forEach(el=>el.classList.toggle('sel',el.id==='n-'+n));
-  const t=byName[n];
-  const ins=E.filter(e=>e[2]===n).map(e=>`<div class="rule">⤵ <b>${e[0]}.${e[1]}</b> → here <span style="color:var(--mut)">(${e[3]})</span></div>`).join('');
-  const outs=E.filter(e=>e[0]===n).map(e=>`<div class="rule">⤴ <b>${e[1]}</b> → <b>${e[2]}</b> <span style="color:var(--mut)">(${e[3]}${e[4]?', optional':''})</span></div>`).join('');
-  panel.innerHTML=`<h2>${n}</h2><span class="mchip" style="background:${MODC[t[1]]}">${MODL[t[1]]}</span>
-    <h4>Business story</h4><p>${t[4]}</p>
-    <h4>Columns (${t[3].length})</h4><table>${t[3].map(c=>`<tr><td class="c">${c[0]}</td><td class="t">${c[1]}${c[3]?' — '+c[3]:''}</td></tr>`).join('')}</table>
-    <h4>Rules</h4>${t[5].map(r=>`<div class="rule"><b>${r[0]}</b> — ${r[1]}</div>`).join('')}
-    <h4>Relationships</h4>${outs}${ins||''}`;
-  panel.scrollTop=0;
-}
-function zoom(f){scale=Math.min(2.2,Math.max(.35,scale*f));canvas.style.transform=`scale(${scale})`;}
-function resetZoom(){scale=1;canvas.style.transform='scale(1)';}
-document.getElementById('q').addEventListener('input',ev=>{
-  const q=ev.target.value.toLowerCase().trim();
+function hoverHighlight(name,on){
+  if(focusedTable) return;
+  const keep = relatedSet(name);
   document.querySelectorAll('.tbl').forEach(el=>{
-    if(!q){el.classList.remove('dim');return;}
-    const t=byName[el.id.slice(2)];
-    const hay=(t[0]+' '+t[3].map(c=>c.join(' ')).join(' ')+' '+t[5].map(r=>r.join(' ')).join(' ')+' '+t[4].replace(/<[^>]+>/g,'')).toLowerCase();
-    el.classList.toggle('dim',!hay.includes(q));
+    if(el.classList.contains('dim') && on) return;
+    el.style.opacity = (on && !keep.has(el.id.slice(2))) ? '.15' : '';
   });
+  svg.querySelectorAll('[data-a]').forEach(p=>{
+    const hot = p.dataset.a===name || p.dataset.b===name;
+    if(p.tagName==='path'){
+      p.setAttribute('stroke', on&&hot ? '#6ea8fe' : (p.getAttribute('stroke-dasharray') ? '#4a5a86' : '#394275'));
+      p.setAttribute('stroke-width', on&&hot ? '2.4' : '1.4');
+    } else { p.style.opacity = on && !hot ? '.1' : '1'; }
+  });
+}
+
+/* ============================== SELECT / PANEL ============================== */
+let selected=null, focusedTable=null, activeTab='overview';
+const panelHead=document.getElementById('panelHead'), panelTabs=document.getElementById('panelTabs'), panelBody=document.getElementById('panelBody');
+
+function genSnippet(t){
+  const lines = t.cols.map(c=>{
+    let l = `  ${c.n} ${c.t.split('→')[0].trim()}`;
+    if(c.nn) l+=' NOT NULL';
+    if(c.def) l+=` DEFAULT ${c.def}`;
+    if(c.pk) l+=' [PK]';
+    if(c.fk) l+=` [FK → ${c.t.split('→')[1]?.trim()||''}]`;
+    return l;
+  });
+  const idx = t.idx.map(i=>`  INDEX (${i.cols.join(', ')})${i.unique?' UNIQUE':''}${i.note?' -- '+i.note:''}`);
+  return `Table ${t.name} {\n${lines.join('\n')}\n${idx.length?'\n'+idx.join('\n'):''}\n}`;
+}
+
+function select(name){
+  selected = name;
+  activeTab = 'overview';
+  document.querySelectorAll('.tbl').forEach(el=>el.classList.toggle('sel', el.id==='n-'+name));
+  render();
+}
+function render(){
+  if(!selected){
+    panelHead.innerHTML = `<div class="empty">Click a table to see its full story, columns, indexes and rules.<br><br>Hover any table to trace its relationships on the diagram.</div>`;
+    panelTabs.innerHTML=''; panelBody.innerHTML=''; return;
+  }
+  const t = byName[selected];
+  panelHead.innerHTML = `<h2>${t.name}</h2><span class="mchip" style="background:${MODULES[t.module].color}">${MODULES[t.module].label}</span>
+    <div class="actionrow">
+      <button onclick="enterFocus('${t.name}')">🔎 Focus + neighbors</button>
+      <button onclick="copySnippet()">⧉ Copy schema</button>
+    </div>`;
+  const tabs = [['overview','Overview'],['columns',`Columns (${t.cols.length})`],['indexes',`Indexes (${t.idx.length})`],['relations','Relations'],['rules',`Rules (${t.rules.length})`]];
+  panelTabs.innerHTML = tabs.map(([id,label])=>`<button class="tab ${activeTab===id?'on':''}" onclick="setTab('${id}')">${label}</button>`).join('');
+
+  const ins = RELS.filter(e=>e[2]===t.name && e[0]!==t.name).map(e=>`<div class="rule">⤵ <b>${e[0]}.${e[1]}</b> → here <span style="color:var(--mut)">(${e[3]})</span></div>`).join('');
+  const outs = RELS.filter(e=>e[0]===t.name && e[2]!==t.name).map(e=>`<div class="rule">⤴ <b>${e[1]}</b> → <b>${e[2]}</b> <span style="color:var(--mut)">(${e[3]}${e[4]?', optional':''})</span></div>`).join('');
+  const selfRef = RELS.filter(e=>e[0]===t.name && e[2]===t.name).map(e=>`<div class="rule">↺ <b>${e[1]}</b> → same table <span style="color:var(--mut)">(${e[3]})</span></div>`).join('');
+
+  const panels = {
+    overview: `<h4>Business story</h4><p>${t.story}</p>`,
+    columns: `<h4>Columns</h4><table>${t.cols.map(c=>`<tr><td class="c">${c.n}${c.pk?' <span class="badge b-pk">PK</span>':''}${c.fk?' <span class="badge b-fk">FK</span>':''}</td><td class="t">${c.t}${c.nn?' · NOT NULL':''}${c.note?' — '+c.note:''}</td><td class="dflt">${c.def?('def '+c.def):''}</td></tr>`).join('')}</table>`,
+    indexes: t.idx.length ? `<h4>Indexes</h4>${t.idx.map(i=>`<div class="idxrow"><span class="cols">(${i.cols.join(', ')})</span><span class="note">${i.unique?'UNIQUE':'index'}${i.note?' · '+i.note:''}</span></div>`).join('')}` : `<div class="empty">No secondary indexes beyond the primary key.</div>`,
+    relations: (outs+selfRef+ins) || `<div class="empty">No foreign-key relationships.</div>`,
+    rules: t.rules.map(r=>`<div class="rule"><b>${r[0]}</b> — ${r[1]}</div>`).join(''),
+  };
+  panelBody.innerHTML = panels[activeTab];
+}
+function setTab(id){ activeTab=id; render(); }
+function copySnippet(){
+  if(!selected) return;
+  const txt = genSnippet(byName[selected]);
+  navigator.clipboard?.writeText(txt).catch(()=>{});
+  const btns = panelHead.querySelectorAll('.actionrow button');
+  const b = btns[1]; if(b){ const old=b.textContent; b.textContent='✓ Copied'; setTimeout(()=>b.textContent=old,1200); }
+}
+
+/* ============================== FOCUS MODE ============================== */
+function enterFocus(name){
+  focusedTable = name;
+  const keep = relatedSet(name);
+  document.querySelectorAll('.tbl').forEach(el=>{
+    const n = el.id.slice(2);
+    el.style.opacity='';
+    el.classList.toggle('dim', !keep.has(n));
+  });
+  svg.querySelectorAll('[data-a]').forEach(p=>{
+    const hot = p.dataset.a===name || p.dataset.b===name;
+    p.style.opacity = hot ? '1' : '.06';
+  });
+  document.getElementById('focusBanner').style.display='flex';
+  document.getElementById('focusName').textContent=name;
+  select(name);
+  fitToNodes([...keep]);
+}
+function exitFocus(){
+  focusedTable=null;
+  document.querySelectorAll('.tbl').forEach(el=>{ el.classList.remove('dim'); el.style.opacity=''; });
+  svg.querySelectorAll('[data-a]').forEach(p=>p.style.opacity='1');
+  document.getElementById('focusBanner').style.display='none';
+}
+
+/* ============================== SEARCH + MODULE FILTER ============================== */
+function stripHtml(s){ return s.replace(/<[^>]+>/g,''); }
+function applyFilters(){
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  document.querySelectorAll('.tbl').forEach(el=>{
+    const name = el.id.slice(2);
+    const t = byName[name];
+    const modOk = activeModules.size===0 || activeModules.has(t.module);
+    const hay = (t.name+' '+t.cols.map(c=>c.n+' '+c.t+' '+(c.note||'')).join(' ')+' '+t.rules.map(r=>r.join(' ')).join(' ')+' '+stripHtml(t.story)).toLowerCase();
+    const qOk = !q || hay.includes(q);
+    el.classList.toggle('dim', !(modOk && qOk));
+    el.classList.toggle('match', !!q && qOk);
+  });
+}
+document.getElementById('q').addEventListener('input', applyFilters);
+document.getElementById('q').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    const first = [...document.querySelectorAll('.tbl.match')][0];
+    if(first){ const name=first.id.slice(2); select(name); fitToNodes([name]); }
+  }
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){selected=null;document.querySelectorAll('.tbl').forEach(el=>el.classList.remove('sel','dim'));}});
-draw(); select('users');
+
+/* ============================== PAN / ZOOM ============================== */
+let view = {x:0,y:0,scale:1};
+function applyView(){ canvas.style.transform = `translate(${view.x}px,${view.y}px) scale(${view.scale})`; drawMinimap(); }
+function zoomBy(f, cx, cy){
+  const rect = wrap.getBoundingClientRect();
+  cx = cx ?? rect.width/2; cy = cy ?? rect.height/2;
+  const newScale = Math.min(2.4, Math.max(.25, view.scale*f));
+  const wx = (cx - view.x)/view.scale, wy = (cy - view.y)/view.scale;
+  view.x = cx - wx*newScale; view.y = cy - wy*newScale; view.scale = newScale;
+  applyView();
+}
+function resetView(){ fitToNodes(TABLES.map(t=>t.name)); }
+function fitToView(){ fitToNodes(TABLES.map(t=>t.name)); }
+function fitToNodes(names){
+  const rect = wrap.getBoundingClientRect();
+  const xs=[], ys=[];
+  names.forEach(n=>{ const p=pos[n]; xs.push(p.x, p.x+p.w); ys.push(p.y, p.y+p.h); });
+  const minX=Math.min(...xs)-40, maxXX=Math.max(...xs)+40, minY=Math.min(...ys)-40, maxYY=Math.max(...ys)+40;
+  const w=maxXX-minX, h=maxYY-minY;
+  const scale = Math.min(1.4, Math.max(.3, Math.min(rect.width/w, rect.height/h)));
+  view.scale = scale;
+  view.x = rect.width/2 - (minX+w/2)*scale;
+  view.y = rect.height/2 - (minY+h/2)*scale;
+  applyView();
+}
+wrap.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const rect = wrap.getBoundingClientRect();
+  zoomBy(e.deltaY<0?1.08:0.93, e.clientX-rect.left, e.clientY-rect.top);
+},{passive:false});
+let dragging=false, dragStart=null;
+wrap.addEventListener('mousedown', e=>{
+  if(e.target.closest('.tbl')) return;
+  dragging=true; dragStart={x:e.clientX-view.x, y:e.clientY-view.y}; wrap.classList.add('grabbing');
+});
+window.addEventListener('mousemove', e=>{
+  if(!dragging) return;
+  view.x = e.clientX-dragStart.x; view.y = e.clientY-dragStart.y; applyView();
+});
+window.addEventListener('mouseup', ()=>{ dragging=false; wrap.classList.remove('grabbing'); });
+
+/* ============================== MINIMAP ============================== */
+const mmsvg = document.getElementById('mmsvg');
+const MM_W=190, MM_H=130;
+function drawMinimap(){
+  const s = Math.min(MM_W/maxX, MM_H/maxY);
+  const offX=(MM_W-maxX*s)/2, offY=(MM_H-maxY*s)/2;
+  let inner = TABLES.map(t=>{
+    const p=pos[t.name];
+    return `<rect x="${offX+p.x*s}" y="${offY+p.y*s}" width="${p.w*s}" height="${p.h*s}" rx="1.5" class="mn"/>`;
+  }).join('');
+  const rect = wrap.getBoundingClientRect();
+  const vx=offX + (-view.x/view.scale)*s, vy=offY + (-view.y/view.scale)*s;
+  const vw=(rect.width/view.scale)*s, vh=(rect.height/view.scale)*s;
+  inner += `<rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" class="mv"/>`;
+  mmsvg.setAttribute('viewBox', `0 0 ${MM_W} ${MM_H}`);
+  mmsvg.innerHTML = inner;
+}
+document.getElementById('minimap').addEventListener('click', e=>{
+  const rect = e.currentTarget.getBoundingClientRect();
+  const s = Math.min(MM_W/maxX, MM_H/maxY);
+  const offX=(MM_W-maxX*s)/2, offY=(MM_H-maxY*s)/2;
+  const mx = (e.clientX-rect.left-offX)/s, my=(e.clientY-rect.top-offY)/s;
+  const wrapRect = wrap.getBoundingClientRect();
+  view.x = wrapRect.width/2 - mx*view.scale;
+  view.y = wrapRect.height/2 - my*view.scale;
+  applyView();
+});
+window.addEventListener('resize', drawMinimap);
+
+/* ============================== COLLAPSIBLE INFO CARDS ============================== */
+function toggleCard(h2){ h2.parentElement.classList.toggle('collapsed'); }
+
+/* ============================== KEYBOARD ============================== */
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement.id!=='q'){ e.preventDefault(); document.getElementById('q').focus(); }
+  if(e.key==='Escape'){
+    document.getElementById('q').value=''; applyFilters();
+    selected=null; document.querySelectorAll('.tbl').forEach(el=>el.classList.remove('sel'));
+    render();
+    if(focusedTable) exitFocus();
+  }
+});
+
+/* ============================== INIT ============================== */
+drawEdges();
+render();
+requestAnimationFrame(()=>{ fitToView(); select('users'); });
 </script>
 </body>
 </html>
