@@ -25,9 +25,10 @@ Phases 1–2 are done ([x]). Work phases strictly in order; each checkpoint need
 
 ---
 
-## Phase 3 — Database Implementation (spec §5, 19 tables)
+## Phase 3 — Database Implementation (spec §5, 19 tables) [x]
 
 > Conventions: `docs/db-conventions.md`. Migrations live in `Modules/<Name>/database/migrations/` (shared tables in root). Portable SQL only. Factories + seeders per module.
+> Done in commit `Phase 3` (24 migrations green, SchemaTest 6 tests, morph map enforced).
 
 ## Task 3.1: Users extension + groups ledger
 
@@ -123,8 +124,8 @@ Phases 1–2 are done ([x]). Work phases strictly in order; each checkpoint need
 
 **Estimated scope:** Medium (3-5 files)
 
-### Checkpoint: After Phase 3
-- [ ] `migrate:fresh --seed` builds all 19 tables + Spatie tables; full suite green
+### Checkpoint: After Phase 3 [x]
+- [x] `migrate:fresh --seed` builds all 19 tables + Spatie tables; full suite green (11 passed)
 - [ ] **Review gate:** code review (migration quality) + arch review (table placement per module) per `docs/handbook/04-code-review-policy.md`
 - [ ] Human sign-off before Phase 4
 

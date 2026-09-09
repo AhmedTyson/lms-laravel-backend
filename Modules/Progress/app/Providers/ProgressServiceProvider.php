@@ -3,6 +3,10 @@
 namespace Modules\Progress\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Modules\Assignments\Models\Assignment;
+use Modules\Courses\Models\Lesson;
+use Modules\Quizzes\Models\Quiz;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class ProgressServiceProvider extends ModuleServiceProvider
@@ -43,4 +47,16 @@ class ProgressServiceProvider extends ModuleServiceProvider
     // {
     //     $schedule->command('inspire')->hourly();
     // }
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        // ADR-010: short component_type values resolve to module models.
+        Relation::enforceMorphMap([
+            'lesson' => Lesson::class,
+            'assignment' => Assignment::class,
+            'quiz' => Quiz::class,
+        ]);
+    }
 }

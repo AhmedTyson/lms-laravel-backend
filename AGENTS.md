@@ -30,6 +30,7 @@ Order that matters: `pint -> pest -> phpstan -> migrate:fresh`. CI runs the same
 - `.env` holds a real local `JWT_SECRET` and is git-ignored — never commit, never copy to staging/prod.
 - `QUEUE_CONNECTION=sync` local / `redis` staging. `MAIL_MAILER=log` local.
 - phpunit.xml forces `sqlite :memory:` — never set `DB_CONNECTION` overrides in CI/test env.
+- Pest `uses(Trait::class)` with an imported name fails to resolve — bind shared traits in `tests/Pest.php` (`->use(...)`), never per-file. Pint's `fully_qualified_strict_types` will otherwise fight Pest forever.
 
 ## Architecture rules (from baseline, enforced in review)
 
