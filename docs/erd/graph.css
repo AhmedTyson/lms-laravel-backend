@@ -1,0 +1,26 @@
+/* Diagram canvas, table nodes, edges, minimap. */
+main{flex:1 0 auto;display:flex;min-height:760px;height:84vh;max-height:1150px;position:relative}
+#wrap{flex:1;overflow:hidden;position:relative;background-color:var(--bg);background-image:radial-gradient(circle,var(--grid) 1.2px,transparent 1.2px);background-size:26px 26px;cursor:grab;min-width:0}
+#wrap.grabbing{cursor:grabbing}
+#canvas{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+#edges{position:absolute;top:0;left:0;pointer-events:none;overflow:visible}
+.tbl{position:absolute;width:258px;background:var(--card);border:1px solid var(--line2);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;transition:opacity .18s,border-color .15s,box-shadow .15s,transform .15s}
+.tbl:hover{border-color:#42537d;transform:translateY(-1px)}
+.tbl.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 14px 34px rgba(0,0,0,.5)}
+.tbl.dim{opacity:.12;pointer-events:none}
+.tbl.match{box-shadow:0 0 0 1px var(--uq)}
+.tbl .thead{padding:10px 13px 8px;background:var(--card2);border-bottom:1px solid var(--line);border-left:4px solid var(--faint);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tbl .thead .t{font:650 13px var(--font-mono);display:block}
+.tbl .thead .m{font-size:10px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.tbl ul{list-style:none;margin:0;padding:6px 0}
+.tbl li{display:flex;justify-content:space-between;gap:8px;padding:3.5px 13px;font:12px var(--font-mono);color:#bcc3d8}
+.tbl li .ct{color:var(--faint);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl li.is-pk{background:rgba(127,209,255,.055)}
+.tbl li.is-fk .cn{color:var(--fk)}
+.tbl li.is-pk .cn{color:var(--pk);font-weight:700}
+.tbl li .keys{display:flex;gap:3px;align-items:center;flex:0 0 auto}
+.tbl .nn{color:var(--faint);font-size:10px}
+#minimap{position:absolute;right:14px;bottom:14px;width:190px;height:130px;background:rgba(13,16,23,.9);border:1px solid var(--line2);border-radius:10px;backdrop-filter:blur(3px);overflow:hidden;cursor:pointer}
+#minimap svg{width:100%;height:100%}
+#minimap .mv{fill:rgba(110,168,254,.12);stroke:var(--acc);stroke-width:1.5}
+#minimap .mn{fill:#3a4260}

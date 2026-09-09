@@ -1,0 +1,28 @@
+/* Detail panel: header, tabs, rules, index rows, actions. */
+aside{width:400px;min-width:400px;border-left:1px solid var(--line);background:var(--bg2);display:flex;flex-direction:column;min-height:0}
+aside .ph{padding:18px 20px 0}
+aside h2{margin:0;font:650 19px var(--font-mono)}
+aside .mchip{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 11px;border-radius:20px;margin:8px 0 4px;color:#0a0c11}
+.tabs{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--line);margin-top:10px;overflow-x:auto}
+.tab{background:transparent;border:none;color:var(--faint);padding:9px 12px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;font-family:var(--font-ui);white-space:nowrap}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.tabpanels{flex:1;overflow-y:auto;padding:16px 20px 40px;min-height:0}
+.tabpanel{display:none}
+.tabpanel.on{display:block}
+aside h4{margin:0 0 7px;font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em}
+aside p{margin:6px 0;color:#c4cade;font-size:13.5px}
+aside table{width:100%;border-collapse:collapse;font-size:12px}
+aside td{border-bottom:1px solid var(--line);padding:5px 4px;vertical-align:top}
+aside td.c{font-family:var(--font-mono);color:var(--pk);white-space:nowrap}
+aside td.t{color:var(--mut);font-size:11px}
+aside td.dflt{color:var(--faint);font-size:10.5px;font-family:var(--font-mono)}
+.rule{background:#0f1626;border:1px solid #202a44;border-radius:9px;padding:8px 11px;margin:6px 0;font-size:12.5px;color:#c4cade}
+.rule b{color:var(--uq)}
+.idxrow{display:flex;justify-content:space-between;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:5px 0;font-size:11.5px}
+.idxrow .cols{font-family:var(--font-mono);color:var(--txt)}
+.idxrow .note{color:var(--faint);font-size:10.5px;text-align:right}
+.actionrow{display:flex;gap:8px;margin:14px 0 4px}
+.actionrow button{flex:1;background:var(--card2);border:1px solid var(--line2);color:var(--txt);border-radius:8px;padding:8px;font-size:12px;cursor:pointer}
+.actionrow button:hover{border-color:var(--acc);color:var(--acc)}
+.empty{color:var(--faint);font-size:13px;padding:40px 6px;text-align:center;line-height:1.7}
+pre.snippet{background:#080a0f;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:var(--font-mono);font-size:11.5px;color:#b6bdd4;overflow-x:auto;white-space:pre}
