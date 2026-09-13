@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Modules\Assignments\Models\Assignment;
 use Modules\Courses\Models\Lesson;
+use Modules\Progress\Observers\ComponentDeletionObserver;
 use Modules\Quizzes\Models\Quiz;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
@@ -58,5 +59,10 @@ class ProgressServiceProvider extends ModuleServiceProvider
             'assignment' => Assignment::class,
             'quiz' => Quiz::class,
         ]);
+
+        // ADR-015: orphan protection without a DB-level FK.
+        Lesson::observe(ComponentDeletionObserver::class);
+        Assignment::observe(ComponentDeletionObserver::class);
+        Quiz::observe(ComponentDeletionObserver::class);
     }
 }

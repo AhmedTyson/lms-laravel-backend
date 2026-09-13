@@ -203,6 +203,7 @@ Phases 1–2 are done ([x]). Work phases strictly in order; each checkpoint need
 
 **Acceptance criteria:**
 - [ ] Cycle (incl. self-parent) rejected with dedicated exception; history rows untouched by reassignment
+- [ ] Reassignment calls `ManagerDepth::recomputeSubtree()` in the same transaction (ADR-013); depth test in `RefinementTest` stays green
 
 **Verification:**
 - [ ] `vendor/bin/pest --filter="ManagerAssignment"` incl. cycle + self-parent cases
@@ -222,6 +223,7 @@ Phases 1–2 are done ([x]). Work phases strictly in order; each checkpoint need
 **Acceptance criteria:**
 - [ ] Grant to non-subordinate → 403; grant of unheld permission → 403 (global + group-scoped)
 - [ ] Revoke writes new `revoked` row; nothing updated/deleted
+- [ ] Every grant/revoke calls `PermissionReadModelSync::syncFromGrant()` inside the same transaction (ADR-012); `RefinementTest` grant→revoke→grant consistency stays green
 
 **Verification:**
 - [ ] `vendor/bin/pest --filter="PermissionGrant"` incl. stale-context regression (ambient team must not leak)
