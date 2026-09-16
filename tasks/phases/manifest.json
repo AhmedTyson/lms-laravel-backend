@@ -1,0 +1,221 @@
+[
+ {
+  "file": "tasks/phases/appendix-b-backlog.md",
+  "title": "Appendix B \u2014 Future Schema Backlog Register (Phase 8+ candidates, reference only)",
+  "status": "hold",
+  "tasks": [
+   "Task B-007",
+   "Task B-008",
+   "Task B-009",
+   "Task B-010",
+   "Task B-011",
+   "Task B-014",
+   "Task B-012",
+   "Task B-013"
+  ],
+  "checkpoint": "Checkpoint: Appendix B",
+  "checkpoint_open": 2,
+  "lines": 168,
+  "sha1": "fab7ef21f7ca"
+ },
+ {
+  "file": "tasks/phases/phase-01.md",
+  "title": "Phase 1 \u2014 Env init [x]",
+  "status": "done",
+  "tasks": [],
+  "checkpoint": "Checkpoint: Phase 1 [x]",
+  "checkpoint_open": 0,
+  "lines": 8,
+  "sha1": "29c06ffc3c1e"
+ },
+ {
+  "file": "tasks/phases/phase-02.md",
+  "title": "Phase 2 \u2014 Skeleton for developers [x]",
+  "status": "done",
+  "tasks": [],
+  "checkpoint": "Checkpoint: Phase 2 [x]",
+  "checkpoint_open": 0,
+  "lines": 8,
+  "sha1": "046840b11daf"
+ },
+ {
+  "file": "tasks/phases/phase-03.md",
+  "title": "Phase 3 \u2014 Database Implementation (spec \u00a75, 19 tables) [x]",
+  "status": "partial",
+  "tasks": [
+   "Task 3.1",
+   "Task 3.2",
+   "Task 3.3",
+   "Task 3.4",
+   "Task 3.5"
+  ],
+  "checkpoint": "Checkpoint: After Phase 3 [x]",
+  "checkpoint_open": 1,
+  "lines": 103,
+  "sha1": "888560f35f6e"
+ },
+ {
+  "file": "tasks/phases/phase-04.md",
+  "title": "Phase 4 \u2014 Auth slice (spec 6.1, SCOPE-004)",
+  "status": "open",
+  "tasks": [
+   "Task 4.1",
+   "Task 4.2",
+   "Task 4.3"
+  ],
+  "checkpoint": "Checkpoint: After Phase 4",
+  "checkpoint_open": 3,
+  "lines": 61,
+  "sha1": "3a3b91c75c66"
+ },
+ {
+  "file": "tasks/phases/phase-05.md",
+  "title": "Phase 5 \u2014 AccessManagement (RULE-002\u2013012, ADR-007/008)",
+  "status": "open",
+  "tasks": [
+   "Task 5.1",
+   "Task 5.2",
+   "Task 5.3"
+  ],
+  "checkpoint": "Checkpoint: After Phase 5",
+  "checkpoint_open": 3,
+  "lines": 62,
+  "sha1": "5a222c07d6c0"
+ },
+ {
+  "file": "tasks/phases/phase-06.md",
+  "title": "Phase 6 \u2014 Courses + Lessons (spec 6.2, 6.3)",
+  "status": "open",
+  "tasks": [
+   "Task 6.1",
+   "Task 6.2"
+  ],
+  "checkpoint": "Checkpoint: After Phase 6",
+  "checkpoint_open": 2,
+  "lines": 39,
+  "sha1": "0b71c18f9b08"
+ },
+ {
+  "file": "tasks/phases/phase-07.md",
+  "title": "Phase 7 \u2014 Enrollment",
+  "status": "open",
+  "tasks": [
+   "Task 7.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 7",
+  "checkpoint_open": 1,
+  "lines": 21,
+  "sha1": "774515cdcf5a"
+ },
+ {
+  "file": "tasks/phases/phase-08.md",
+  "title": "Phase 8 \u2014 Assignments (spec 6.4, RULE-015/016)",
+  "status": "open",
+  "tasks": [
+   "Task 8.1",
+   "Task 8.2"
+  ],
+  "checkpoint": "Checkpoint: After Phase 8",
+  "checkpoint_open": 1,
+  "lines": 38,
+  "sha1": "e2f797bbc588"
+ },
+ {
+  "file": "tasks/phases/phase-09.md",
+  "title": "Phase 9 \u2014 Quizzes (spec 6.5, SCOPE-005, RULE-017)",
+  "status": "open",
+  "tasks": [
+   "Task 9.1",
+   "Task 9.2"
+  ],
+  "checkpoint": "Checkpoint: After Phase 9",
+  "checkpoint_open": 1,
+  "lines": 38,
+  "sha1": "fd59f7198ca1"
+ },
+ {
+  "file": "tasks/phases/phase-10.md",
+  "title": "Phase 10 \u2014 Progress (RULE-018 revised, RULE-019)",
+  "status": "open",
+  "tasks": [
+   "Task 10.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 10",
+  "checkpoint_open": 1,
+  "lines": 21,
+  "sha1": "0bbbd911ef76"
+ },
+ {
+  "file": "tasks/phases/phase-11.md",
+  "title": "Phase 11 \u2014 Notifications (spec 6.7)",
+  "status": "open",
+  "tasks": [
+   "Task 11.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 11",
+  "checkpoint_open": 1,
+  "lines": 21,
+  "sha1": "e6e74bff1558"
+ },
+ {
+  "file": "tasks/phases/phase-12.md",
+  "title": "Phase 12 \u2014 Reporting (spec 6.8, ADR-008)",
+  "status": "open",
+  "tasks": [
+   "Task 12.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 12",
+  "checkpoint_open": 1,
+  "lines": 21,
+  "sha1": "2447830b06c5"
+ },
+ {
+  "file": "tasks/phases/phase-13.md",
+  "title": "Phase 13 \u2014 Integration & Security hardening",
+  "status": "open",
+  "tasks": [
+   "Task 13.1",
+   "Task 13.2"
+  ],
+  "checkpoint": "Checkpoint: After Phase 13",
+  "checkpoint_open": 1,
+  "lines": 38,
+  "sha1": "9e26a971bd05"
+ },
+ {
+  "file": "tasks/phases/phase-14.md",
+  "title": "Phase 14 \u2014 API Documentation",
+  "status": "open",
+  "tasks": [
+   "Task 14.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 14 \u2014 docs approved; sign-off before Phase 15",
+  "checkpoint_open": 0,
+  "lines": 17,
+  "sha1": "766f050b8617"
+ },
+ {
+  "file": "tasks/phases/phase-15.md",
+  "title": "Phase 15 \u2014 Performance",
+  "status": "open",
+  "tasks": [
+   "Task 15.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 15 \u2014 perf notes approved; sign-off before Phase 16",
+  "checkpoint_open": 0,
+  "lines": 17,
+  "sha1": "6fc1a10f2079"
+ },
+ {
+  "file": "tasks/phases/phase-16.md",
+  "title": "Phase 16 \u2014 Deployment",
+  "status": "open",
+  "tasks": [
+   "Task 16.1"
+  ],
+  "checkpoint": "Checkpoint: Final",
+  "checkpoint_open": 1,
+  "lines": 18,
+  "sha1": "f9fb450cc252"
+ }
+]
