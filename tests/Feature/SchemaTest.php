@@ -35,6 +35,7 @@ test('v2.1 scoring columns exist with correct shape', function () {
     expect(Schema::hasColumn('assignments', 'passing_threshold'))->toBeTrue();
     expect(Schema::hasColumn('users', 'manager_id'))->toBeTrue();
     expect(Schema::hasColumn('users', 'approval_status'))->toBeTrue();
+    expect(Schema::hasColumn('users', 'phone_number'))->toBeTrue();
 });
 
 test('duplicate enrollment violates unique index', function () {

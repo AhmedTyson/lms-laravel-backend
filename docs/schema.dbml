@@ -51,6 +51,7 @@ Table users {
   id bigint [pk, increment]
   name varchar(255) [not null]
   email varchar(255) [not null, unique]
+  phone_number varchar(30) [null]
   email_verified_at timestamp
   password varchar(255) [not null]
   manager_id bigint [ref: > users.id, null, note: 'RULE-002 strict tree, cycle-checked in service (ADR-007)']

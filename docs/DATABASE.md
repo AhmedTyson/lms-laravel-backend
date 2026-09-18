@@ -45,6 +45,7 @@ erDiagram
         bigint id PK
         varchar name
         varchar email UK
+        varchar phone_number "NULL"
         timestamp email_verified_at "NULL"
         varchar password
         bigint manager_id FK "NULL, self-ref, RULE-002"
