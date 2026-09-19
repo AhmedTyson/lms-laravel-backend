@@ -41,7 +41,7 @@
  {
   "file": "tasks/phases/phase-03.md",
   "title": "Phase 3 \u2014 Database Implementation (spec \u00a75, 19 tables) [x]",
-  "status": "partial",
+  "status": "done",
   "tasks": [
    "Task 3.1",
    "Task 3.2",
@@ -50,23 +50,23 @@
    "Task 3.5"
   ],
   "checkpoint": "Checkpoint: After Phase 3 [x]",
-  "checkpoint_open": 1,
+  "checkpoint_open": 0,
   "lines": 103,
-  "sha1": "888560f35f6e"
+  "sha1": "665d9301c460"
  },
  {
   "file": "tasks/phases/phase-04.md",
-  "title": "Phase 4 \u2014 Auth slice (spec 6.1, SCOPE-004)",
-  "status": "open",
+  "title": "Phase 4 \u2014 Auth slice (spec 6.1, SCOPE-004) [x]",
+  "status": "done",
   "tasks": [
    "Task 4.1",
    "Task 4.2",
    "Task 4.3"
   ],
-  "checkpoint": "Checkpoint: After Phase 4",
-  "checkpoint_open": 3,
+  "checkpoint": "Checkpoint: After Phase 4 [x]",
+  "checkpoint_open": 0,
   "lines": 61,
-  "sha1": "3a3b91c75c66"
+  "sha1": "fc7a22d1b239"
  },
  {
   "file": "tasks/phases/phase-05.md",

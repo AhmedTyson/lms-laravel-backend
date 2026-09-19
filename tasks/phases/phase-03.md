@@ -102,4 +102,4 @@
 ### Checkpoint: After Phase 3 [x]
 - [x] `migrate:fresh --seed` builds all 19 tables + Spatie tables; full suite green (11 passed)
 - [x] **Review gate:** code review (migration quality) + arch review (table placement per module) per `docs/handbook/04-code-review-policy.md`
-- [ ] Human sign-off before Phase 4
+- [x] Human sign-off before Phase 4

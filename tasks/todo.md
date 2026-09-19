@@ -10,8 +10,8 @@ Skill: `fast-plan` (index-first, token-capped planning). Machine index: `tasks/p
 |---|---|---|---|---|
 | Phase 1 — Env init [x] | done | -- | signed | `tasks/phases/phase-01.md` (8 lines) |
 | Phase 2 — Skeleton for developers [x] | done | -- | signed | `tasks/phases/phase-02.md` (8 lines) |
-| Phase 3 — Database Implementation (spec §5, 19 tables) [x] | partial | Task 3.1<br>Task 3.2<br>Task 3.3<br>Task 3.4<br>Task 3.5 | review done, sign-off open | `tasks/phases/phase-03.md` (103 lines) |
-| Phase 4 — Auth slice (spec 6.1, SCOPE-004) | open | Task 4.1<br>Task 4.2<br>Task 4.3 | pending (3 open) | `tasks/phases/phase-04.md` (61 lines) |
+| Phase 3 — Database Implementation (spec §5, 19 tables) [x] | done | -- | signed | `tasks/phases/phase-03.md` (103 lines) |
+| Phase 4 — Auth slice (spec 6.1, SCOPE-004) [x] | done | -- | signed | `tasks/phases/phase-04.md` (61 lines) |
 | Phase 5 — AccessManagement (RULE-002–012, ADR-007/008) | open | Task 5.1<br>Task 5.2<br>Task 5.3 | pending (3 open) | `tasks/phases/phase-05.md` (62 lines) |
 | Phase 6 — Courses + Lessons (spec 6.2, 6.3) | open | Task 6.1<br>Task 6.2 | pending (2 open) | `tasks/phases/phase-06.md` (39 lines) |
 | Phase 7 — Enrollment | open | Task 7.1 | pending (1 open) | `tasks/phases/phase-07.md` (21 lines) |
@@ -28,4 +28,4 @@ Skill: `fast-plan` (index-first, token-capped planning). Machine index: `tasks/p
 
 Dependency chain: 01 -> 02 -> 03 -> 04 -> 05 -> 06 -> 07 -> 08 -> 09 -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16. Appendix B gated separately (Contracts closed + real requirement + ADR).
 
-Current stop: Phase 3 review done, your sign-off open → then Phase 4 — Auth slice. Appendix B [HOLD], non-actionable.
+Current stop: Phase 4 signed off & completed → starting Phase 5 — AccessManagement. Appendix B [HOLD], non-actionable.
