@@ -4,6 +4,7 @@ namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
@@ -23,7 +24,6 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $defaultCountry = config('lms.phone.default_country', 'EG');
         $allowedCountries = config('lms.phone.allowed_countries', ['EG']);
         $allowInternational = config('lms.phone.allow_international', true);
 
@@ -33,18 +33,11 @@ class RegisterRequest extends FormRequest
             'phone_number' => [
                 'nullable',
                 'string',
-                'unique:users,phone_number',
+                Rule::unique('users', 'phone_number'),
                 function ($attribute, $value, $fail) use ($allowInternational) {
-                    // Normalize input string: strip spaces, dashes, parentheses
                     $clean = preg_replace('/[^\d+]/', '', $value);
-
-                    // Check Egyptian Mobile National Format (11 digits: 010, 011, 012, 015)
                     $isEgyptNationalMobile = (bool) preg_match('/^01[0125]\d{8}$/', $clean);
-
-                    // Check Egyptian Mobile E.164 International Format (+2010, +2011, +2012, +2015 + 8 digits)
                     $isEgyptInternationalMobile = (bool) preg_match('/^\+201[0125]\d{8}$/', $clean);
-
-                    // Check General International Format if enabled (+ followed by 7 to 15 digits)
                     $isGeneralInternational = $allowInternational && preg_match('/^\+\d{7,15}$/', $clean);
 
                     if (! $isEgyptNationalMobile && ! $isEgyptInternationalMobile && ! $isGeneralInternational) {

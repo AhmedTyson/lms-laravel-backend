@@ -25,7 +25,7 @@ class User extends Authenticatable implements JWTSubject
      * @return array<string, string>
      */
     /**
-     * Mutator to normalize phone numbers to E.164 (+2010...) before DB insert.
+     * Mutator to normalize phone numbers (convert local EG 010... to +2010...)
      */
     protected function setPhoneNumberAttribute(?string $value): void
     {
@@ -37,7 +37,6 @@ class User extends Authenticatable implements JWTSubject
 
         $clean = preg_replace('/[^\d+]/', '', $value);
 
-        // Convert local Egyptian mobile (010..., 011..., 012..., 015...) to +201...
         if (preg_match('/^01[0125]\d{8}$/', $clean)) {
             $clean = '+20'.substr($clean, 1);
         }
