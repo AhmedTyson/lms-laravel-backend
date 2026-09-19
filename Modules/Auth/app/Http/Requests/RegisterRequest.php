@@ -33,17 +33,8 @@ class RegisterRequest extends FormRequest
             'phone_number' => [
                 'nullable',
                 'string',
+                Rule::phone()->country($allowedCountries)->mobile()->international(),
                 Rule::unique('users', 'phone_number'),
-                function ($attribute, $value, $fail) use ($allowInternational) {
-                    $clean = preg_replace('/[^\d+]/', '', $value);
-                    $isEgyptNationalMobile = (bool) preg_match('/^01[0125]\d{8}$/', $clean);
-                    $isEgyptInternationalMobile = (bool) preg_match('/^\+201[0125]\d{8}$/', $clean);
-                    $isGeneralInternational = $allowInternational && preg_match('/^\+\d{7,15}$/', $clean);
-
-                    if (! $isEgyptNationalMobile && ! $isEgyptInternationalMobile && ! $isGeneralInternational) {
-                        $fail(__('The :attribute must be a valid Egyptian mobile number (11 digits starting with 010, 011, 012, 015) or valid E.164 international format.'));
-                    }
-                },
             ],
             'phone_country' => ['nullable', 'string', 'size:2'],
             'role' => ['required', 'string', 'in:student,instructor'],
