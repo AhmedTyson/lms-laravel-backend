@@ -4,11 +4,12 @@
 
 ## Task 4.1: Registration + email verification
 
-**Description:** `POST /api/register` (Student vs Instructor paths; Instructor gets `approval_status=pending`, `manager_id` NULL until approval). Verification gate blocks enroll/publish (not login/browse).
+**Description:** `POST /api/auth/register` (Student vs Instructor paths; Instructor gets `approval_status=pending`, `manager_id` NULL until approval). Includes `phone_number` validation for Egyptian mobile operators (010, 011, 012, 015) and E.164 international numbers via `RegisterRequest`, normalized in `User` model. Also supports Google OAuth registration/login via Socialite (`GET /api/auth/google/redirect` & `POST /api/auth/google/callback`). Verification gate blocks enroll/publish (not login/browse).
 
 **Acceptance criteria:**
 - [x] Unverified user gets 403 on enrollment stub; verified passes gate
 - [x] Student `manager_id` always NULL
+- [x] `phone_number` validated for Egyptian operator prefixes and normalized to E.164 (`+2010...`)
 
 **Verification:**
 - [x] `vendor/bin/pest --filter="AuthRegistration"` green
@@ -23,12 +24,13 @@
 
 **Estimated scope:** Medium (3-5 files)
 
-## Task 4.2: Login, refresh, me (JWT)
+## Task 4.2: Login, refresh, me, password reset (JWT)
 
-**Description:** `POST /api/login` (JWT), refresh, logout (blacklist), `GET /api/me` behind `auth:api`. No session usage in API.
+**Description:** `POST /api/auth/login` (JWT), Google OAuth login, `POST /api/auth/forgot-password`, `POST /api/auth/reset-password`, `POST /api/auth/refresh`, `POST /api/auth/logout` (blacklist), `GET /api/auth/me` behind `auth:api`. No session usage in API.
 
 **Acceptance criteria:**
 - [x] 401 without token; expired token refreshable within grace; blacklisted token rejected
+- [x] Password reset flow sends signed link and updates password
 
 **Verification:**
 - [x] `vendor/bin/pest --filter="AuthLogin"` green

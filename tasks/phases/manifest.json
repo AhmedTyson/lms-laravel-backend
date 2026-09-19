@@ -65,8 +65,8 @@
   ],
   "checkpoint": "Checkpoint: After Phase 4 [x]",
   "checkpoint_open": 0,
-  "lines": 61,
-  "sha1": "fc7a22d1b239"
+  "lines": 63,
+  "sha1": "a00de6b18c59"
  },
  {
   "file": "tasks/phases/phase-05.md",
