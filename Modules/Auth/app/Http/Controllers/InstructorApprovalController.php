@@ -3,54 +3,44 @@
 namespace Modules\Auth\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Modules\AccessManagement\Services\ManagerAssignmentService;
+use Modules\Auth\Events\InstructorApproved;
+use Modules\Auth\Http\Requests\ApproveInstructorRequest;
+use Modules\Auth\Transformers\UserResource;
 
 class InstructorApprovalController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Approve a pending instructor and set manager.
      */
-    public function index()
+    public function approve(ApproveInstructorRequest $request, int $id, ManagerAssignmentService $managerService): JsonResponse
     {
-        return view('auth::index');
+        $instructor = User::findOrFail($id);
+
+        if ($instructor->approval_status === 'approved') {
+            return response()->json([
+                'message' => 'Instructor is already approved.',
+                'error_code' => 'ALREADY_APPROVED',
+            ], 409);
+        }
+
+        $managerId = $request->validated('manager_id') ?? auth('api')->id();
+        $manager = User::findOrFail($managerId);
+
+        // Assign manager & recompute subtree depth atomically (ADR-007 / ADR-013)
+        $managerService->assign($instructor, $manager);
+
+        $instructor->update([
+            'approval_status' => 'approved',
+        ]);
+
+        event(new InstructorApproved($instructor));
+
+        return response()->json([
+            'message' => 'Instructor approved successfully.',
+            'data' => new UserResource($instructor),
+        ], 200);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('auth::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('auth::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('auth::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

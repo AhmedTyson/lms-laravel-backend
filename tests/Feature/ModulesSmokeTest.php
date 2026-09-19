@@ -11,11 +11,12 @@ test('all nine modules are enabled', function () {
     }
 });
 
-test('modules expose no business routes yet', function () {
+test('modules expose valid registered routes', function () {
     $routes = collect(app('router')->getRoutes()->getRoutes())
         ->map(fn ($r) => $r->uri())
         ->filter(fn ($uri) => str_starts_with($uri, 'api/'));
 
-    // Only the shared health check may exist at init.
-    expect($routes->values()->all())->toBe(['api/health']);
+    expect($routes->contains('api/health'))->toBeTrue();
+    expect($routes->contains('api/auth/register'))->toBeTrue();
+    expect($routes->contains('api/auth/login'))->toBeTrue();
 });
