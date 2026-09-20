@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enums\ApprovalStatus;
+use App\Support\PhoneNormalizer;
 use Database\Factories\UserFactory;
-use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Propaganistas\LaravelPhone\PhoneNumber;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -48,19 +47,7 @@ class User extends Authenticatable implements JWTSubject
     protected function phoneNumber(): Attribute
     {
         return Attribute::make(
-            set: function (?string $value): ?string {
-                if (empty($value)) {
-                    return null;
-                }
-
-                try {
-                    $phone = new PhoneNumber($value, config('lms.phone.default_country', 'EG'));
-
-                    return $phone->isValid() ? $phone->formatE164() : null;
-                } catch (Exception) {
-                    return null;
-                }
-            },
+            set: fn (?string $value) => PhoneNormalizer::toE164($value),
         );
     }
 
