@@ -2,6 +2,10 @@
 
 namespace Modules\Auth\Providers;
 
+use App\Support\ApiResponse;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class AuthServiceProvider extends ModuleServiceProvider
@@ -14,4 +18,18 @@ class AuthServiceProvider extends ModuleServiceProvider
         EventServiceProvider::class,
         RouteServiceProvider::class,
     ];
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        $tooMany = fn () => ApiResponse::error('Too many attempts. Try again later.', 'TOO_MANY_REQUESTS', 429);
+
+        // Fortify convention: login keyed by email+IP so one attacker can't lock out others.
+        RateLimiter::for('auth-login', fn (Request $request) => Limit::perMinute(5)->by($request->input('email').'|'.$request->ip())->response($tooMany));
+        RateLimiter::for('auth-register', fn (Request $request) => Limit::perMinute(6)->by($request->ip())->response($tooMany));
+        RateLimiter::for('auth-verify', fn (Request $request) => Limit::perMinute(6)->by($request->ip())->response($tooMany));
+        RateLimiter::for('auth-password', fn (Request $request) => Limit::perMinute(5)->by($request->ip())->response($tooMany));
+        RateLimiter::for('auth-oauth', fn (Request $request) => Limit::perMinute(10)->by($request->ip())->response($tooMany));
+    }
 }
