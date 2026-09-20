@@ -32,7 +32,7 @@ class AuthController extends Controller
             'phone_number' => $request->validated('phone_number'),
             'password' => $request->validated('password'),
             'manager_id' => null, // Student & unapproved instructor have manager_id = null (RULE-002)
-            'approval_status' => $role === 'instructor' ? 'pending' : null, // SCOPE-004
+            'approval_status' => $role === 'instructor' ? 'pending' : null, // Instructors start as 'pending'; students have no approval lifecycle (SCOPE-004)
         ]);
 
         // Assign Spatie Role if role exists
@@ -102,9 +102,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Send password reset link to user.
-     */
     public function forgotPassword(Request $request): JsonResponse
     {
         $request->validate(['email' => ['required', 'email']]);
@@ -123,9 +120,6 @@ class AuthController extends Controller
         ], 400);
     }
 
-    /**
-     * Reset user password using token.
-     */
     public function resetPassword(Request $request): JsonResponse
     {
         $request->validate([
@@ -158,9 +152,6 @@ class AuthController extends Controller
         ], 400);
     }
 
-    /**
-     * Redirect to Google OAuth consent.
-     */
     public function googleRedirect(): JsonResponse
     {
         return response()->json([
@@ -168,9 +159,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Callback for Google OAuth.
-     */
     public function googleCallback(Request $request): JsonResponse
     {
         $request->validate([
@@ -214,9 +202,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Refresh active JWT.
-     */
     public function refresh(): JsonResponse
     {
         $newToken = auth('api')->refresh();
@@ -228,9 +213,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    /**
-     * Get authenticated user profile.
-     */
     public function me(): JsonResponse
     {
         return response()->json([
