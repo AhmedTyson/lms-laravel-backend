@@ -2,26 +2,14 @@
 
 namespace Modules\Auth\Http\Controllers;
 
-use App\Enums\ApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Support\ApiResponse;
-use Exception;
-use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Modules\Auth\Exceptions\OAuthNotConfiguredException;
-use Modules\Auth\Http\Requests\ForgotPasswordRequest;
-use Modules\Auth\Http\Requests\GoogleCallbackRequest;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Http\Requests\RegisterRequest;
-use Modules\Auth\Http\Requests\ResetPasswordRequest;
 use Modules\Auth\Http\Requests\VerifyEmailRequest;
-use Modules\Auth\Services\GoogleAuthService;
+use Modules\Auth\Services\RegistrationService;
 use Modules\Auth\Transformers\UserResource;
 
 class AuthController extends Controller
@@ -29,20 +17,12 @@ class AuthController extends Controller
     /**
      * Register a new Student or Instructor.
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(RegisterRequest $request, RegistrationService $service): JsonResponse
     {
-        $role = $request->validated('role');
-
-        $user = User::create($request->safe()->except(['role', 'phone_country']));
-
-        $user->forceFill([
-            'manager_id' => null, // Student & unapproved instructor have manager_id = null (RULE-002)
-            'approval_status' => $role === 'instructor' ? ApprovalStatus::Pending : null, // Instructors start as 'pending'; students have no approval lifecycle (SCOPE-004)
-        ])->save();
-
-        $user->assignRoleIfExists($role);
-
-        event(new Registered($user));
+        $user = $service->create(
+            $request->safe()->except(['role', 'phone_country']),
+            $request->validated('role')
+        );
 
         return ApiResponse::success('Registration successful. Please verify your email address.', new UserResource($user), 201);
     }
@@ -85,79 +65,5 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
 
         return ApiResponse::success('Email verified successfully.', new UserResource($user));
-    }
-
-    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
-    {
-        $status = Password::sendResetLink($request->only('email'));
-
-        if ($status === Password::RESET_LINK_SENT) {
-            return ApiResponse::success('If your email is registered, you will receive a password reset link shortly.');
-        }
-
-        return ApiResponse::error('Unable to send password reset link.', 'RESET_LINK_FAILED', 400);
-    }
-
-    public function resetPassword(ResetPasswordRequest $request): JsonResponse
-    {
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password),
-                    'remember_token' => Str::random(60),
-                ])->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        if ($status === Password::PASSWORD_RESET) {
-            return ApiResponse::success('Password reset successfully.');
-        }
-
-        return ApiResponse::error('Invalid or expired password reset token.', 'INVALID_RESET_TOKEN', 400);
-    }
-
-    public function googleRedirect(GoogleAuthService $service): JsonResponse
-    {
-        try {
-            return response()->json(['url' => $service->redirectUrl()]);
-        } catch (OAuthNotConfiguredException) {
-            return ApiResponse::error('Google OAuth is not configured.', 'OAUTH_NOT_CONFIGURED', 503);
-        }
-    }
-
-    public function googleCallback(GoogleCallbackRequest $request, GoogleAuthService $service): JsonResponse
-    {
-        try {
-            $user = $service->handle($request->validated('role', 'student'));
-        } catch (OAuthNotConfiguredException) {
-            return ApiResponse::error('Google OAuth is not configured.', 'OAUTH_NOT_CONFIGURED', 503);
-        } catch (Exception) {
-            return ApiResponse::error('Invalid Google authorization code.', 'INVALID_GOOGLE_CODE', 422);
-        }
-
-        return ApiResponse::jwt(auth('api')->login($user), new UserResource($user));
-    }
-
-    /**
-     * Invalidate (blacklist) current JWT.
-     */
-    public function logout(): JsonResponse
-    {
-        auth('api')->logout();
-
-        return ApiResponse::success('Successfully logged out.');
-    }
-
-    public function refresh(): JsonResponse
-    {
-        return ApiResponse::jwt(auth('api')->refresh());
-    }
-
-    public function me(Request $request): JsonResponse
-    {
-        return ApiResponse::data(new UserResource($request->user('api')));
     }
 }
