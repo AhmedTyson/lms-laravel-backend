@@ -25,7 +25,7 @@ class InstructorApprovalController extends Controller
             return ApiResponse::error('Instructor is already approved.', 'ALREADY_APPROVED', 409);
         }
 
-        $managerId = $request->validated('manager_id') ?? auth('api')->id();
+        $managerId = $request->validated('manager_id') ?? $request->user('api')?->id;
         $manager = User::findOrFail($managerId);
 
         // Assign manager & recompute subtree depth atomically (ADR-007 / ADR-013)

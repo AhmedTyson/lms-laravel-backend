@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -57,7 +58,7 @@ class AuthController extends Controller
             return ApiResponse::error('Invalid credentials.', 'INVALID_CREDENTIALS', 401);
         }
 
-        return ApiResponse::jwt($token, new UserResource(auth('api')->user()));
+        return ApiResponse::jwt($token, new UserResource($request->user('api')));
     }
 
     /**
@@ -155,8 +156,8 @@ class AuthController extends Controller
         return ApiResponse::jwt(auth('api')->refresh());
     }
 
-    public function me(): JsonResponse
+    public function me(Request $request): JsonResponse
     {
-        return ApiResponse::data(new UserResource(auth('api')->user()));
+        return ApiResponse::data(new UserResource($request->user('api')));
     }
 }
