@@ -2,7 +2,7 @@
 
 Learning Management System backend: instructors author structured courses (lessons, assignments, quizzes), students enroll and progress with reliable tracking, admins retain platform oversight — plus a general-purpose Access Management subsystem (hierarchical permission delegation, groups). All exposed through a versioned REST API.
 
-> Status: **Phases 1–2 complete** (init, env, tooling, CI, nine module shells, DB kit). Business logic lands in later phases per `tasks/plan.md`. No auth endpoints, grants, or course tables exist yet — by design.
+> Status: **Phases 1–4 complete** (init, env, tooling, CI, nine module shells, 19-table schema, Auth slice live: JWT register/login/refresh, email verify, password reset, instructor approval). Now: **Phase 5 — AccessManagement**. Tracker: `tasks/todo.md`.
 
 Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architecture baseline: `docs/Architecture Initialization + Phase Replanning Prompt.md` · Database docs: `docs/DATABASE.md` (Mermaid ERD, renders on GitHub) · `docs/schema.dbml` (paste into dbdiagram.io) · `docs/erd.html` (offline interactive explorer — crow's-foot, click tables for stories + rules)
 
@@ -10,8 +10,10 @@ Spec: `docs/LMS_Laravel_BRD_PRD_v2_1_full.md` (v2.1, authoritative) · Architect
 
 | Concern | Technology | Version |
 |---|---|---|
-| Framework | Laravel | 13.x (PHP ^8.3) |
+| Framework | Laravel | 13.x (PHP ^8.4) |
 | Auth | Tymon JWT | ^2.3 |
+| Phone validation | propaganistas/laravel-phone (libphonenumber) | * |
+| Request graph | laramint/laravel-brain (`brain:scan`, dev only) | ^2.7 |
 | Authorization | Spatie Permission (**Teams mode ON**) | ^8.3 |
 | Audit | Spatie Activitylog | ^5.1 |
 | Modules | nWidart Laravel Modules | ^13.0 |
@@ -73,6 +75,8 @@ Modules/            # Auth, AccessManagement, Courses, Enrollment, Assignments,
                     # Quizzes, Progress, Notifications, Reporting (shells: providers
                     # + config + database stubs + empty routes + tests)
 app/ config/ routes/ database/   # standard Laravel (thin; logic lives in modules)
+                      # app/Support/ApiResponse.php — shared JSON envelope (success/data/error/jwt)
+                      # rate limiters: core owns `api`, each module owns its own (Auth: auth-login/register/verify/password/oauth)
 docs/               # BRD/PRD spec, architecture baseline, ADRs, conventions
 tasks/              # plan.md + todo.md (phase tracker)
 ```
@@ -83,7 +87,9 @@ Planned module internals: `Domain/` `Application/` `Infrastructure/` `Http/` `Da
 
 - [x] Phase 1 — scaffold, env, packages, tooling, CI
 - [x] Phase 2 — nine module shells + DB init kit + JWT api guard + Filament
-- [ ] Later — schema → Auth → AccessManagement → teaching modules → reviews (code/arch/patterns)
+- [x] Phase 3 — 19-table schema + seeders + SchemaTest
+- [x] Phase 4 — Auth slice (register/login/refresh, email verify, password reset, instructor approval)
+- [ ] Phase 5 — AccessManagement (current)
 
 ## Contributing
 
