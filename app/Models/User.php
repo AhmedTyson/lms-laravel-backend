@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Propaganistas\LaravelPhone\PhoneNumber;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Throwable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[Fillable(['name', 'email', 'phone_number', 'password', 'manager_id', 'manager_depth', 'approval_status'])]
@@ -19,42 +22,40 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    /**
-     * Mutator to normalize phone numbers (convert local EG 010... to +2010...)
-     */
-    protected function setPhoneNumberAttribute(?string $value): void
-    {
-        if (empty($value)) {
-            $this->attributes['phone_number'] = null;
-
-            return;
-        }
-
-        $clean = preg_replace('/[^\d+]/', '', $value);
-
-        if (preg_match('/^01[0125]\d{8}$/', $clean)) {
-            $clean = '+20'.substr($clean, 1);
-        }
-
-        $this->attributes['phone_number'] = $clean;
-    }
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Normalises to E.164 on write; invalid input passes through for validation to reject.
+    protected function phoneNumber(): Attribute
+    {
+        return Attribute::make(
+            set: function (?string $value): ?string {
+                if (empty($value)) {
+                    return null;
+                }
+
+                $phone = new PhoneNumber($value, config('lms.phone.default_country', 'EG'));
+
+                try {
+                    return $phone->isValid() ? $phone->formatE164() : $value;
+                } catch (Throwable) {
+                    return $value;
+                }
+            },
+        );
+    }
+
+    // Assigns a Spatie role only when it has been seeded for the api guard.
+    public function assignRoleIfExists(string $role): void
+    {
+        if (Role::where('name', $role)->where('guard_name', 'api')->exists()) {
+            $this->assignRole(Role::findByName($role, 'api'));
+        }
     }
 
     public function getJWTIdentifier(): mixed
