@@ -6,18 +6,21 @@ use App\Enums\ApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Support\ApiResponse;
+use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Modules\Auth\Exceptions\OAuthNotConfiguredException;
 use Modules\Auth\Http\Requests\ForgotPasswordRequest;
+use Modules\Auth\Http\Requests\GoogleCallbackRequest;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Http\Requests\RegisterRequest;
 use Modules\Auth\Http\Requests\ResetPasswordRequest;
 use Modules\Auth\Http\Requests\VerifyEmailRequest;
+use Modules\Auth\Services\GoogleAuthService;
 use Modules\Auth\Transformers\UserResource;
 
 class AuthController extends Controller
@@ -115,35 +118,24 @@ class AuthController extends Controller
         return ApiResponse::error('Invalid or expired password reset token.', 'INVALID_RESET_TOKEN', 400);
     }
 
-    public function googleRedirect(): JsonResponse
+    public function googleRedirect(GoogleAuthService $service): JsonResponse
     {
-        return response()->json([
-            'url' => 'https://accounts.google.com/o/oauth2/v2/auth?client_id=mock-client-id&redirect_uri=mock-callback',
-        ]);
+        try {
+            return response()->json(['url' => $service->redirectUrl()]);
+        } catch (OAuthNotConfiguredException) {
+            return ApiResponse::error('Google OAuth is not configured.', 'OAUTH_NOT_CONFIGURED', 503);
+        }
     }
 
-    public function googleCallback(Request $request): JsonResponse
+    public function googleCallback(GoogleCallbackRequest $request, GoogleAuthService $service): JsonResponse
     {
-        $request->validate([
-            'code' => ['required', 'string'],
-            'role' => ['nullable', 'string', 'in:student,instructor'],
-        ]);
-
-        // Mock Google user retrieval for Phase 7 API contract
-        $role = $request->input('role', 'student');
-
-        $user = User::firstOrCreate(
-            ['email' => 'google_user_'.Str::random(6).'@gmail.com'],
-            [
-                'name' => 'Google User',
-                'password' => Hash::make(Str::random(16)),
-                'email_verified_at' => now(),
-            ]
-        );
-
-        $user->forceFill([
-            'approval_status' => $role === 'instructor' ? ApprovalStatus::Pending : null,
-        ])->save();
+        try {
+            $user = $service->handle($request->validated('role', 'student'));
+        } catch (OAuthNotConfiguredException) {
+            return ApiResponse::error('Google OAuth is not configured.', 'OAUTH_NOT_CONFIGURED', 503);
+        } catch (Exception) {
+            return ApiResponse::error('Invalid Google authorization code.', 'INVALID_GOOGLE_CODE', 422);
+        }
 
         return ApiResponse::jwt(auth('api')->login($user), new UserResource($user));
     }
