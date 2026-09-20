@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'typesafe' => [
+        'api_key' => env('TYPESAFE_API_KEY', 'apikey_22128b9f981ddf2d4f5eabdacf282d282945_fcbf7e361dd2f89d399a913e50bd8e05bc1508e85f7f4e858baeb164bc16d3fc'),
+        'base_url' => env('TYPESAFE_BASE_URL', 'https://api.typesafe.ai/v1/systemone'),
+        'model' => env('TYPESAFE_MODEL', 'jev-latest'),
+    ],
 ];
