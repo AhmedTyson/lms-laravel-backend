@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Http\Controllers;
 
+use App\Enums\ApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Support\ApiResponse;
@@ -28,11 +29,12 @@ class AuthController extends Controller
     {
         $role = $request->validated('role');
 
-        $user = User::create([
-            ...$request->safe()->except(['role', 'phone_country']),
-            'manager_id' => null,  // Student & unapproved instructor have manager_id = null (RULE-002)
-            'approval_status' => $role === 'instructor' ? 'pending' : null, // Instructors start as 'pending'; students have no approval lifecycle (SCOPE-004)
-        ]);
+        $user = User::create($request->safe()->except(['role', 'phone_country']));
+
+        $user->forceFill([
+            'manager_id' => null, // Student & unapproved instructor have manager_id = null (RULE-002)
+            'approval_status' => $role === 'instructor' ? ApprovalStatus::Pending : null, // Instructors start as 'pending'; students have no approval lifecycle (SCOPE-004)
+        ])->save();
 
         $user->assignRoleIfExists($role);
 
@@ -130,9 +132,12 @@ class AuthController extends Controller
                 'name' => 'Google User',
                 'password' => Hash::make(Str::random(16)),
                 'email_verified_at' => now(),
-                'approval_status' => $role === 'instructor' ? 'pending' : null,
             ]
         );
+
+        $user->forceFill([
+            'approval_status' => $role === 'instructor' ? ApprovalStatus::Pending : null,
+        ])->save();
 
         return ApiResponse::jwt(auth('api')->login($user), new UserResource($user));
     }
