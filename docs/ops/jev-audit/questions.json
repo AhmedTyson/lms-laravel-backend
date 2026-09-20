@@ -1,0 +1,107 @@
+{
+  "_readme": "Noul questions for Jev (TypeSafe System One). 'yes_means' tells code how to read p(yes): 'concern' = a high value is a problem, 'ok' = a high value is good, 'info' = a fact that other checks combine with. Thresholds are starting points: validate on your own data before trusting them (see --validate).",
+  "thresholds": { "high": 0.7, "low": 0.3 },
+
+  "commit": [
+    {
+      "id": "secret_committed",
+      "yes_means": "concern",
+      "source": "handbook 05 §1 (git log -p must never show a real key)",
+      "instructions": "Does this commit add a literal credential (API key, token, password or secret) that looks real, as opposed to an empty value, an env() lookup without a literal default, or an obvious placeholder?",
+      "criteria": {
+        "true": "A value shaped like a real credential appears in added lines, including as a default argument or inside an example env file. A SECRET-LIKE marker counts as a real-looking value.",
+        "false": "Only empty values, env() references without a literal default, or clearly fake placeholders such as changeme or xxx."
+      }
+    },
+    {
+      "id": "new_dependency_or_pattern",
+      "yes_means": "info",
+      "source": "handbook 06 §1 + DoD 07 (new package/pattern/contract needs an ADR before the code lands)",
+      "instructions": "Does this commit introduce a new third-party package, external service integration, or architectural pattern to the repository, beyond routine use of what already exists?",
+      "criteria": {
+        "true": "A new composer or npm dependency, a new outbound API client, or a new cross-cutting mechanism such as a shared response envelope or a limiter registry.",
+        "false": "Routine feature, fix, refactor, docs or test work using packages and patterns already in the repo."
+      }
+    },
+    {
+      "id": "behavior_in_root_app",
+      "yes_means": "concern",
+      "source": "AGENTS.md (root app/ = kernel only) + handbook 06 §3",
+      "instructions": "Does this commit add business or integration behavior under the root app/ directory instead of inside an owning module?",
+      "criteria": {
+        "true": "Services, API clients, validation rules or domain logic placed in app/, other than the User model, service providers, or console kernel code.",
+        "false": "Changes live inside Modules/, or only touch kernel files, docs, config, tests or tooling."
+      }
+    },
+    {
+      "id": "test_depends_on_live_service",
+      "yes_means": "concern",
+      "source": "handbook 03 §4 (flaky tests are defects) + CI runs in-memory SQLite with no secrets",
+      "instructions": "Does a test added or changed in this commit depend on a real external service, a real network call, or a real API key instead of a fake?",
+      "criteria": {
+        "true": "The test would fail offline or without a secret, for example it calls a live HTTP API without Http::fake().",
+        "false": "No test is touched, or every touched test runs against fakes, factories and the in-memory database only."
+      }
+    },
+    {
+      "id": "governed_rule_touched",
+      "yes_means": "info",
+      "source": "handbook 03 §2 (every cited RULE needs a test naming it)",
+      "instructions": "Does this commit change behavior that a numbered business rule or SCOPE item in the spec governs (RULE-xxx or SCOPE-xxx)?",
+      "criteria": {
+        "true": "Changes enrollment, course lifecycle, grading, delegation, approval, or another behavior that a spec rule constrains.",
+        "false": "Scaffolding, tooling, docs, formatting or infrastructure with no business-rule behavior."
+      }
+    },
+    {
+      "id": "beyond_current_phase",
+      "yes_means": "concern",
+      "source": "handbook 01 §5 + todo.md (phases strictly in order; ModulesSmokeTest gate)",
+      "instructions": "Does this commit implement functionality that belongs to a phase later than repo_context.current_phase?",
+      "criteria": {
+        "true": "Adds endpoints, tables or services whose phase appears after the current phase in repo_context.phases.",
+        "false": "The work belongs to the current or an earlier phase, or is docs or tooling that supports them."
+      }
+    },
+    {
+      "id": "mixed_concerns",
+      "yes_means": "concern",
+      "source": "handbook 01 §3 (one task = one PR) + 04 §4 (no unrelated changes)",
+      "instructions": "Does this commit combine unrelated changes that would normally be separate commits, for example a feature plus unrelated tooling or dependency changes?",
+      "criteria": {
+        "true": "Two or more independent purposes are visible in the commit message or in the changed files.",
+        "false": "One coherent purpose, even if it touches several files."
+      }
+    }
+  ],
+
+  "rule": [
+    {
+      "id": "rule_requires_db",
+      "yes_means": "info",
+      "instructions": "Does the rule text explicitly require database-level enforcement (for example the words DB-enforced, unique, or a constraint), as opposed to application-level enforcement or no enforcement?",
+      "criteria": {
+        "true": "The rule states or clearly implies that the database must enforce it.",
+        "false": "The rule is application-enforced, is silent about enforcement, or forbids a constraint."
+      }
+    },
+    {
+      "id": "db_level_enforced",
+      "yes_means": "ok",
+      "instructions": "Does the supplied migration enforce this rule with a database constraint (unique index, foreign key or check) instead of leaving it only to application code?",
+      "criteria": {
+        "true": "A unique index, foreign key or check constraint in the migration directly enforces the rule.",
+        "false": "The migration only stores the data; enforcement would have to happen in application code."
+      }
+    },
+    {
+      "id": "contradicts_rule",
+      "yes_means": "concern",
+      "instructions": "Does the supplied migration contradict the rule text, for example a missing column, uniqueness on the wrong columns, or a constraint the rule says must not exist?",
+      "criteria": {
+        "true": "The migration's structure conflicts with what the rule requires or forbids.",
+        "false": "The migration is consistent with the rule, or the rule does not constrain the schema."
+      }
+    }
+  ]
+}
