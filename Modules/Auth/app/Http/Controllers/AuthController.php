@@ -64,6 +64,12 @@ class AuthController extends Controller
     {
         $user = User::findOrFail($request->validated('id'));
 
+        $signature = hash_hmac('sha256', $request->validated('id').$request->validated('hash').$request->validated('expires'), config('app.key'));
+
+        if (! hash_equals($signature, (string) $request->validated('signature')) || $request->validated('expires') < now()->timestamp) {
+            return ApiResponse::error('Invalid or expired verification link.', 'INVALID_SIGNATURE', 400);
+        }
+
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $request->validated('hash'))) {
             return ApiResponse::error('Invalid email verification hash.', 'INVALID_HASH', 400);
         }
