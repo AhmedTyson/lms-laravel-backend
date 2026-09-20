@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -49,20 +48,6 @@ class User extends Authenticatable implements JWTSubject
         return Attribute::make(
             set: fn (?string $value) => PhoneNormalizer::toE164($value),
         );
-    }
-
-    // Assigns a Spatie role only when it has been seeded for the api guard.
-    public function assignRoleIfExists(string $roleName): bool
-    {
-        $role = Role::where('name', $roleName)->where('guard_name', 'api')->first();
-
-        if (! $role) {
-            return false;
-        }
-
-        $this->assignRole($role);
-
-        return true;
     }
 
     public function getJWTIdentifier(): mixed
