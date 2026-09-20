@@ -9,6 +9,10 @@ class TypeSafeJevServiceTest extends TestCase
 {
     public function test_jev_service_executes_system_one_decisions(): void
     {
+        if (! config('services.typesafe.api_key')) {
+            $this->markTestSkipped('TYPESAFE_API_KEY not configured.');
+        }
+
         $service = new TypeSafeJevService;
 
         $noulScore = $service->noul(
