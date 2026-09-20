@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use Exception;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -12,7 +13,6 @@ use Illuminate\Notifications\Notifiable;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
-use Throwable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 #[Fillable(['name', 'email', 'phone_number', 'password', 'manager_id', 'manager_depth', 'approval_status'])]
@@ -39,11 +39,11 @@ class User extends Authenticatable implements JWTSubject
                     return null;
                 }
 
-                $phone = new PhoneNumber($value, config('lms.phone.default_country', 'EG'));
-
                 try {
+                    $phone = new PhoneNumber($value, config('lms.phone.default_country', 'EG'));
+
                     return $phone->isValid() ? $phone->formatE164() : $value;
-                } catch (Throwable) {
+                } catch (Exception) {
                     return $value;
                 }
             },
@@ -51,11 +51,17 @@ class User extends Authenticatable implements JWTSubject
     }
 
     // Assigns a Spatie role only when it has been seeded for the api guard.
-    public function assignRoleIfExists(string $role): void
+    public function assignRoleIfExists(string $roleName): bool
     {
-        if (Role::where('name', $role)->where('guard_name', 'api')->exists()) {
-            $this->assignRole(Role::findByName($role, 'api'));
+        $role = Role::where('name', $roleName)->where('guard_name', 'api')->first();
+
+        if (! $role) {
+            return false;
         }
+
+        $this->assignRole($role);
+
+        return true;
     }
 
     public function getJWTIdentifier(): mixed
