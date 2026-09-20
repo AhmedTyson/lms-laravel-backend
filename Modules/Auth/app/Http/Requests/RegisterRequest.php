@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Http\Requests;
 
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,16 +25,13 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $allowedCountries = config('lms.phone.allowed_countries', ['EG']);
-        $allowInternational = config('lms.phone.allow_international', true);
-
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'phone_number' => [
                 'nullable',
                 'string',
-                Rule::phone()->country($allowedCountries)->mobile()->international(),
+                new ValidPhoneNumber,
                 Rule::unique('users', 'phone_number'),
             ],
             'phone_country' => ['nullable', 'string', 'size:2'],
