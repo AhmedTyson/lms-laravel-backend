@@ -2,45 +2,29 @@
 
 namespace Modules\AccessManagement\Providers;
 
-use Illuminate\Console\Scheduling\Schedule;
+use App\Support\ApiResponse;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class AccessManagementServiceProvider extends ModuleServiceProvider
 {
-    /**
-     * The name of the module.
-     */
     protected string $name = 'AccessManagement';
 
-    /**
-     * The lowercase version of the module name.
-     */
     protected string $nameLower = 'accessmanagement';
 
-    /**
-     * Command classes to register.
-     *
-     * @var string[]
-     */
-    // protected array $commands = [];
-
-    /**
-     * Provider classes to register.
-     *
-     * @var string[]
-     */
     protected array $providers = [
         EventServiceProvider::class,
         RouteServiceProvider::class,
     ];
 
-    /**
-     * Define module schedules.
-     *
-     * @param  $schedule
-     */
-    // protected function configureSchedules(Schedule $schedule): void
-    // {
-    //     $schedule->command('inspire')->hourly();
-    // }
+    public function boot(): void
+    {
+        parent::boot();
+
+        $tooMany = fn () => ApiResponse::error('Too many attempts. Try again later.', 'TOO_MANY_REQUESTS', 429);
+
+        RateLimiter::for('access-grants', fn (Request $request) => Limit::perMinute(30)->by($request->user()?->id ?: $request->ip())->response($tooMany));
+    }
 }
