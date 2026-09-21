@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\AccessManagement\Models\Group;
 use Modules\AccessManagement\Models\PermissionGrant;
+use Modules\AccessManagement\Services\GroupService;
 use Modules\AccessManagement\Services\PermissionReadModelSync;
 use Tests\TestCase;
 
@@ -25,7 +26,7 @@ class PermissionGrantTest extends TestCase
 
         $this->admin = User::factory()->create();
         $this->sub = User::factory()->create(['manager_id' => $this->admin->id]);
-        $this->group = Group::create(['owner_id' => $this->admin->id, 'name' => 'Engineering']);
+        $this->group = app(GroupService::class)->create(['name' => 'Engineering'], $this->admin);
 
         // System-issued ceiling so the admin can grant: ledger row + read-model sync.
         $seed = PermissionGrant::create([

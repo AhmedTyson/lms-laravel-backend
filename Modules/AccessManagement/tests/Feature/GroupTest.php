@@ -4,8 +4,7 @@ namespace Modules\AccessManagement\Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Modules\AccessManagement\Models\Group;
-use Modules\AccessManagement\Models\GroupMember;
+use Modules\AccessManagement\Services\GroupService;
 use Tests\TestCase;
 
 class GroupTest extends TestCase
@@ -21,7 +20,7 @@ class GroupTest extends TestCase
     {
         $owner = User::factory()->create();
         $member = User::factory()->create();
-        $group = Group::create(['owner_id' => $owner->id, 'name' => 'Engineering']);
+        $group = app(GroupService::class)->create(['name' => 'Engineering'], $owner);
 
         // Membership alone confers nothing (RULE-009): member is not owner's subordinate chain target here,
         // and holds no permission, so granting through them fails the ceiling.
@@ -39,10 +38,9 @@ class GroupTest extends TestCase
     {
         $manager = User::factory()->create();
         $owner = User::factory()->create(['manager_id' => $manager->id]);
-        $group = Group::create(['owner_id' => $owner->id, 'name' => 'Engineering']);
-        GroupMember::create(['group_id' => $group->id, 'user_id' => $owner->id]);
+        $group = app(GroupService::class)->create(['name' => 'Engineering'], $owner);
 
-        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($manager))
+        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($owner))
             ->deleteJson("/api/groups/{$group->id}/members/{$owner->id}")
             ->assertStatus(200);
 
@@ -54,10 +52,9 @@ class GroupTest extends TestCase
     {
         $admin = User::factory()->create(['email' => 'admin@example.com']);
         $owner = User::factory()->create();
-        $group = Group::create(['owner_id' => $owner->id, 'name' => 'Engineering']);
-        GroupMember::create(['group_id' => $group->id, 'user_id' => $owner->id]);
+        $group = app(GroupService::class)->create(['name' => 'Engineering'], $owner);
 
-        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($admin))
+        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($owner))
             ->deleteJson("/api/groups/{$group->id}/members/{$owner->id}")
             ->assertStatus(200);
 
@@ -77,5 +74,30 @@ class GroupTest extends TestCase
         $this->withHeaders($headers)->getJson("/api/groups/{$id}")->assertStatus(200);
         $this->withHeaders($headers)->deleteJson("/api/groups/{$id}")->assertStatus(200);
         $this->assertDatabaseMissing('groups', ['id' => $id]);
+    }
+
+    public function test_outsider_cannot_view_or_delete_group(): void
+    {
+        $owner = User::factory()->create();
+        $outsider = User::factory()->create();
+        $group = app(GroupService::class)->create(['name' => 'Engineering'], $owner);
+        $headers = ['Authorization' => 'Bearer '.$this->tokenFor($outsider)];
+
+        // Laravel renders policy denial as 403 with our exception handler shape.
+        $this->withHeaders($headers)->getJson("/api/groups/{$group->id}")->assertStatus(403);
+        $this->withHeaders($headers)->deleteJson("/api/groups/{$group->id}")->assertStatus(403);
+        $this->assertDatabaseHas('groups', ['id' => $group->id]);
+    }
+
+    public function test_outsider_cannot_manage_members(): void
+    {
+        $owner = User::factory()->create();
+        $outsider = User::factory()->create();
+        $group = app(GroupService::class)->create(['name' => 'Engineering'], $owner);
+        $headers = ['Authorization' => 'Bearer '.$this->tokenFor($outsider)];
+
+        $this->withHeaders($headers)
+            ->postJson("/api/groups/{$group->id}/members", ['user_id' => $outsider->id])
+            ->assertStatus(403);
     }
 }

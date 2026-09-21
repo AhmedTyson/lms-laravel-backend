@@ -4,7 +4,7 @@ namespace Modules\AccessManagement\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RevokeGrantRequest extends FormRequest
+class DelegationRequest extends FormRequest
 {
     public function authorize(): bool
     {

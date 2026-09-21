@@ -46,17 +46,26 @@ class DelegationService
         });
     }
 
-    // RULE-003: walks grantee chain upward, granter must appear.
+    // RULE-003: walks grantee chain upward, granter must appear. Depth-capped, cycle-safe.
     private function ensureSubordinate(User $granter, User $grantee): void
     {
+        $seen = [$grantee->id => true];
         $current = $grantee;
 
-        while ($current !== null && $current->manager_id !== null) {
+        for ($depth = 0; $depth < 32 && $current !== null && $current->manager_id !== null; $depth++) {
             if ($current->manager_id === $granter->id) {
                 return;
             }
 
             $current = $current->manager;
+
+            if ($current !== null && isset($seen[$current->id])) {
+                break;
+            }
+
+            if ($current !== null) {
+                $seen[$current->id] = true;
+            }
         }
 
         throw new NotSubordinateException("User {$grantee->id} is not subordinate to {$granter->id}.");

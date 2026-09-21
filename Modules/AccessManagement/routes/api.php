@@ -9,7 +9,7 @@ Route::post('grants', [GrantController::class, 'store'])->middleware(['auth:api'
 Route::post('revokes', [GrantController::class, 'revoke'])->middleware(['auth:api', 'throttle:access-grants']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::apiResource('groups', GroupController::class)->only(['index', 'store', 'show', 'destroy'])->middleware('throttle:api');
-    Route::post('groups/{group}/members', [GroupMemberController::class, 'store'])->middleware('throttle:api');
-    Route::delete('groups/{group}/members/{user}', [GroupMemberController::class, 'destroy'])->middleware('throttle:api');
+    Route::apiResource('groups', GroupController::class)->only(['index', 'store', 'show', 'destroy'])->middleware('throttle:access-groups');
+    Route::post('groups/{group}/members', [GroupMemberController::class, 'store'])->middleware('throttle:access-groups');
+    Route::delete('groups/{group}/members/{user}', [GroupMemberController::class, 'destroy'])->middleware('throttle:access-groups');
 });
