@@ -3,54 +3,37 @@
 namespace Modules\AccessManagement\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Modules\AccessManagement\Http\Requests\StoreGroupRequest;
+use Modules\AccessManagement\Models\Group;
+use Modules\AccessManagement\Services\GroupService;
+use Modules\AccessManagement\Transformers\GroupResource;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
-        return view('accessmanagement::index');
+        return ApiResponse::data(GroupResource::collection(Group::paginate()));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreGroupRequest $request, GroupService $service): JsonResponse
     {
-        return view('accessmanagement::create');
+        $group = $service->create($request->validated(), $request->user('api'));
+
+        return ApiResponse::success('Group created.', new GroupResource($group), 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function show(Group $group): JsonResponse
     {
-        return view('accessmanagement::show');
+        return ApiResponse::data(new GroupResource($group));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function destroy(Group $group): JsonResponse
     {
-        return view('accessmanagement::edit');
+        $group->members()->delete();
+        $group->delete();
+
+        return ApiResponse::success('Group deleted.');
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

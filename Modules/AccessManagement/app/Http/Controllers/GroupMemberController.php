@@ -3,54 +3,27 @@
 namespace Modules\AccessManagement\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Support\ApiResponse;
+use Illuminate\Http\JsonResponse;
+use Modules\AccessManagement\Http\Requests\StoreGroupMemberRequest;
+use Modules\AccessManagement\Models\Group;
+use Modules\AccessManagement\Services\GroupService;
+use Modules\AccessManagement\Transformers\GroupMemberResource;
+use Modules\AccessManagement\Transformers\GroupResource;
 
 class GroupMemberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(StoreGroupMemberRequest $request, Group $group, GroupService $service): JsonResponse
     {
-        return view('accessmanagement::index');
+        $member = $service->addMember($group, $request->validated('user_id'));
+
+        return ApiResponse::success('Member added.', new GroupMemberResource($member), 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function destroy(Group $group, int $user, GroupService $service): JsonResponse
     {
-        return view('accessmanagement::create');
+        $group = $service->removeMember($group, $user);
+
+        return ApiResponse::success('Member removed.', new GroupResource($group));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('accessmanagement::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('accessmanagement::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }

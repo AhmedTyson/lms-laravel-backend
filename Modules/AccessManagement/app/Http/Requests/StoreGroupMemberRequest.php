@@ -4,7 +4,7 @@ namespace Modules\AccessManagement\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGroupRequest extends FormRequest
+class StoreGroupMemberRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,7 @@ class StoreGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 }
