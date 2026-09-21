@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Auth\Transformers\UserResource;
+use Modules\Auth\Http\Resources\UserResource;
 
 class SessionController extends Controller
 {

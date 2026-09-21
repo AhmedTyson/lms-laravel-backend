@@ -9,8 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Modules\Auth\Http\Requests\LoginRequest;
 use Modules\Auth\Http\Requests\RegisterRequest;
 use Modules\Auth\Http\Requests\VerifyEmailRequest;
+use Modules\Auth\Http\Resources\UserResource;
 use Modules\Auth\Services\RegistrationService;
-use Modules\Auth\Transformers\UserResource;
 
 class AuthController extends Controller
 {

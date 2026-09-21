@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\AccessManagement\Services\ManagerAssignmentService;
 use Modules\Auth\Events\InstructorApproved;
 use Modules\Auth\Http\Requests\ApproveInstructorRequest;
-use Modules\Auth\Transformers\UserResource;
+use Modules\Auth\Http\Resources\UserResource;
 
 class InstructorApprovalController extends Controller
 {

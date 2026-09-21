@@ -8,8 +8,8 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Modules\Auth\Exceptions\OAuthNotConfiguredException;
 use Modules\Auth\Http\Requests\GoogleCallbackRequest;
+use Modules\Auth\Http\Resources\UserResource;
 use Modules\Auth\Services\GoogleAuthService;
-use Modules\Auth\Transformers\UserResource;
 
 class OAuthController extends Controller
 {

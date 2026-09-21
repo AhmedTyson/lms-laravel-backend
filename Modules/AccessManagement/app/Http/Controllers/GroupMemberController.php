@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 use Modules\AccessManagement\Http\Requests\StoreGroupMemberRequest;
+use Modules\AccessManagement\Http\Resources\GroupMemberResource;
+use Modules\AccessManagement\Http\Resources\GroupResource;
 use Modules\AccessManagement\Models\Group;
 use Modules\AccessManagement\Services\GroupService;
-use Modules\AccessManagement\Transformers\GroupMemberResource;
-use Modules\AccessManagement\Transformers\GroupResource;
 
 class GroupMemberController extends Controller
 {

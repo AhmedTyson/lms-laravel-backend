@@ -9,8 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Modules\AccessManagement\Exceptions\NotSubordinateException;
 use Modules\AccessManagement\Exceptions\PermissionCeilingException;
 use Modules\AccessManagement\Http\Requests\DelegationRequest;
+use Modules\AccessManagement\Http\Resources\GrantResource;
 use Modules\AccessManagement\Services\DelegationService;
-use Modules\AccessManagement\Transformers\GrantResource;
 
 class GrantController extends Controller
 {

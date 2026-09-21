@@ -8,9 +8,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Modules\AccessManagement\Http\Requests\StoreGroupRequest;
+use Modules\AccessManagement\Http\Resources\GroupResource;
 use Modules\AccessManagement\Models\Group;
 use Modules\AccessManagement\Services\GroupService;
-use Modules\AccessManagement\Transformers\GroupResource;
 
 class GroupController extends Controller
 {
