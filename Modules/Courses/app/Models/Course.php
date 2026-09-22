@@ -3,6 +3,8 @@
 namespace Modules\Courses\Models;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,18 +38,42 @@ class Course extends Model
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    /** @param array<string, mixed> $filters */
-    public function scopeFilter($query, array $filters): void
+    #[Scope]
+    protected function search(Builder $query, string $term): void
     {
-        $query
-            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w
-                ->where('title', 'like', "%{$s}%")
-                ->orWhere('description', 'like', "%{$s}%")))
-            ->when($filters['category'] ?? null, fn ($q, $c) => $q->where('category', $c))
-            ->when($filters['status'] ?? null, fn ($q, $s) => $q->where('status', $s))
-            ->when($filters['instructor_id'] ?? null, fn ($q, $i) => $q->where('instructor_id', $i))
-            ->when($filters['published_at'] ?? null, fn ($q, $d) => $q->whereDate('published_at', $d))
-            ->when($filters['archived_at'] ?? null, fn ($q, $d) => $q->whereDate('archived_at', $d));
+        $query->where(fn ($w) => $w
+            ->where('title', 'like', "%{$term}%")
+            ->orWhere('description', 'like', "%{$term}%"));
+    }
+
+    #[Scope]
+    protected function inCategory(Builder $query, string $category): void
+    {
+        $query->where('category', $category);
+    }
+
+    #[Scope]
+    protected function withStatus(Builder $query, string $status): void
+    {
+        $query->where('status', $status);
+    }
+
+    #[Scope]
+    protected function taughtBy(Builder $query, int $instructorId): void
+    {
+        $query->where('instructor_id', $instructorId);
+    }
+
+    #[Scope]
+    protected function publishedOn(Builder $query, string $date): void
+    {
+        $query->whereDate('published_at', $date);
+    }
+
+    #[Scope]
+    protected function archivedOn(Builder $query, string $date): void
+    {
+        $query->whereDate('archived_at', $date);
     }
 
     public function lessons(): HasMany
