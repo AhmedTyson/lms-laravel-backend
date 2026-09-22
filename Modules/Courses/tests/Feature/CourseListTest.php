@@ -11,7 +11,7 @@ class CourseListTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_all_courses_returns_paginated_envelope(): void
+    private function seedCourses(): void
     {
         $instructor = User::factory()->create();
         Course::create([
@@ -25,8 +25,14 @@ class CourseListTest extends TestCase
             'instructor_id' => $instructor->id,
             'title' => 'Vue Basics',
             'category' => 'Frontend',
+            'description' => 'Nothing like Laravel here',
             'status' => 'draft',
         ]);
+    }
+
+    public function test_get_all_courses_returns_paginated_envelope(): void
+    {
+        $this->seedCourses();
 
         $this->getJson('/api/courses?page=1&per_page=10')
             ->assertStatus(200)
@@ -34,50 +40,24 @@ class CourseListTest extends TestCase
             ->assertJsonPath('data.0.title', 'Laravel Basics');
     }
 
-    public function test_get_all_courses_filters_by_search_and_status(): void
+    public function test_filter_search_and_status_combine(): void
     {
-        $instructor = User::factory()->create();
-        Course::create([
-            'instructor_id' => $instructor->id,
-            'title' => 'Laravel Basics',
-            'category' => 'Backend',
-            'status' => 'published',
-        ]);
-        Course::create([
-            'instructor_id' => $instructor->id,
-            'title' => 'Vue Basics',
-            'category' => 'Frontend',
-            'status' => 'draft',
-        ]);
+        $this->seedCourses();
 
-        $this->getJson('/api/courses?page=1&per_page=10&search=Laravel&status=published')
+        // Grouped OR must not leak the draft (description match) across status.
+        $this->getJson('/api/courses?page=1&per_page=10&filter[search]=Laravel&filter[status]=published')
             ->assertStatus(200)
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.title', 'Laravel Basics');
     }
 
-    public function test_search_does_not_leak_across_status_filter(): void
+    public function test_sort_descending_by_title(): void
     {
-        $instructor = User::factory()->create();
-        Course::create([
-            'instructor_id' => $instructor->id,
-            'title' => 'Vue Basics',
-            'category' => 'Frontend',
-            'description' => 'Nothing like Laravel here',
-            'status' => 'draft',
-        ]);
-        Course::create([
-            'instructor_id' => $instructor->id,
-            'title' => 'Laravel Basics',
-            'category' => 'Backend',
-            'status' => 'published',
-        ]);
+        $this->seedCourses();
 
-        // UnGrouped OR would match the draft via description, ignoring status.
-        $this->getJson('/api/courses?page=1&per_page=10&search=Laravel&status=published')
+        $this->getJson('/api/courses?page=1&per_page=10&sort=-title')
             ->assertStatus(200)
-            ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.title', 'Laravel Basics');
+            ->assertJsonPath('data.0.title', 'Vue Basics');
     }
 
     public function test_get_all_courses_requires_pagination_params(): void

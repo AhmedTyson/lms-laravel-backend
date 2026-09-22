@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Modules\Courses\Http\Requests\RetrieveAllCoursesRequest;
 use Modules\Courses\Http\Resources\CourseResource;
 use Modules\Courses\Models\Course;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CoursesController extends Controller
 {
@@ -17,18 +19,19 @@ class CoursesController extends Controller
      */
     public function getAllCourses(RetrieveAllCoursesRequest $request): JsonResponse
     {
-        $f = $request->validated();
-
-        $courses = Course::with('instructor')
-            ->when($f['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w
-                ->where('title', 'like', "%{$s}%")
-                ->orWhere('description', 'like', "%{$s}%")))
-            ->when($f['category'] ?? null, fn ($q, $c) => $q->where('category', $c))
-            ->when($f['status'] ?? null, fn ($q, $s) => $q->where('status', $s))
-            ->when($f['instructor_id'] ?? null, fn ($q, $i) => $q->where('instructor_id', $i))
-            ->when($f['published_at'] ?? null, fn ($q, $d) => $q->whereDate('published_at', $d))
-            ->when($f['archived_at'] ?? null, fn ($q, $d) => $q->whereDate('archived_at', $d))
-            ->paginate($f['per_page'] ?? 10);
+        $courses = QueryBuilder::for(Course::with('instructor'))
+            ->allowedFilters(...[
+                AllowedFilter::callback('search', fn ($q, $s) => $q->where(fn ($w) => $w
+                    ->where('title', 'like', "%{$s}%")
+                    ->orWhere('description', 'like', "%{$s}%"))),
+                AllowedFilter::partial('category'),
+                AllowedFilter::exact('status'),
+                AllowedFilter::exact('instructor_id'),
+                AllowedFilter::callback('published_at', fn ($q, $d) => $q->whereDate('published_at', $d)),
+                AllowedFilter::callback('archived_at', fn ($q, $d) => $q->whereDate('archived_at', $d)),
+            ])
+            ->allowedSorts(...['title', 'created_at', 'published_at'])
+            ->paginate($request->validated('per_page', 10));
 
         return ApiResponse::data(CourseResource::collection($courses));
     }
