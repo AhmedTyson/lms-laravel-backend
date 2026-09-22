@@ -30,7 +30,10 @@ class AccessManagementServiceProvider extends ModuleServiceProvider
 
         $tooMany = fn () => ApiResponse::error('Too many attempts. Try again later.', 'TOO_MANY_REQUESTS', 429);
 
-        RateLimiter::for('access-grants', fn (Request $request) => Limit::perMinute(30)->by($request->user()?->id ?: $request->ip())->response($tooMany));
-        RateLimiter::for('access-groups', fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip())->response($tooMany));
+        foreach (['access-grants' => 30, 'access-groups' => 60] as $name => $attempts) {
+            RateLimiter::for($name, fn (Request $request) => Limit::perMinute($attempts)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response($tooMany));
+        }
     }
 }

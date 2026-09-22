@@ -26,10 +26,27 @@ class AuthServiceProvider extends ModuleServiceProvider
         $tooMany = fn () => ApiResponse::error('Too many attempts. Try again later.', 'TOO_MANY_REQUESTS', 429);
 
         // Fortify convention: login keyed by email+IP so one attacker can't lock out others.
-        RateLimiter::for('auth-login', fn (Request $request) => Limit::perMinute(5)->by($request->input('email').'|'.$request->ip())->response($tooMany));
-        RateLimiter::for('auth-register', fn (Request $request) => Limit::perMinute(6)->by($request->ip())->response($tooMany));
-        RateLimiter::for('auth-verify', fn (Request $request) => Limit::perMinute(6)->by($request->ip())->response($tooMany));
-        RateLimiter::for('auth-password', fn (Request $request) => Limit::perMinute(5)->by($request->ip())->response($tooMany));
-        RateLimiter::for('auth-oauth', fn (Request $request) => Limit::perMinute(10)->by($request->ip())->response($tooMany));
+        $perMinute = [
+            'auth-login' => 5,
+            'auth-register' => 6,
+            'auth-verify' => 6,
+            'auth-password' => 5,
+            'auth-oauth' => 10,
+        ];
+
+        foreach ($perMinute as $name => $attempts) {
+            RateLimiter::for($name, fn (Request $request) => Limit::perMinute($attempts)
+                ->by($this->limiterKey($name, $request))
+                ->response($tooMany));
+        }
+    }
+
+    private function limiterKey(string $name, Request $request): string
+    {
+        if ($name === 'auth-login') {
+            return $request->input('email').'|'.$request->ip();
+        }
+
+        return $request->user()?->id ?: $request->ip();
     }
 }

@@ -52,15 +52,14 @@ class AuthController extends Controller
      */
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
-        $user = User::findOrFail($request->validated('id'));
+        $fields = $request->validated();
+        $user = User::findOrFail($fields['id']);
 
-        $signature = hash_hmac('sha256', $request->validated('id').$request->validated('hash').$request->validated('expires'), config('app.key'));
-
-        if (! hash_equals($signature, (string) $request->validated('signature')) || $request->validated('expires') < now()->timestamp) {
+        if (! $this->hasValidSignature($fields)) {
             return ApiResponse::error('Invalid or expired verification link.', 'INVALID_SIGNATURE', 400);
         }
 
-        if (! hash_equals(sha1($user->getEmailForVerification()), (string) $request->validated('hash'))) {
+        if (! $this->hasValidHash($user, $fields['hash'])) {
             return ApiResponse::error('Invalid email verification hash.', 'INVALID_HASH', 400);
         }
 
@@ -71,5 +70,19 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
 
         return ApiResponse::success('Email verified successfully.', new UserResource($user));
+    }
+
+    /** @param array{id: mixed, hash: mixed, expires: mixed, signature: mixed} $fields */
+    private function hasValidSignature(array $fields): bool
+    {
+        $expected = hash_hmac('sha256', $fields['id'].$fields['hash'].$fields['expires'], config('app.key'));
+
+        return hash_equals($expected, (string) $fields['signature'])
+            && $fields['expires'] >= now()->timestamp;
+    }
+
+    private function hasValidHash(User $user, mixed $hash): bool
+    {
+        return hash_equals(sha1($user->getEmailForVerification()), (string) $hash);
     }
 }

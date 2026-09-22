@@ -16,8 +16,10 @@ class GroupController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $groups = Group::where('owner_id', $request->user('api')->id)
-            ->orWhereHas('members', fn ($q) => $q->where('user_id', $request->user('api')->id))
+        $userId = $request->user('api')->id;
+
+        $groups = Group::where('owner_id', $userId)
+            ->orWhereHas('members', fn ($memberQuery) => $memberQuery->where('user_id', $userId))
             ->paginate();
 
         return ApiResponse::data(GroupResource::collection($groups));

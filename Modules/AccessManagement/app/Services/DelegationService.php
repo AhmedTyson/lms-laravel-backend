@@ -45,26 +45,9 @@ class DelegationService
     // RULE-003: walks grantee chain upward, granter must appear. Depth-capped, cycle-safe.
     private function ensureSubordinate(User $granter, User $grantee): void
     {
-        $seen = [$grantee->id => true];
-        $current = $grantee;
-
-        for ($depth = 0; $depth < 32 && $current !== null && $current->manager_id !== null; $depth++) {
-            if ($current->manager_id === $granter->id) {
-                return;
-            }
-
-            $current = $current->manager;
-
-            if ($current !== null && isset($seen[$current->id])) {
-                break;
-            }
-
-            if ($current !== null) {
-                $seen[$current->id] = true;
-            }
+        if (! ManagerChain::contains($grantee, $granter->id)) {
+            throw new NotSubordinateException("User {$grantee->id} is not subordinate to {$granter->id}.");
         }
-
-        throw new NotSubordinateException("User {$grantee->id} is not subordinate to {$granter->id}.");
     }
 
     // RULE-004: granter must hold permission globally or in the same group.
@@ -72,7 +55,7 @@ class DelegationService
     {
         $holds = UserPermission::where('user_id', $granter->id)
             ->where('permission_name', $permission)
-            ->where(fn ($q) => $q->where('group_id', $groupId)->orWhereNull('group_id'))
+            ->where(fn ($permissionQuery) => $permissionQuery->where('group_id', $groupId)->orWhereNull('group_id'))
             ->exists();
 
         if (! $holds) {

@@ -45,11 +45,7 @@ class GroupService
                 return $group->fresh();
             }
 
-            $owner = User::find($userId);
-
-            // Manager first (RULE-012), else oldest surviving user; successor joins if needed.
-            $successorId = $owner?->manager?->id
-                ?? User::whereKeyNot($userId)->oldest('id')->value('id');
+            $successorId = $this->resolveSuccessorId($userId);
 
             abort_unless($successorId, 422, 'Group has no eligible successor.');
 
@@ -62,6 +58,14 @@ class GroupService
 
             return $group->fresh();
         });
+    }
+
+    // Manager first (RULE-012), else oldest surviving user; successor joins if needed.
+    private function resolveSuccessorId(int $removedOwnerId): ?int
+    {
+        $managerId = User::find($removedOwnerId)?->manager?->id;
+
+        return $managerId ?? User::whereKeyNot($removedOwnerId)->oldest('id')->value('id');
     }
 
     public function delete(Group $group): void

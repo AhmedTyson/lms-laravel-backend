@@ -13,9 +13,10 @@ class RegistrationService
     {
         $user = User::create($attributes);
 
+        // Students carry no approval lifecycle (SCOPE-004); unapproved instructors park at null manager (RULE-002).
         $user->forceFill([
-            'manager_id' => null, // Student & unapproved instructor have manager_id = null (RULE-002)
-            'approval_status' => $role === 'instructor' ? ApprovalStatus::Pending : null, // Instructors start as 'pending'; students have no approval lifecycle (SCOPE-004)
+            'manager_id' => null,
+            'approval_status' => $this->initialApprovalStatus($role),
         ])->save();
 
         $this->assignRoleIfExists($user, $role);
@@ -23,6 +24,11 @@ class RegistrationService
         event(new Registered($user));
 
         return $user;
+    }
+
+    private function initialApprovalStatus(string $role): ?ApprovalStatus
+    {
+        return $role === 'instructor' ? ApprovalStatus::Pending : null;
     }
 
     private function assignRoleIfExists(User $user, string $roleName): bool
