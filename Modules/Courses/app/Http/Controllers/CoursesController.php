@@ -17,16 +17,18 @@ class CoursesController extends Controller
      */
     public function getAllCourses(RetrieveAllCoursesRequest $request): JsonResponse
     {
-        $filters = $request->safe()->except(['page', 'per_page']);
+        $f = $request->validated();
 
         $courses = Course::with('instructor')
-            ->when($filters['search'] ?? null, fn ($q, $s) => $q->search($s))
-            ->when($filters['category'] ?? null, fn ($q, $c) => $q->inCategory($c))
-            ->when($filters['status'] ?? null, fn ($q, $s) => $q->withStatus($s))
-            ->when($filters['instructor_id'] ?? null, fn ($q, $i) => $q->taughtBy($i))
-            ->when($filters['published_at'] ?? null, fn ($q, $d) => $q->publishedOn($d))
-            ->when($filters['archived_at'] ?? null, fn ($q, $d) => $q->archivedOn($d))
-            ->paginate($request->validated('per_page', 10));
+            ->when($f['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w
+                ->where('title', 'like', "%{$s}%")
+                ->orWhere('description', 'like', "%{$s}%")))
+            ->when($f['category'] ?? null, fn ($q, $c) => $q->where('category', $c))
+            ->when($f['status'] ?? null, fn ($q, $s) => $q->where('status', $s))
+            ->when($f['instructor_id'] ?? null, fn ($q, $i) => $q->where('instructor_id', $i))
+            ->when($f['published_at'] ?? null, fn ($q, $d) => $q->whereDate('published_at', $d))
+            ->when($f['archived_at'] ?? null, fn ($q, $d) => $q->whereDate('archived_at', $d))
+            ->paginate($f['per_page'] ?? 10);
 
         return ApiResponse::data(CourseResource::collection($courses));
     }
