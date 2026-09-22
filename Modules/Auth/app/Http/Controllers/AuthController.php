@@ -32,6 +32,12 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
+        $user = User::where('email', $request->validated('email'))->first();
+
+        if ($user && ! $user->hasVerifiedEmail() && config('lms.auth.require_verified')) {
+            return ApiResponse::error('Email not verified. Check your inbox.', 'EMAIL_NOT_VERIFIED', 403);
+        }
+
         $token = auth('api')->attempt($request->only('email', 'password'));
 
         if (! $token) {

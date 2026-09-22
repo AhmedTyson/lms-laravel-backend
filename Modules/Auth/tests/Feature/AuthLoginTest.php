@@ -42,4 +42,27 @@ class AuthLoginTest extends TestCase
         $response->assertStatus(401)
             ->assertJsonPath('error_code', 'INVALID_CREDENTIALS');
     }
+
+    public function test_unverified_login_allowed_until_phase_11_flag(): void
+    {
+        User::factory()->unverified()->create([
+            'email' => 'user@example.com',
+            'password' => Hash::make('Password123!'),
+        ]);
+
+        // Flag off (today): token issued.
+        $this->postJson('/api/auth/login', [
+            'email' => 'user@example.com',
+            'password' => 'Password123!',
+        ])->assertStatus(200)->assertJsonStructure(['access_token']);
+
+        // Flag on (Phase 11 mailer): token withheld.
+        config()->set('lms.auth.require_verified', true);
+
+        $this->postJson('/api/auth/login', [
+            'email' => 'user@example.com',
+            'password' => 'Password123!',
+        ])->assertStatus(403)
+            ->assertJsonPath('error_code', 'EMAIL_NOT_VERIFIED');
+    }
 }
