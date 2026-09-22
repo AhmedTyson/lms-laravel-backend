@@ -37,7 +37,8 @@ class CourseListTest extends TestCase
         $this->getJson('/api/courses?page=1&per_page=10')
             ->assertStatus(200)
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.title', 'Laravel Basics');
+            ->assertJsonFragment(['title' => 'Laravel Basics'])
+            ->assertJsonFragment(['title' => 'Vue Basics']);
     }
 
     public function test_filter_search_and_status_combine(): void

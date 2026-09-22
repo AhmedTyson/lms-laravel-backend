@@ -19,18 +19,19 @@ class CoursesController extends Controller
      */
     public function getAllCourses(RetrieveAllCoursesRequest $request): JsonResponse
     {
-        $courses = QueryBuilder::for(Course::with('instructor'))
+        $courses = QueryBuilder::for(Course::class)
             ->allowedFilters(...[
-                AllowedFilter::callback('search', fn ($q, $s) => $q->where(fn ($w) => $w
-                    ->where('title', 'like', "%{$s}%")
-                    ->orWhere('description', 'like', "%{$s}%"))),
+                AllowedFilter::callback('search', fn ($query, $term) => $query->where(fn ($where) => $where
+                    ->where('title', 'like', "%{$term}%")
+                    ->orWhere('description', 'like', "%{$term}%"))),
                 AllowedFilter::partial('category'),
                 AllowedFilter::exact('status'),
                 AllowedFilter::exact('instructor_id'),
-                AllowedFilter::callback('published_at', fn ($q, $d) => $q->whereDate('published_at', $d)),
-                AllowedFilter::callback('archived_at', fn ($q, $d) => $q->whereDate('archived_at', $d)),
+                AllowedFilter::callback('published_at', fn ($query, $date) => $query->whereDate('published_at', $date)),
+                AllowedFilter::callback('archived_at', fn ($query, $date) => $query->whereDate('archived_at', $date)),
             ])
             ->allowedSorts(...['title', 'created_at', 'published_at'])
+            ->defaultSort('-created_at')
             ->paginate($request->validated('per_page', 10));
 
         return ApiResponse::data(CourseResource::collection($courses));
