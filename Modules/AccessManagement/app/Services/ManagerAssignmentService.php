@@ -18,14 +18,24 @@ class ManagerAssignmentService
         }
 
         DB::transaction(function () use ($user, $newManager) {
-            // Check for cycles by walking newManager's upward chain
+            // Cycle-safe upward walk: depth-capped, visited set.
+            $seen = [$newManager->id => true];
             $current = $newManager;
-            while ($current !== null && $current->manager_id !== null) {
+
+            for ($depth = 0; $depth < 32 && $current !== null && $current->manager_id !== null; $depth++) {
                 if ($current->manager_id === $user->id) {
                     throw new CircularManagerAssignmentException("Assigning user {$newManager->id} as manager to user {$user->id} creates a circular chain.");
                 }
 
                 $current = User::find($current->manager_id);
+
+                if ($current !== null && isset($seen[$current->id])) {
+                    break;
+                }
+
+                if ($current !== null) {
+                    $seen[$current->id] = true;
+                }
             }
 
             $user->manager_id = $newManager->id;

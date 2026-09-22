@@ -4,7 +4,7 @@ namespace Modules\AccessManagement\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
+use Modules\AccessManagement\Enums\LedgerAction;
 use Modules\AccessManagement\Exceptions\NotSubordinateException;
 use Modules\AccessManagement\Exceptions\PermissionCeilingException;
 use Modules\AccessManagement\Models\PermissionGrant;
@@ -16,13 +16,9 @@ class DelegationService
 {
     public function __construct(private PermissionReadModelSync $sync) {}
 
-    public function record(array $data, User $granter, string $action): PermissionGrant
+    public function record(array $data, User $granter, LedgerAction $action): PermissionGrant
     {
-        $ledgerAction = match ($action) {
-            'grant' => 'granted',
-            'revoke' => 'revoked',
-            default => throw new InvalidArgumentException("Unknown ledger action {$action}."),
-        };
+        $ledgerAction = $action->ledgerValue();
 
         return DB::transaction(function () use ($data, $granter, $ledgerAction) {
             $grantee = User::findOrFail($data['grantee_id']);
