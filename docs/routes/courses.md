@@ -1,4 +1,4 @@
-# Courses Routes — `/api` (planned, Phase 6)
+# Courses Routes — `/api` (Phase 6 open; list live, rest planned)
 
 Spec §5.6/5.7. Auth: all `auth:api`. Instructor-owned writes; students read published only.
 
@@ -10,9 +10,11 @@ Response `201`: `{ "message": "Course created.", "data": { "id": 1, "instructor_
 
 Errors: `422` validation (duplicate title → unique violation).
 
-## GET `/courses` — list
+## GET `/courses` — list (live, QueryBuilder)
 
-Query: `?status=published&category=Backend&instructor_id=4&page=1`. Paginated `data` envelope.
+Query: `?filter[status]=published&filter[category]=Backend&filter[instructor_id]=4&filter[search]=laravel&sort=-created_at&page=1&per_page=10`.
+
+Filters: `search` (grouped title/description LIKE), `category` partial, `status`/`instructor_id` exact, `published_at`/`archived_at` date callbacks. Sorts: `title`, `created_at`, `published_at` (`-` desc). Default sort `-created_at`. Paginated `data` envelope of `CourseResource`.
 
 ## GET `/courses/{id}` — show
 
