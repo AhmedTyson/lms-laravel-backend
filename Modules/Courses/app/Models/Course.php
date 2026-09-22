@@ -36,6 +36,20 @@ class Course extends Model
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
+    /** @param array<string, mixed> $filters */
+    public function scopeFilter($query, array $filters): void
+    {
+        $query
+            ->when($filters['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w
+                ->where('title', 'like', "%{$s}%")
+                ->orWhere('description', 'like', "%{$s}%")))
+            ->when($filters['category'] ?? null, fn ($q, $c) => $q->where('category', $c))
+            ->when($filters['status'] ?? null, fn ($q, $s) => $q->where('status', $s))
+            ->when($filters['instructor_id'] ?? null, fn ($q, $i) => $q->where('instructor_id', $i))
+            ->when($filters['published_at'] ?? null, fn ($q, $d) => $q->whereDate('published_at', $d))
+            ->when($filters['archived_at'] ?? null, fn ($q, $d) => $q->whereDate('archived_at', $d));
+    }
+
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class)->orderBy('order');

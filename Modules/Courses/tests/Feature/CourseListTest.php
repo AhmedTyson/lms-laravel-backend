@@ -56,6 +56,30 @@ class CourseListTest extends TestCase
             ->assertJsonPath('data.0.title', 'Laravel Basics');
     }
 
+    public function test_search_does_not_leak_across_status_filter(): void
+    {
+        $instructor = User::factory()->create();
+        Course::create([
+            'instructor_id' => $instructor->id,
+            'title' => 'Vue Basics',
+            'category' => 'Frontend',
+            'description' => 'Nothing like Laravel here',
+            'status' => 'draft',
+        ]);
+        Course::create([
+            'instructor_id' => $instructor->id,
+            'title' => 'Laravel Basics',
+            'category' => 'Backend',
+            'status' => 'published',
+        ]);
+
+        // UnGrouped OR would match the draft via description, ignoring status.
+        $this->getJson('/api/courses?page=1&per_page=10&search=Laravel&status=published')
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.title', 'Laravel Basics');
+    }
+
     public function test_get_all_courses_requires_pagination_params(): void
     {
         $this->getJson('/api/courses')->assertStatus(422);
