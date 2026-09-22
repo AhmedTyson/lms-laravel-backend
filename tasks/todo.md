@@ -28,4 +28,4 @@ Skill: `fast-plan` (index-first, token-capped planning). Machine index: `tasks/p
 
 Dependency chain: 01 -> 02 -> 03 -> 04 -> 05 -> 06 -> 07 -> 08 -> 09 -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16. Appendix B gated separately (Contracts closed + real requirement + ADR).
 
-Current stop: Phase 4 signed off & completed → starting Phase 5 — AccessManagement. Appendix B [HOLD], non-actionable.
+Current stop: Phase 5 code complete (delegation, groups, policy, 46 green) → checkpoint E2E + sign-off pending. Phase 6 list endpoint live early (`GET /api/courses`). Appendix B [HOLD], non-actionable.

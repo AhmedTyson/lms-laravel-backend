@@ -31,6 +31,14 @@ Order that matters: `pint -> pest -> phpstan -> migrate:fresh`. CI runs the same
 - `QUEUE_CONNECTION=sync` local / `redis` staging. `MAIL_MAILER=log` local.
 - phpunit.xml forces `sqlite :memory:` — never set `DB_CONNECTION` overrides in CI/test env.
 - Pest `uses(Trait::class)` with an imported name fails to resolve — bind shared traits in `tests/Pest.php` (`->use(...)`), never per-file. Pint's `fully_qualified_strict_types` will otherwise fight Pest forever.
+- All JSON via `App\Support\ApiResponse` (`success`/`data`/`error`/`jwt`) — never hand-built envelopes. 429s included.
+- Rate limiters are module-owned (`AuthServiceProvider`, `AccessManagementServiceProvider`); core keeps `api` only. Named limiters: `auth-login/register/verify/password/oauth`, `access-grants/groups`.
+- Factories resolve via `Factory::guessFactoryNamesUsing` in `AppServiceProvider` — no per-model wiring. Smoke guard: `tests/Feature/FactorySmokeTest.php`. Demo data: per-module seeders in FK order (`docs/mock-data-plan.md`).
+- FormRequest per endpoint, thin controllers (validate → authorize → service → resource). Resources live in `Modules/<Name>/app/Http/Resources/` with `@mixin` model hints (Scramble JR001).
+- List endpoints use `spatie/laravel-query-builder` (ADR-0006): `filter[x]`, `sort`, paginated envelope. Phone validation via `propaganistas/laravel-phone`; normalization centralized in `App\Support\PhoneNormalizer` (request pre-validate + model mutator).
+- Brain scanner config (`config/laravel-brain.php`): `source_paths` includes `Modules/*/app`, `route_paths` includes `Modules/*/routes/*.php`, AST mode (auto-discover pulls package bulk).
+- Route contracts: `docs/routes/<module>.md` per method (bodies + responses). Update the doc when the route changes.
+- Clean-code process: `docs/handbook/10-clean-code-rules.md` (10 rules + open backlog). Findings get fix or ticket, never silence.
 
 ## Architecture rules (from baseline, enforced in review)
 
@@ -42,3 +50,5 @@ Order that matters: `pint -> pest -> phpstan -> migrate:fresh`. CI runs the same
 - AccessManagement is authorization-only (`who can do what`), never teaching domain. Auth ≠ Authorization ≠ Enrollment — separate modules.
 - Later-phase invariants (don't pre-build): `permission_grants` append-only; `manager_id` cycle check = service + transaction + `CircularManagerAssignmentException`; grant/revoke + Reporting use **explicit** Spatie team param, never ambient `setPermissionsTeamId()`.
 - Every new package/pattern needs `docs/adr/NNNN-name.md` (Decision / Reason / Alternatives / Impact / Status).
+- Approval endpoint (`instructors/{id}/approve`) lives in Auth until Phase 5 moves it to AccessManagement — do not duplicate approval logic elsewhere.
+- Phase status words: `done`/`partial`/`open`/`hold`; checkpoint signed only with zero open boxes (`tasks/phases/manifest.json` mirrors `todo.md`).
