@@ -2,15 +2,16 @@
 
 namespace Modules\Notifications\Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Modules\Notifications\Models\Notification;
 
 class NotificationsDatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // $this->call([]);
+        $user = User::first() ?? User::factory()->create();
+
+        Notification::factory()->create(['user_id' => $user->id]);
     }
 }

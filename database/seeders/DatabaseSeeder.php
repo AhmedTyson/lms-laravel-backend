@@ -7,6 +7,15 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Modules\AccessManagement\Database\Seeders\AccessManagementDatabaseSeeder;
+use Modules\Assignments\Database\Seeders\AssignmentsDatabaseSeeder;
+use Modules\Auth\Database\Seeders\AuthDatabaseSeeder;
+use Modules\Courses\Database\Seeders\CoursesDatabaseSeeder;
+use Modules\Enrollment\Database\Seeders\EnrollmentDatabaseSeeder;
+use Modules\Notifications\Database\Seeders\NotificationsDatabaseSeeder;
+use Modules\Progress\Database\Seeders\ProgressDatabaseSeeder;
+use Modules\Quizzes\Database\Seeders\QuizzesDatabaseSeeder;
+use Modules\Reporting\Database\Seeders\ReportingDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,7 +43,17 @@ class DatabaseSeeder extends Seeder
             ], $extra)
         ));
 
-        // Module seeders (Phase 9+) register below, AFTER the admin.
-        // $this->call([...]);
+        // Module seeders run AFTER the admin, in FK dependency order.
+        $this->call([
+            AuthDatabaseSeeder::class,
+            AccessManagementDatabaseSeeder::class,
+            CoursesDatabaseSeeder::class,
+            EnrollmentDatabaseSeeder::class,
+            AssignmentsDatabaseSeeder::class,
+            QuizzesDatabaseSeeder::class,
+            ProgressDatabaseSeeder::class,
+            NotificationsDatabaseSeeder::class,
+            ReportingDatabaseSeeder::class,
+        ]);
     }
 }

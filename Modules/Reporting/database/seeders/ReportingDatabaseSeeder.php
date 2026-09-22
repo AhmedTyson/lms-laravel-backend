@@ -6,11 +6,8 @@ use Illuminate\Database\Seeder;
 
 class ReportingDatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // $this->call([]);
+        // Reporting reads aggregates only — no owned tables, nothing to seed.
     }
 }
