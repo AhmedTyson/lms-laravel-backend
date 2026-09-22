@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use App\Support\ApiResponse;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -34,6 +35,17 @@ class AppServiceProvider extends ServiceProvider
             'assignment' => Assignment::class,
             'quiz' => Quiz::class,
         ]);
+
+        // Module models resolve to their module's Database\Factories namespace.
+        Factory::guessFactoryNamesUsing(function (string $modelName): string {
+            if (str_starts_with($modelName, 'Modules\\')) {
+                $parts = explode('\\', $modelName);
+
+                return $parts[0].'\\'.$parts[1].'\\Database\\Factories\\'.end($parts).'Factory';
+            }
+
+            return 'Database\\Factories\\'.class_basename($modelName).'Factory';
+        });
 
         $tooMany = fn () => ApiResponse::error('Too many attempts. Try again later.', 'TOO_MANY_REQUESTS', 429);
 
