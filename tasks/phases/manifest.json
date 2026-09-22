@@ -217,5 +217,246 @@
   "checkpoint_open": 1,
   "lines": 18,
   "sha1": "f9fb450cc252"
+ },
+ {
+  "file": "tasks/phases/phase-17.md",
+  "title": "Phase 17 \u2014 Query Performance (future, needs measured bottleneck)",
+  "status": "open",
+  "tasks": [
+   "Task 17.1",
+   "Task 17.2"
+  ],
+  "checkpoint": "Checkpoint: After Phase 17",
+  "checkpoint_open": 2,
+  "lines": 47,
+  "sha1": "90e9c2e093ca"
+ },
+ {
+  "file": "tasks/phases/phase-18.md",
+  "title": "Phase 18 \u2014 Caching Layer (future, needs read-hotspot evidence)",
+  "status": "open",
+  "tasks": [
+   "Task 18.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 18",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "9d8723fd9425"
+ },
+ {
+  "file": "tasks/phases/phase-19.md",
+  "title": "Phase 19 \u2014 Queues & Background Jobs (future, needs slow-request evidence)",
+  "status": "open",
+  "tasks": [
+   "Task 19.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 19",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "8be675855199"
+ },
+ {
+  "file": "tasks/phases/phase-20.md",
+  "title": "Phase 20 \u2014 Full-Text Search (future, needs catalog scale pain)",
+  "status": "open",
+  "tasks": [
+   "Task 20.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 20",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "8cb2fdf281f5"
+ },
+ {
+  "file": "tasks/phases/phase-21.md",
+  "title": "Phase 21 \u2014 Gradebook (BACKLOG-012, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 21.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 21",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "2123b924a432"
+ },
+ {
+  "file": "tasks/phases/phase-22.md",
+  "title": "Phase 22 \u2014 Course Structure Hierarchy (BACKLOG-007, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 22.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 22",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "1bfdce107a1b"
+ },
+ {
+  "file": "tasks/phases/phase-23.md",
+  "title": "Phase 23 \u2014 Reusable Learning Assets (BACKLOG-014, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 23.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 23",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "719a29b922b8"
+ },
+ {
+  "file": "tasks/phases/phase-24.md",
+  "title": "Phase 24 \u2014 Certification (BACKLOG-013, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 24.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 24",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "9c358e0320ab"
+ },
+ {
+  "file": "tasks/phases/phase-25.md",
+  "title": "Phase 25 \u2014 Co-Instructors (BACKLOG-009, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 25.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 25",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "b0bd4f0a96a2"
+ },
+ {
+  "file": "tasks/phases/phase-26.md",
+  "title": "Phase 26 \u2014 Category Tree (BACKLOG-008, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 26.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 26",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "b605931fc60e"
+ },
+ {
+  "file": "tasks/phases/phase-27.md",
+  "title": "Phase 27 \u2014 Prerequisites (BACKLOG-010, gated)",
+  "status": "hold",
+  "tasks": [
+   "Task 27.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 27",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "b52d3e335dd9"
+ },
+ {
+  "file": "tasks/phases/phase-28.md",
+  "title": "Phase 28 \u2014 Content Versioning (BACKLOG-011, gated, weakest case)",
+  "status": "hold",
+  "tasks": [
+   "Task 28.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 28",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "13430ee67365"
+ },
+ {
+  "file": "tasks/phases/phase-29.md",
+  "title": "Phase 29 \u2014 Audit Trail Expansion (future, compliance-gated)",
+  "status": "open",
+  "tasks": [
+   "Task 29.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 29",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "c28947d4477c"
+ },
+ {
+  "file": "tasks/phases/phase-30.md",
+  "title": "Phase 30 \u2014 Abuse Hardening (future, needs attack evidence or launch proximity)",
+  "status": "open",
+  "tasks": [
+   "Task 30.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 30",
+  "checkpoint_open": 2,
+  "lines": 31,
+  "sha1": "e73bb136518c"
+ },
+ {
+  "file": "tasks/phases/phase-31.md",
+  "title": "Phase 31 \u2014 Observability (future, needs production traffic)",
+  "status": "open",
+  "tasks": [
+   "Task 31.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 31",
+  "checkpoint_open": 2,
+  "lines": 31,
+  "sha1": "72487aaf337c"
+ },
+ {
+  "file": "tasks/phases/phase-32.md",
+  "title": "Phase 32 \u2014 Backup & Disaster Recovery (future, pre-launch required)",
+  "status": "open",
+  "tasks": [
+   "Task 32.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 32",
+  "checkpoint_open": 2,
+  "lines": 28,
+  "sha1": "02d9fa8ba889"
+ },
+ {
+  "file": "tasks/phases/phase-33.md",
+  "title": "Phase 33 \u2014 Read Scaling (future, needs read-pressure evidence)",
+  "status": "open",
+  "tasks": [
+   "Task 33.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 33",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "2228cedfc451"
+ },
+ {
+  "file": "tasks/phases/phase-34.md",
+  "title": "Phase 34 \u2014 Partitioning & Archival (future, needs table-size evidence)",
+  "status": "open",
+  "tasks": [
+   "Task 34.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 34",
+  "checkpoint_open": 2,
+  "lines": 29,
+  "sha1": "5fb725eaaf25"
+ },
+ {
+  "file": "tasks/phases/phase-35.md",
+  "title": "Phase 35 \u2014 API v2 & Deprecation (future, needs breaking-change pressure)",
+  "status": "open",
+  "tasks": [
+   "Task 35.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 35",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "3fec20eff514"
+ },
+ {
+  "file": "tasks/phases/phase-36.md",
+  "title": "Phase 36 \u2014 Multi-Tenancy Hardening (future, needs second-tenant demand)",
+  "status": "open",
+  "tasks": [
+   "Task 36.1"
+  ],
+  "checkpoint": "Checkpoint: After Phase 36 (final)",
+  "checkpoint_open": 2,
+  "lines": 30,
+  "sha1": "16658aef05aa"
  }
 ]

@@ -24,6 +24,26 @@ Skill: `fast-plan` (index-first, token-capped planning). Machine index: `tasks/p
 | Phase 14 — API Documentation | open | Task 14.1 | no boxes | `tasks/phases/phase-14.md` (17 lines) |
 | Phase 15 — Performance | open | Task 15.1 | no boxes | `tasks/phases/phase-15.md` (17 lines) |
 | Phase 16 — Deployment | open | Task 16.1 | pending (1 open) | `tasks/phases/phase-16.md` (18 lines) |
+| Phase 17 — Query Performance (future, needs measured bottleneck) | open | Task 17.1<br>Task 17.2 | pending (2 open) | `tasks/phases/phase-17.md` (47 lines) |
+| Phase 18 — Caching Layer (future, needs read-hotspot evidence) | open | Task 18.1 | pending (2 open) | `tasks/phases/phase-18.md` (30 lines) |
+| Phase 19 — Queues & Background Jobs (future, needs slow-request evidence) | open | Task 19.1 | pending (2 open) | `tasks/phases/phase-19.md` (30 lines) |
+| Phase 20 — Full-Text Search (future, needs catalog scale pain) | open | Task 20.1 | pending (2 open) | `tasks/phases/phase-20.md` (30 lines) |
+| Phase 21 — Gradebook (BACKLOG-012, gated) | hold | Task 21.1 | pending (2 open) | `tasks/phases/phase-21.md` (29 lines) |
+| Phase 22 — Course Structure Hierarchy (BACKLOG-007, gated) | hold | Task 22.1 | pending (2 open) | `tasks/phases/phase-22.md` (30 lines) |
+| Phase 23 — Reusable Learning Assets (BACKLOG-014, gated) | hold | Task 23.1 | pending (2 open) | `tasks/phases/phase-23.md` (29 lines) |
+| Phase 24 — Certification (BACKLOG-013, gated) | hold | Task 24.1 | pending (2 open) | `tasks/phases/phase-24.md` (29 lines) |
+| Phase 25 — Co-Instructors (BACKLOG-009, gated) | hold | Task 25.1 | pending (2 open) | `tasks/phases/phase-25.md` (29 lines) |
+| Phase 26 — Category Tree (BACKLOG-008, gated) | hold | Task 26.1 | pending (2 open) | `tasks/phases/phase-26.md` (29 lines) |
+| Phase 27 — Prerequisites (BACKLOG-010, gated) | hold | Task 27.1 | pending (2 open) | `tasks/phases/phase-27.md` (29 lines) |
+| Phase 28 — Content Versioning (BACKLOG-011, gated, weakest case) | hold | Task 28.1 | pending (2 open) | `tasks/phases/phase-28.md` (29 lines) |
+| Phase 29 — Audit Trail Expansion (future, compliance-gated) | open | Task 29.1 | pending (2 open) | `tasks/phases/phase-29.md` (29 lines) |
+| Phase 30 — Abuse Hardening (future, needs attack evidence or launch proximity) | open | Task 30.1 | pending (2 open) | `tasks/phases/phase-30.md` (31 lines) |
+| Phase 31 — Observability (future, needs production traffic) | open | Task 31.1 | pending (2 open) | `tasks/phases/phase-31.md` (31 lines) |
+| Phase 32 — Backup & Disaster Recovery (future, pre-launch required) | open | Task 32.1 | pending (2 open) | `tasks/phases/phase-32.md` (28 lines) |
+| Phase 33 — Read Scaling (future, needs read-pressure evidence) | open | Task 33.1 | pending (2 open) | `tasks/phases/phase-33.md` (30 lines) |
+| Phase 34 — Partitioning & Archival (future, needs table-size evidence) | open | Task 34.1 | pending (2 open) | `tasks/phases/phase-34.md` (29 lines) |
+| Phase 35 — API v2 & Deprecation (future, needs breaking-change pressure) | open | Task 35.1 | pending (2 open) | `tasks/phases/phase-35.md` (30 lines) |
+| Phase 36 — Multi-Tenancy Hardening (future, needs second-tenant demand) | open | Task 36.1 | pending (2 open) | `tasks/phases/phase-36.md` (30 lines) |
 | Appendix B — Future Schema Backlog Register (Phase 8+ candidates, reference only) | hold | Task B-007<br>Task B-008<br>Task B-009<br>Task B-010<br>Task B-011<br>Task B-014<br>Task B-012<br>Task B-013 | gated (2 holds) | `tasks/phases/appendix-b-backlog.md` (168 lines) |
 
 Dependency chain: 01 -> 02 -> 03 -> 04 -> 05 -> 06 -> 07 -> 08 -> 09 -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16. Appendix B gated separately (Contracts closed + real requirement + ADR).
