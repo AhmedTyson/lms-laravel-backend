@@ -4,7 +4,9 @@ namespace Modules\AccessManagement\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\AccessManagement\Models\GroupMember;
 
+/** @mixin GroupMember */
 class GroupMemberResource extends JsonResource
 {
     public function toArray(Request $request): array

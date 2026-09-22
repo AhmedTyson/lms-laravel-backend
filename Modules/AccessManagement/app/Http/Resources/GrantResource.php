@@ -4,7 +4,9 @@ namespace Modules\AccessManagement\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\AccessManagement\Models\PermissionGrant;
 
+/** @mixin PermissionGrant */
 class GrantResource extends JsonResource
 {
     public function toArray(Request $request): array
