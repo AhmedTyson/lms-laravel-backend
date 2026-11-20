@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      - name: Security audit
+        run: composer audit --no-interaction
+
       - name: App key (.env is git-ignored)
         run: |
           cp .env.example .env
