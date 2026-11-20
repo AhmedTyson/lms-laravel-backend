@@ -10,9 +10,10 @@ class AttemptAnswer extends Model
 {
     use HasFactory;
 
+    // is_correct is evaluated server-side and set via forceFill (handbook 10 §3).
     protected $fillable = [
         'attempt_id', 'question_id', 'selected_option_ids',
-        'answer_boolean', 'answer_text', 'answer_number', 'is_correct',
+        'answer_boolean', 'answer_text', 'answer_number',
     ];
 
     protected function casts(): array

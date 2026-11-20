@@ -12,9 +12,10 @@ class Attempt extends Model
 {
     use HasFactory;
 
+    // Score is computed server-side and set via forceFill in grading service (handbook 10 §3).
     protected $fillable = [
         'quiz_id', 'enrollment_id', 'attempt_number',
-        'score', 'started_at', 'submitted_at',
+        'started_at', 'submitted_at',
     ];
 
     protected function casts(): array

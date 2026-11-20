@@ -16,6 +16,9 @@ use Modules\Notifications\Database\Seeders\NotificationsDatabaseSeeder;
 use Modules\Progress\Database\Seeders\ProgressDatabaseSeeder;
 use Modules\Quizzes\Database\Seeders\QuizzesDatabaseSeeder;
 use Modules\Reporting\Database\Seeders\ReportingDatabaseSeeder;
+use RuntimeException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,6 +31,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $isDev = app()->environment(['local', 'testing']);
+        $adminEmail = env('ADMIN_SEED_EMAIL', $isDev ? 'admin@example.com' : null);
+        $adminPassword = env('ADMIN_SEED_PASSWORD', $isDev ? 'ChangeMe123!' : null);
+
+        if (! $adminEmail || ! $adminPassword) {
+            throw new RuntimeException('ADMIN_SEED_EMAIL and ADMIN_SEED_PASSWORD must be set outside local/testing.');
+        }
+
         // manager_id / approval_status columns land in Phase 9; the extra
         // attributes below activate automatically once migrated.
         $extra = ['email_verified_at' => now()];
@@ -35,13 +46,34 @@ class DatabaseSeeder extends Seeder
             $extra['manager_id'] = null;
         }
 
-        User::unguarded(fn () => User::firstOrCreate(
-            ['email' => env('ADMIN_SEED_EMAIL', 'admin@example.com')],
+        $admin = User::unguarded(fn () => User::firstOrCreate(
+            ['email' => $adminEmail],
             array_merge([
                 'name' => 'Root Admin',
-                'password' => Hash::make(env('ADMIN_SEED_PASSWORD', 'ChangeMe123!')),
+                'password' => Hash::make($adminPassword),
             ], $extra)
         ));
+
+        if (Schema::hasTable('roles') && Schema::hasTable('permissions')) {
+            $previousTeamId = getPermissionsTeamId();
+            setPermissionsTeamId(0);
+
+            try {
+                foreach (['admin', 'instructor', 'student'] as $roleName) {
+                    Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'api']);
+                }
+
+                $permissions = [
+                    Permission::firstOrCreate(['name' => 'approve-instructors', 'guard_name' => 'api']),
+                    Permission::firstOrCreate(['name' => 'users.manage_roles', 'guard_name' => 'api']),
+                ];
+
+                $admin->assignRole('admin');
+                $admin->givePermissionTo($permissions);
+            } finally {
+                setPermissionsTeamId($previousTeamId);
+            }
+        }
 
         // Module seeders run AFTER the admin, in FK dependency order.
         $this->call([

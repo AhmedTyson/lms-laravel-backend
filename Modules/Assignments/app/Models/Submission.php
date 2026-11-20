@@ -12,10 +12,11 @@ class Submission extends Model
 {
     use HasFactory;
 
+    // Privileged grading/outcome fields (grade, graded_by, graded_at, status, is_late)
+    // are set via forceFill inside authorized grading services only (handbook 10 §3).
     protected $fillable = [
         'assignment_id', 'enrollment_id', 'attempt_number', 'file_path',
-        'content', 'submitted_at', 'is_late', 'grade',
-        'graded_by', 'graded_at', 'status',
+        'content', 'submitted_at',
     ];
 
     protected function casts(): array
