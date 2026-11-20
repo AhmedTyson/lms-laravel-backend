@@ -75,9 +75,9 @@ Auth: public. Throttle: `auth-password` (5/min/IP).
 
 Request: `{ "email": "sara@example.com" }` (no `exists` rule — never leaks registration).
 
-Response `200`: `{ "message": "If your email is registered, you will receive a password reset link shortly." }`.
+Response `200`: `{ "message": "If your email is registered, you will receive a password reset link shortly." }` (always `200` to prevent account enumeration).
 
-Errors: `400` + `RESET_LINK_FAILED`.
+Errors: `422` validation.
 
 ## POST `/reset-password` — set new password
 
