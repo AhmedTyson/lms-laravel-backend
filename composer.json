@@ -24,6 +24,7 @@
         "fakerphp/faker": "^1.23",
         "laramint/laravel-brain": "^2.7",
         "larastan/larastan": "^3.11",
+        "laravel/boost": "^2.10",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.31",
         "mockery/mockery": "^1.6",
@@ -104,7 +105,7 @@
             "wikimedia/composer-merge-plugin": true
         },
         "platform": {
-            "php": "8.4"
+            "php": "8.4.1"
         }
     },
     "minimum-stability": "dev",
