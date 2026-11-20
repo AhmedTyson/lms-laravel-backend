@@ -1,0 +1,2631 @@
+{
+  "prefix": "LMS",
+  "chen": {
+    "title": "LMSDB (Laravel v2.1) - Chen Entity-Relationship Diagram",
+    "width": 7900,
+    "height": 4600,
+    "legend_pos": [
+      6850,
+      3980
+    ],
+    "entities": [
+      {
+        "id": "Group",
+        "label": "Group",
+        "x": 760,
+        "y": 1000,
+        "w": 220,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "PermissionGrant",
+        "label": "PermissionGrant",
+        "x": 760,
+        "y": 1950,
+        "w": 290,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "ActivityLog",
+        "label": "ActivityLog",
+        "x": 760,
+        "y": 3350,
+        "w": 240,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "User",
+        "label": "User",
+        "x": 2150,
+        "y": 1520,
+        "w": 320,
+        "h": 100,
+        "weak": false
+      },
+      {
+        "id": "Notification",
+        "label": "Notification",
+        "x": 3100,
+        "y": 480,
+        "w": 240,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "Course",
+        "label": "Course",
+        "x": 3950,
+        "y": 880,
+        "w": 240,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "Lesson",
+        "label": "Lesson",
+        "x": 5450,
+        "y": 480,
+        "w": 220,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "Assignment",
+        "label": "Assignment",
+        "x": 3950,
+        "y": 1680,
+        "w": 250,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "Submission",
+        "label": "Submission",
+        "x": 3180,
+        "y": 2120,
+        "w": 240,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "Enrollment",
+        "label": "Enrollment",
+        "x": 3950,
+        "y": 2950,
+        "w": 250,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "ComponentCompletion",
+        "label": "ComponentCompletion",
+        "x": 2280,
+        "y": 3450,
+        "w": 340,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "ProgressRecord",
+        "label": "ProgressRecord",
+        "x": 3950,
+        "y": 3920,
+        "w": 280,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "Quiz",
+        "label": "Quiz",
+        "x": 5700,
+        "y": 1680,
+        "w": 220,
+        "h": 95,
+        "weak": false
+      },
+      {
+        "id": "Attempt",
+        "label": "Attempt",
+        "x": 5700,
+        "y": 2950,
+        "w": 230,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "Question",
+        "label": "Question",
+        "x": 7050,
+        "y": 1680,
+        "w": 230,
+        "h": 95,
+        "weak": true
+      },
+      {
+        "id": "QuestionOption",
+        "label": "QuestionOption",
+        "x": 7050,
+        "y": 540,
+        "w": 270,
+        "h": 95,
+        "weak": true
+      }
+    ],
+    "relationships": [
+      {
+        "id": "Owns",
+        "label": "Owns",
+        "x": 1440,
+        "y": 1080,
+        "ident": false,
+        "w": 200,
+        "h": 110
+      },
+      {
+        "id": "MemberOf",
+        "label": "MemberOf",
+        "x": 1440,
+        "y": 1450,
+        "ident": false,
+        "w": 220,
+        "h": 110
+      },
+      {
+        "id": "Grants",
+        "label": "Grants",
+        "x": 1440,
+        "y": 1700,
+        "ident": false,
+        "w": 200,
+        "h": 110
+      },
+      {
+        "id": "ReceivesGrant",
+        "label": "ReceivesGrant",
+        "x": 1440,
+        "y": 1950,
+        "ident": false,
+        "w": 240,
+        "h": 115
+      },
+      {
+        "id": "ScopedTo",
+        "label": "ScopedTo",
+        "x": 760,
+        "y": 1475,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "Manages",
+        "label": "Manages",
+        "x": 1700,
+        "y": 2280,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "Notifies",
+        "label": "Notifies",
+        "x": 2760,
+        "y": 1020,
+        "ident": true,
+        "w": 210,
+        "h": 115
+      },
+      {
+        "id": "Instructs",
+        "label": "Instructs",
+        "x": 3100,
+        "y": 1180,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "HasLesson",
+        "label": "HasLesson",
+        "x": 4700,
+        "y": 680,
+        "ident": true,
+        "w": 220,
+        "h": 115
+      },
+      {
+        "id": "HasAssignment",
+        "label": "HasAssignment",
+        "x": 3950,
+        "y": 1280,
+        "ident": false,
+        "w": 240,
+        "h": 115
+      },
+      {
+        "id": "HasQuiz",
+        "label": "HasQuiz",
+        "x": 4900,
+        "y": 1240,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "ForCourse",
+        "label": "ForCourse",
+        "x": 4760,
+        "y": 1980,
+        "ident": false,
+        "w": 220,
+        "h": 110
+      },
+      {
+        "id": "Grades",
+        "label": "Grades",
+        "x": 2650,
+        "y": 1820,
+        "ident": false,
+        "w": 200,
+        "h": 110
+      },
+      {
+        "id": "ForAssignment",
+        "label": "ForAssignment",
+        "x": 3560,
+        "y": 1900,
+        "ident": true,
+        "w": 240,
+        "h": 115
+      },
+      {
+        "id": "Submits",
+        "label": "Submits",
+        "x": 3560,
+        "y": 2535,
+        "ident": true,
+        "w": 210,
+        "h": 115
+      },
+      {
+        "id": "EnrollsIn",
+        "label": "EnrollsIn",
+        "x": 2780,
+        "y": 2560,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "Overrides",
+        "label": "Overrides",
+        "x": 2215,
+        "y": 2500,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "Completes",
+        "label": "Completes",
+        "x": 3100,
+        "y": 3220,
+        "ident": true,
+        "w": 220,
+        "h": 115
+      },
+      {
+        "id": "TracksProgress",
+        "label": "TracksProgress",
+        "x": 3950,
+        "y": 3435,
+        "ident": true,
+        "w": 250,
+        "h": 115
+      },
+      {
+        "id": "ForQuiz",
+        "label": "ForQuiz",
+        "x": 5700,
+        "y": 2315,
+        "ident": true,
+        "w": 210,
+        "h": 115
+      },
+      {
+        "id": "Sits",
+        "label": "Sits",
+        "x": 4825,
+        "y": 2950,
+        "ident": true,
+        "w": 200,
+        "h": 115
+      },
+      {
+        "id": "HasQuestion",
+        "label": "HasQuestion",
+        "x": 6375,
+        "y": 1680,
+        "ident": true,
+        "w": 230,
+        "h": 115
+      },
+      {
+        "id": "Answers",
+        "label": "Answers",
+        "x": 6420,
+        "y": 2360,
+        "ident": false,
+        "w": 210,
+        "h": 110
+      },
+      {
+        "id": "HasOption",
+        "label": "HasOption",
+        "x": 7050,
+        "y": 1110,
+        "ident": true,
+        "w": 220,
+        "h": 115
+      }
+    ],
+    "anchors": {
+      "User": {
+        "Owns": [
+          1990,
+          1485
+        ],
+        "MemberOf": [
+          1990,
+          1510
+        ],
+        "Grants": [
+          1990,
+          1535
+        ],
+        "ReceivesGrant": [
+          1990,
+          1560
+        ],
+        "Manages": [
+          2030,
+          1570
+        ],
+        "Overrides": [
+          2130,
+          1570
+        ],
+        "EnrollsIn": [
+          2220,
+          1570
+        ],
+        "Grades": [
+          2310,
+          1555
+        ],
+        "Instructs": [
+          2310,
+          1510
+        ],
+        "Notifies": [
+          2260,
+          1470
+        ]
+      },
+      "Course": {
+        "Instructs": [
+          3830,
+          895
+        ],
+        "HasLesson": [
+          4070,
+          855
+        ],
+        "HasQuiz": [
+          4070,
+          905
+        ],
+        "ForCourse": [
+          4040,
+          927
+        ],
+        "HasAssignment": [
+          3950,
+          927
+        ]
+      },
+      "Enrollment": {
+        "EnrollsIn": [
+          3825,
+          2930
+        ],
+        "Submits": [
+          3825,
+          2910
+        ],
+        "Completes": [
+          3825,
+          2965
+        ],
+        "TracksProgress": [
+          3950,
+          2997
+        ],
+        "Sits": [
+          4075,
+          2950
+        ],
+        "ForCourse": [
+          4040,
+          2902
+        ]
+      }
+    },
+    "links": [
+      {
+        "a": "User",
+        "b": "Owns",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Owns",
+        "b": "Group",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "MemberOf",
+        "card": "M",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "MemberOf",
+        "b": "Group",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "Grants",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Grants",
+        "b": "PermissionGrant",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "ReceivesGrant",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "ReceivesGrant",
+        "b": "PermissionGrant",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Group",
+        "b": "ScopedTo",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "ScopedTo",
+        "b": "PermissionGrant",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "User",
+        "b": "Manages",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": -34
+      },
+      {
+        "a": "User",
+        "b": "Manages",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 34
+      },
+      {
+        "a": "User",
+        "b": "Notifies",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Notifies",
+        "b": "Notification",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "Instructs",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Instructs",
+        "b": "Course",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Course",
+        "b": "HasLesson",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "HasLesson",
+        "b": "Lesson",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Course",
+        "b": "HasAssignment",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "HasAssignment",
+        "b": "Assignment",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 26
+      },
+      {
+        "a": "Course",
+        "b": "HasQuiz",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "HasQuiz",
+        "b": "Quiz",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "EnrollsIn",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "EnrollsIn",
+        "b": "Enrollment",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Course",
+        "b": "ForCourse",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "ForCourse",
+        "b": "Enrollment",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "Grades",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Grades",
+        "b": "Submission",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Assignment",
+        "b": "ForAssignment",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "ForAssignment",
+        "b": "Submission",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Enrollment",
+        "b": "Submits",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Submits",
+        "b": "Submission",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Quiz",
+        "b": "HasQuestion",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "HasQuestion",
+        "b": "Question",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Question",
+        "b": "HasOption",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "HasOption",
+        "b": "QuestionOption",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 26
+      },
+      {
+        "a": "Quiz",
+        "b": "ForQuiz",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "ForQuiz",
+        "b": "Attempt",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 26
+      },
+      {
+        "a": "Enrollment",
+        "b": "Sits",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Sits",
+        "b": "Attempt",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "Attempt",
+        "b": "Answers",
+        "card": "M",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Answers",
+        "b": "Question",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Enrollment",
+        "b": "TracksProgress",
+        "card": "1",
+        "ent": "a",
+        "total": true,
+        "off": 26
+      },
+      {
+        "a": "TracksProgress",
+        "b": "ProgressRecord",
+        "card": "1",
+        "ent": "b",
+        "total": true,
+        "off": 26
+      },
+      {
+        "a": "Enrollment",
+        "b": "Completes",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 24
+      },
+      {
+        "a": "Completes",
+        "b": "ComponentCompletion",
+        "card": "N",
+        "ent": "b",
+        "total": true,
+        "off": 24
+      },
+      {
+        "a": "User",
+        "b": "Overrides",
+        "card": "1",
+        "ent": "a",
+        "total": false,
+        "off": 26
+      },
+      {
+        "a": "Overrides",
+        "b": "ComponentCompletion",
+        "card": "N",
+        "ent": "b",
+        "total": false,
+        "off": 26
+      }
+    ],
+    "attribute_groups": [
+      {
+        "owner": "User",
+        "layout": "fan",
+        "a0": 212,
+        "a1": 296,
+        "radii": [
+          340,
+          520,
+          700
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "name",
+            "kind": "simple"
+          },
+          {
+            "label": "email_verified_at",
+            "kind": "simple"
+          },
+          {
+            "label": "email",
+            "kind": "simple"
+          },
+          {
+            "label": "phone_number",
+            "kind": "simple"
+          },
+          {
+            "label": "remember_token",
+            "kind": "simple"
+          },
+          {
+            "label": "password",
+            "kind": "simple"
+          },
+          {
+            "label": "approval_status",
+            "kind": "simple"
+          },
+          {
+            "label": "manager_depth",
+            "kind": "derived"
+          }
+        ]
+      },
+      {
+        "owner": "Group",
+        "layout": "fan",
+        "a0": 175,
+        "a1": 245,
+        "radii": [
+          290,
+          340
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "name",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "MemberOf",
+        "layout": "polar",
+        "items": [
+          {
+            "label": "joined_at",
+            "kind": "simple",
+            "ang": 270,
+            "r": 145
+          }
+        ]
+      },
+      {
+        "owner": "PermissionGrant",
+        "layout": "fan",
+        "a0": 125,
+        "a1": 235,
+        "radii": [
+          330,
+          500
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "permission_name",
+            "kind": "simple"
+          },
+          {
+            "label": "action",
+            "kind": "simple"
+          },
+          {
+            "label": "granted_at",
+            "kind": "simple"
+          },
+          {
+            "label": "revoked_at",
+            "kind": "simple"
+          },
+          {
+            "label": "created_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "ActivityLog",
+        "layout": "fan",
+        "a0": 15,
+        "a1": 330,
+        "radii": [
+          320,
+          500
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "log_name",
+            "kind": "simple"
+          },
+          {
+            "label": "description",
+            "kind": "simple"
+          },
+          {
+            "label": "subject_type",
+            "kind": "simple"
+          },
+          {
+            "label": "subject_id",
+            "kind": "simple"
+          },
+          {
+            "label": "event",
+            "kind": "simple"
+          },
+          {
+            "label": "causer_type",
+            "kind": "simple"
+          },
+          {
+            "label": "causer_id",
+            "kind": "simple"
+          },
+          {
+            "label": "attribute_changes",
+            "kind": "simple"
+          },
+          {
+            "label": "properties",
+            "kind": "simple"
+          },
+          {
+            "label": "created_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Notification",
+        "layout": "fan",
+        "a0": 215,
+        "a1": 350,
+        "radii": [
+          260,
+          410
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "type",
+            "kind": "simple"
+          },
+          {
+            "label": "data",
+            "kind": "simple"
+          },
+          {
+            "label": "read_at",
+            "kind": "simple"
+          },
+          {
+            "label": "created_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Course",
+        "layout": "fan",
+        "a0": 215,
+        "a1": 315,
+        "radii": [
+          310,
+          480
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "title",
+            "kind": "simple"
+          },
+          {
+            "label": "category",
+            "kind": "simple"
+          },
+          {
+            "label": "description",
+            "kind": "simple"
+          },
+          {
+            "label": "status",
+            "kind": "simple"
+          },
+          {
+            "label": "published_at",
+            "kind": "simple"
+          },
+          {
+            "label": "archived_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Lesson",
+        "layout": "fan",
+        "a0": 235,
+        "a1": 360,
+        "radii": [
+          280,
+          430
+        ],
+        "items": [
+          {
+            "label": "order",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "title",
+            "kind": "simple"
+          },
+          {
+            "label": "content_reference",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Assignment",
+        "layout": "fan",
+        "a0": 45,
+        "a1": 122,
+        "radii": [
+          300,
+          480,
+          650
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "title",
+            "kind": "simple"
+          },
+          {
+            "label": "resubmission_allowed",
+            "kind": "simple"
+          },
+          {
+            "label": "due_date",
+            "kind": "simple"
+          },
+          {
+            "label": "description",
+            "kind": "simple"
+          },
+          {
+            "label": "passing_threshold",
+            "kind": "simple"
+          },
+          {
+            "label": "max_score",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Submission",
+        "layout": "fan",
+        "a0": 236,
+        "a1": 310,
+        "radii": [
+          260,
+          440
+        ],
+        "items": [
+          {
+            "label": "attempt_number",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "status",
+            "kind": "simple"
+          },
+          {
+            "label": "is_late",
+            "kind": "simple"
+          },
+          {
+            "label": "grade",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Submission",
+        "layout": "fan",
+        "a0": 108,
+        "a1": 168,
+        "radii": [
+          260,
+          420
+        ],
+        "items": [
+          {
+            "label": "file_path",
+            "kind": "simple"
+          },
+          {
+            "label": "content",
+            "kind": "simple"
+          },
+          {
+            "label": "submitted_at",
+            "kind": "simple"
+          },
+          {
+            "label": "graded_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Enrollment",
+        "layout": "fan",
+        "a0": 15,
+        "a1": 52,
+        "radii": [
+          290,
+          420
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "status",
+            "kind": "simple"
+          },
+          {
+            "label": "enrolled_at",
+            "kind": "simple"
+          },
+          {
+            "label": "completed_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "ProgressRecord",
+        "layout": "fan",
+        "a0": 30,
+        "a1": 150,
+        "radii": [
+          260,
+          400
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "percent_complete",
+            "kind": "simple"
+          },
+          {
+            "label": "completed_at",
+            "kind": "simple"
+          },
+          {
+            "label": "updated_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "ComponentCompletion",
+        "layout": "fan",
+        "a0": 135,
+        "a1": 235,
+        "radii": [
+          300,
+          460
+        ],
+        "items": [
+          {
+            "label": "component_type",
+            "kind": "partial"
+          },
+          {
+            "label": "component_id",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "completed_at",
+            "kind": "simple"
+          },
+          {
+            "label": "is_override",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Quiz",
+        "layout": "fan",
+        "a0": 225,
+        "a1": 342,
+        "radii": [
+          300,
+          490
+        ],
+        "items": [
+          {
+            "label": "id",
+            "kind": "key"
+          },
+          {
+            "label": "title",
+            "kind": "simple"
+          },
+          {
+            "label": "opens_at",
+            "kind": "simple"
+          },
+          {
+            "label": "closes_at",
+            "kind": "simple"
+          },
+          {
+            "label": "max_attempts",
+            "kind": "simple"
+          },
+          {
+            "label": "passing_threshold",
+            "kind": "simple"
+          },
+          {
+            "label": "total_points",
+            "kind": "derived"
+          }
+        ]
+      },
+      {
+        "owner": "Attempt",
+        "layout": "fan",
+        "a0": 35,
+        "a1": 145,
+        "radii": [
+          280,
+          430
+        ],
+        "items": [
+          {
+            "label": "attempt_number",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "score",
+            "kind": "simple"
+          },
+          {
+            "label": "started_at",
+            "kind": "simple"
+          },
+          {
+            "label": "submitted_at",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Answers",
+        "layout": "fan",
+        "a0": 25,
+        "a1": 115,
+        "radii": [
+          260,
+          410
+        ],
+        "items": [
+          {
+            "label": "selected_option_ids",
+            "kind": "simple"
+          },
+          {
+            "label": "answer_boolean",
+            "kind": "simple"
+          },
+          {
+            "label": "answer_text",
+            "kind": "simple"
+          },
+          {
+            "label": "answer_number",
+            "kind": "simple"
+          },
+          {
+            "label": "is_correct",
+            "kind": "simple"
+          }
+        ]
+      },
+      {
+        "owner": "Question",
+        "layout": "fan",
+        "a0": -55,
+        "a1": 65,
+        "radii": [
+          350,
+          540
+        ],
+        "items": [
+          {
+            "label": "order",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "prompt",
+            "kind": "simple"
+          },
+          {
+            "label": "type",
+            "kind": "simple"
+          },
+          {
+            "label": "points",
+            "kind": "simple"
+          },
+          {
+            "label": "correct_boolean",
+            "kind": "simple"
+          },
+          {
+            "label": "correct_number",
+            "kind": "simple"
+          },
+          {
+            "label": "numeric_tolerance",
+            "kind": "simple"
+          },
+          {
+            "label": "AcceptedAnswer",
+            "kind": "multi"
+          }
+        ]
+      },
+      {
+        "owner": "QuestionOption",
+        "layout": "fan",
+        "a0": 200,
+        "a1": 340,
+        "radii": [
+          270,
+          410
+        ],
+        "items": [
+          {
+            "label": "order",
+            "kind": "partial"
+          },
+          {
+            "label": "id",
+            "kind": "simple"
+          },
+          {
+            "label": "label",
+            "kind": "simple"
+          },
+          {
+            "label": "is_correct",
+            "kind": "simple"
+          }
+        ]
+      }
+    ]
+  },
+  "mapping": {
+    "title": "LMSDB (Laravel v2.1) \u2014 Relational Schema Mapping (20 Domain Tables)",
+    "subtitle": "Normalized (3NF) \u2022 ARCH-005 Auto-Increment PKs \u2022 ADR-011/012/013/014 Hardened \u2022 Append-Only permission_grants Ledger \u2022 Polymorphic component_completions",
+    "footer": "LMS Backend v2.1 \u2022 20 Domain Tables \u2022 30 Explicit Foreign Keys \u2022 3NF/BCNF Verified \u2022 Zero-Collision Corridor Routing",
+    "width": 6442,
+    "height": 3240,
+    "legend_pos": [
+      5222,
+      2560
+    ],
+    "tables": [
+      {
+        "name": "users",
+        "x": 340,
+        "y": 320,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "name",
+            "flags": ""
+          },
+          {
+            "name": "email",
+            "flags": "UQ"
+          },
+          {
+            "name": "phone_number",
+            "flags": ""
+          },
+          {
+            "name": "email_verified_at",
+            "flags": ""
+          },
+          {
+            "name": "password",
+            "flags": ""
+          },
+          {
+            "name": "remember_token",
+            "flags": ""
+          },
+          {
+            "name": "manager_id",
+            "flags": "FK"
+          },
+          {
+            "name": "manager_depth",
+            "flags": ""
+          },
+          {
+            "name": "approval_status",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "activity_log",
+        "x": 1845,
+        "y": 320,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "log_name",
+            "flags": ""
+          },
+          {
+            "name": "description",
+            "flags": ""
+          },
+          {
+            "name": "subject_type",
+            "flags": ""
+          },
+          {
+            "name": "subject_id",
+            "flags": ""
+          },
+          {
+            "name": "event",
+            "flags": ""
+          },
+          {
+            "name": "causer_type",
+            "flags": ""
+          },
+          {
+            "name": "causer_id",
+            "flags": ""
+          },
+          {
+            "name": "attribute_changes",
+            "flags": ""
+          },
+          {
+            "name": "properties",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "notifications",
+        "x": 3288,
+        "y": 320,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "user_id",
+            "flags": "FK"
+          },
+          {
+            "name": "type",
+            "flags": ""
+          },
+          {
+            "name": "data",
+            "flags": ""
+          },
+          {
+            "name": "read_at",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "groups",
+        "x": 340,
+        "y": 860,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "owner_id",
+            "flags": "FK"
+          },
+          {
+            "name": "name",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "permission_grants",
+        "x": 995,
+        "y": 860,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "granter_id",
+            "flags": "FK"
+          },
+          {
+            "name": "grantee_id",
+            "flags": "FK"
+          },
+          {
+            "name": "group_id",
+            "flags": "FK"
+          },
+          {
+            "name": "permission_name",
+            "flags": ""
+          },
+          {
+            "name": "action",
+            "flags": ""
+          },
+          {
+            "name": "granted_at",
+            "flags": ""
+          },
+          {
+            "name": "revoked_at",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "courses",
+        "x": 2095,
+        "y": 860,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "instructor_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "title",
+            "flags": "UQ"
+          },
+          {
+            "name": "category",
+            "flags": ""
+          },
+          {
+            "name": "description",
+            "flags": ""
+          },
+          {
+            "name": "status",
+            "flags": ""
+          },
+          {
+            "name": "published_at",
+            "flags": ""
+          },
+          {
+            "name": "archived_at",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "group_members",
+        "x": 340,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "group_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "user_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "joined_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "user_permissions",
+        "x": 886,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "user_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "permission_name",
+            "flags": "UQ"
+          },
+          {
+            "name": "group_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "granted_via_grant_id",
+            "flags": "FK"
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "lessons",
+        "x": 1856,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "course_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "title",
+            "flags": ""
+          },
+          {
+            "name": "content_reference",
+            "flags": ""
+          },
+          {
+            "name": "order",
+            "flags": "UQ"
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "enrollments",
+        "x": 2755,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "student_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "course_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "status",
+            "flags": ""
+          },
+          {
+            "name": "enrolled_at",
+            "flags": ""
+          },
+          {
+            "name": "completed_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "assignments",
+        "x": 3542,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "course_id",
+            "flags": "FK"
+          },
+          {
+            "name": "title",
+            "flags": ""
+          },
+          {
+            "name": "description",
+            "flags": ""
+          },
+          {
+            "name": "due_date",
+            "flags": ""
+          },
+          {
+            "name": "resubmission_allowed",
+            "flags": ""
+          },
+          {
+            "name": "max_score",
+            "flags": ""
+          },
+          {
+            "name": "passing_threshold",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "quizzes",
+        "x": 4826,
+        "y": 1440,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "course_id",
+            "flags": "FK"
+          },
+          {
+            "name": "title",
+            "flags": ""
+          },
+          {
+            "name": "opens_at",
+            "flags": ""
+          },
+          {
+            "name": "closes_at",
+            "flags": ""
+          },
+          {
+            "name": "max_attempts",
+            "flags": ""
+          },
+          {
+            "name": "passing_threshold",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "progress_records",
+        "x": 340,
+        "y": 2060,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "enrollment_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "percent_complete",
+            "flags": ""
+          },
+          {
+            "name": "completed_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "component_completions",
+        "x": 1111,
+        "y": 2060,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "enrollment_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "component_type",
+            "flags": "UQ"
+          },
+          {
+            "name": "component_id",
+            "flags": "UQ"
+          },
+          {
+            "name": "completed_at",
+            "flags": ""
+          },
+          {
+            "name": "is_override",
+            "flags": ""
+          },
+          {
+            "name": "overridden_by",
+            "flags": "FK"
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "submissions",
+        "x": 2320,
+        "y": 2060,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "assignment_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "enrollment_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "attempt_number",
+            "flags": "UQ"
+          },
+          {
+            "name": "file_path",
+            "flags": ""
+          },
+          {
+            "name": "content",
+            "flags": ""
+          },
+          {
+            "name": "submitted_at",
+            "flags": ""
+          },
+          {
+            "name": "is_late",
+            "flags": ""
+          },
+          {
+            "name": "grade",
+            "flags": ""
+          },
+          {
+            "name": "graded_by",
+            "flags": "FK"
+          },
+          {
+            "name": "graded_at",
+            "flags": ""
+          },
+          {
+            "name": "status",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "attempts",
+        "x": 3916,
+        "y": 2060,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "quiz_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "enrollment_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "attempt_number",
+            "flags": "UQ"
+          },
+          {
+            "name": "score",
+            "flags": ""
+          },
+          {
+            "name": "started_at",
+            "flags": ""
+          },
+          {
+            "name": "submitted_at",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "questions",
+        "x": 5041,
+        "y": 2060,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "quiz_id",
+            "flags": "FK"
+          },
+          {
+            "name": "prompt",
+            "flags": ""
+          },
+          {
+            "name": "type",
+            "flags": ""
+          },
+          {
+            "name": "order",
+            "flags": ""
+          },
+          {
+            "name": "points",
+            "flags": ""
+          },
+          {
+            "name": "correct_boolean",
+            "flags": ""
+          },
+          {
+            "name": "correct_number",
+            "flags": ""
+          },
+          {
+            "name": "numeric_tolerance",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "question_options",
+        "x": 340,
+        "y": 2680,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "question_id",
+            "flags": "FK"
+          },
+          {
+            "name": "label",
+            "flags": ""
+          },
+          {
+            "name": "is_correct",
+            "flags": ""
+          },
+          {
+            "name": "order",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "question_accepted_answers",
+        "x": 1201,
+        "y": 2680,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "question_id",
+            "flags": "FK"
+          },
+          {
+            "name": "answer_text",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      },
+      {
+        "name": "attempt_answers",
+        "x": 1905,
+        "y": 2680,
+        "columns": [
+          {
+            "name": "id",
+            "flags": "PK"
+          },
+          {
+            "name": "attempt_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "question_id",
+            "flags": "FK,UQ"
+          },
+          {
+            "name": "selected_option_ids",
+            "flags": ""
+          },
+          {
+            "name": "answer_boolean",
+            "flags": ""
+          },
+          {
+            "name": "answer_text",
+            "flags": ""
+          },
+          {
+            "name": "answer_number",
+            "flags": ""
+          },
+          {
+            "name": "is_correct",
+            "flags": ""
+          },
+          {
+            "name": "created_at",
+            "flags": ""
+          },
+          {
+            "name": "updated_at",
+            "flags": ""
+          }
+        ]
+      }
+    ],
+    "fks": [
+      {
+        "from_table": "users",
+        "from_col": "manager_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 41,
+        "corridor_y": 230
+      },
+      {
+        "from_table": "notifications",
+        "from_col": "user_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 68,
+        "corridor_y": 210
+      },
+      {
+        "from_table": "groups",
+        "from_col": "owner_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 12,
+        "corridor_y": 540
+      },
+      {
+        "from_table": "permission_grants",
+        "from_col": "granter_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 24,
+        "corridor_y": 520
+      },
+      {
+        "from_table": "permission_grants",
+        "from_col": "grantee_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 36,
+        "corridor_y": 500
+      },
+      {
+        "from_table": "courses",
+        "from_col": "instructor_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 48,
+        "corridor_y": 480
+      },
+      {
+        "from_table": "group_members",
+        "from_col": "user_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 60,
+        "corridor_y": 1240,
+        "bus_x": 280,
+        "target_corridor_y": 460
+      },
+      {
+        "from_table": "user_permissions",
+        "from_col": "user_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 72,
+        "corridor_y": 1220,
+        "bus_x": 250,
+        "target_corridor_y": 440
+      },
+      {
+        "from_table": "enrollments",
+        "from_col": "student_id",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 14,
+        "corridor_y": 1200,
+        "bus_x": 220,
+        "target_corridor_y": 190
+      },
+      {
+        "from_table": "component_completions",
+        "from_col": "overridden_by",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 26,
+        "corridor_y": 1840,
+        "bus_x": 190,
+        "target_corridor_y": 170
+      },
+      {
+        "from_table": "submissions",
+        "from_col": "graded_by",
+        "from_side": "top",
+        "to_table": "users",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 55,
+        "corridor_y": 1820,
+        "bus_x": 160,
+        "target_corridor_y": 150
+      },
+      {
+        "from_table": "permission_grants",
+        "from_col": "group_id",
+        "from_side": "top",
+        "to_table": "groups",
+        "to_col": "id",
+        "to_side": "top",
+        "to_off": 41,
+        "corridor_y": 760
+      },
+      {
+        "from_table": "group_members",
+        "from_col": "group_id",
+        "from_side": "top",
+        "to_table": "groups",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 24,
+        "corridor_y": 1060
+      },
+      {
+        "from_table": "user_permissions",
+        "from_col": "group_id",
+        "from_side": "top",
+        "to_table": "groups",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 56,
+        "corridor_y": 1040
+      },
+      {
+        "from_table": "user_permissions",
+        "from_col": "granted_via_grant_id",
+        "from_side": "top",
+        "to_table": "permission_grants",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 41,
+        "corridor_y": 1020
+      },
+      {
+        "from_table": "lessons",
+        "from_col": "course_id",
+        "from_side": "top",
+        "to_table": "courses",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 14,
+        "corridor_y": 1080
+      },
+      {
+        "from_table": "enrollments",
+        "from_col": "course_id",
+        "from_side": "top",
+        "to_table": "courses",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 32,
+        "corridor_y": 1100
+      },
+      {
+        "from_table": "assignments",
+        "from_col": "course_id",
+        "from_side": "top",
+        "to_table": "courses",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 50,
+        "corridor_y": 1120
+      },
+      {
+        "from_table": "quizzes",
+        "from_col": "course_id",
+        "from_side": "top",
+        "to_table": "courses",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 68,
+        "corridor_y": 1140
+      },
+      {
+        "from_table": "progress_records",
+        "from_col": "enrollment_id",
+        "from_side": "top",
+        "to_table": "enrollments",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 14,
+        "corridor_y": 1700
+      },
+      {
+        "from_table": "component_completions",
+        "from_col": "enrollment_id",
+        "from_side": "top",
+        "to_table": "enrollments",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 32,
+        "corridor_y": 1680
+      },
+      {
+        "from_table": "submissions",
+        "from_col": "enrollment_id",
+        "from_side": "top",
+        "to_table": "enrollments",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 50,
+        "corridor_y": 1660
+      },
+      {
+        "from_table": "attempts",
+        "from_col": "enrollment_id",
+        "from_side": "top",
+        "to_table": "enrollments",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 68,
+        "corridor_y": 1640
+      },
+      {
+        "from_table": "submissions",
+        "from_col": "assignment_id",
+        "from_side": "top",
+        "to_table": "assignments",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 41,
+        "corridor_y": 1720
+      },
+      {
+        "from_table": "attempts",
+        "from_col": "quiz_id",
+        "from_side": "top",
+        "to_table": "quizzes",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 24,
+        "corridor_y": 1740
+      },
+      {
+        "from_table": "questions",
+        "from_col": "quiz_id",
+        "from_side": "top",
+        "to_table": "quizzes",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 58,
+        "corridor_y": 1760
+      },
+      {
+        "from_table": "question_options",
+        "from_col": "question_id",
+        "from_side": "top",
+        "to_table": "questions",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 20,
+        "corridor_y": 2320
+      },
+      {
+        "from_table": "question_accepted_answers",
+        "from_col": "question_id",
+        "from_side": "top",
+        "to_table": "questions",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 42,
+        "corridor_y": 2340
+      },
+      {
+        "from_table": "attempt_answers",
+        "from_col": "question_id",
+        "from_side": "top",
+        "to_table": "questions",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 64,
+        "corridor_y": 2360
+      },
+      {
+        "from_table": "attempt_answers",
+        "from_col": "attempt_id",
+        "from_side": "top",
+        "to_table": "attempts",
+        "to_col": "id",
+        "to_side": "bot",
+        "to_off": 41,
+        "corridor_y": 2300
+      }
+    ]
+  }
+}
