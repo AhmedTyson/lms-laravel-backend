@@ -65,4 +65,23 @@ class CourseListTest extends TestCase
     {
         $this->getJson('/api/courses')->assertStatus(422);
     }
+
+    public function test_draft_filter_and_wildcard_search_and_unknown_filters_are_hardened(): void
+    {
+        $this->seedCourses();
+
+        // Anonymous request filtering explicitly for draft courses must receive 0 drafts
+        $this->getJson('/api/courses?page=1&per_page=10&filter[status]=draft')
+            ->assertStatus(200)
+            ->assertJsonCount(0, 'data');
+
+        // Literal % wildcard in search must be escaped and not match all rows
+        $this->getJson('/api/courses?page=1&per_page=10&filter[search]=%25')
+            ->assertStatus(200)
+            ->assertJsonCount(0, 'data');
+
+        // Unknown filter key must fail validation with 422 instead of leaking Spatie schema
+        $this->getJson('/api/courses?page=1&per_page=10&filter[bogus]=1')
+            ->assertStatus(422);
+    }
 }

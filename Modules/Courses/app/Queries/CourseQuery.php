@@ -2,8 +2,10 @@
 
 namespace Modules\Courses\Queries;
 
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
 use Modules\Courses\Models\Course;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -13,7 +15,29 @@ class CourseQuery
     /** @param array<string, mixed> $params */
     public function paginate(array $params): LengthAwarePaginator
     {
-        return QueryBuilder::for(Course::class)
+        $user = auth('api')->user();
+        $isStudent = false;
+        $isAdmin = false;
+
+        if ($user instanceof User && Schema::hasTable('roles')) {
+            $previousTeamId = getPermissionsTeamId();
+            setPermissionsTeamId(0);
+
+            try {
+                $isStudent = $user->hasRole('student', 'api') && ! $user->hasAnyRole(['instructor', 'admin'], 'api');
+                $isAdmin = $user->hasRole('admin', 'api');
+            } finally {
+                setPermissionsTeamId($previousTeamId);
+            }
+        }
+
+        $requestedStatus = $params['filter']['status'] ?? null;
+        $hideUnpublished = $isStudent || (! $isAdmin && in_array($requestedStatus, ['draft', 'archived'], true));
+
+        $subject = Course::query()
+            ->when($hideUnpublished, fn (Builder $query) => $query->where('status', 'published'));
+
+        return QueryBuilder::for($subject)
             ->allowedFilters(...[
                 AllowedFilter::callback('search', fn (Builder $builder, string $term) => $this->applySearch($builder, $term)),
                 AllowedFilter::partial('category'),
@@ -24,13 +48,20 @@ class CourseQuery
             ])
             ->allowedSorts(...['title', 'created_at', 'published_at'])
             ->defaultSort('-created_at')
-            ->paginate($params['per_page'] ?? 10);
+            ->paginate(
+                (int) ($params['per_page'] ?? 10),
+                ['*'],
+                'page',
+                (int) ($params['page'] ?? 1)
+            );
     }
 
     private function applySearch(Builder $builder, string $term): void
     {
+        $escaped = addcslashes($term, '\\%_');
+
         $builder->where(fn (Builder $nested) => $nested
-            ->where('title', 'like', "%{$term}%")
-            ->orWhere('description', 'like', "%{$term}%"));
+            ->where('title', 'like', "%{$escaped}%")
+            ->orWhere('description', 'like', "%{$escaped}%"));
     }
 }
