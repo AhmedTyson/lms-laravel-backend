@@ -19,10 +19,12 @@ Route::prefix('auth')->group(function () {
     Route::get('google/redirect', [OAuthController::class, 'googleRedirect'])->middleware('throttle:auth-oauth');
     Route::post('google/callback', [OAuthController::class, 'googleCallback'])->middleware('throttle:auth-oauth');
 
+    // Refresh accepts expired access tokens within refresh_ttl (validated inside SessionController)
+    Route::post('refresh', [SessionController::class, 'refresh'])->middleware('throttle:api');
+
     // JWT Authenticated Routes (auth:api)
     Route::middleware('auth:api')->group(function () {
         Route::post('logout', [SessionController::class, 'logout'])->middleware('throttle:api');
-        Route::post('refresh', [SessionController::class, 'refresh'])->middleware('throttle:api');
         Route::get('me', [SessionController::class, 'me'])->middleware('throttle:api');
 
         // Admin Instructor Approval (SCOPE-004, RULE-010)

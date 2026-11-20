@@ -17,6 +17,10 @@ class RegisterRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        if (is_string($this->input('email'))) {
+            $this->merge(['email' => mb_strtolower(trim($this->input('email')))]);
+        }
+
         // Canonicalise before `unique` runs so 010… and +2010… collide.
         if (($normalized = PhoneNormalizer::toE164($this->input('phone_number'))) !== null) {
             $this->merge(['phone_number' => $normalized]);

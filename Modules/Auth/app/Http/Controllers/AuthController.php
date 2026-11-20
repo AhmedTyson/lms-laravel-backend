@@ -20,8 +20,8 @@ class AuthController extends Controller
     public function register(RegisterRequest $request, RegistrationService $service): JsonResponse
     {
         $user = $service->create(
-            $request->safe()->except(['role', 'phone_country']),
-            $request->validated('role')
+            $request->safe()->only(['name', 'email', 'phone_number', 'password']),
+            (string) $request->validated('role')
         );
 
         return ApiResponse::success('Registration successful. Please verify your email address.', new UserResource($user), 201);
@@ -32,19 +32,28 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $user = User::where('email', $request->validated('email'))->first();
-
-        if ($user && ! $user->hasVerifiedEmail() && config('lms.auth.require_verified')) {
-            return ApiResponse::error('Email not verified. Check your inbox.', 'EMAIL_NOT_VERIFIED', 403);
-        }
-
-        $token = auth('api')->attempt($request->only('email', 'password'));
+        $token = auth('api')->attempt($request->safe()->only(['email', 'password']));
 
         if (! $token) {
             return ApiResponse::error('Invalid credentials.', 'INVALID_CREDENTIALS', 401);
         }
 
-        return ApiResponse::jwt($token, new UserResource($request->user('api')));
+        /** @var User $user */
+        $user = $request->user('api');
+
+        if ($user->suspended_at !== null) {
+            auth('api')->logout();
+
+            return ApiResponse::error('Account is suspended.', 'ACCOUNT_SUSPENDED', 403);
+        }
+
+        if (! $user->hasVerifiedEmail() && config('lms.auth.require_verified')) {
+            auth('api')->logout();
+
+            return ApiResponse::error('Email not verified. Check your inbox.', 'EMAIL_NOT_VERIFIED', 403);
+        }
+
+        return ApiResponse::jwt($token, new UserResource($user));
     }
 
     /**
@@ -53,13 +62,14 @@ class AuthController extends Controller
     public function verifyEmail(VerifyEmailRequest $request): JsonResponse
     {
         $fields = $request->validated();
-        $user = User::findOrFail($fields['id']);
 
         if (! $this->hasValidSignature($fields)) {
             return ApiResponse::error('Invalid or expired verification link.', 'INVALID_SIGNATURE', 400);
         }
 
-        if (! $this->hasValidHash($user, $fields['hash'])) {
+        $user = User::find($fields['id']);
+
+        if (! $user || ! $this->hasValidHash($user, $fields['hash'])) {
             return ApiResponse::error('Invalid email verification hash.', 'INVALID_HASH', 400);
         }
 

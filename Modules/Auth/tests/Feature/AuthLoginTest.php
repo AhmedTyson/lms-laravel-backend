@@ -59,10 +59,53 @@ class AuthLoginTest extends TestCase
         // Flag on (Phase 11 mailer): token withheld.
         config()->set('lms.auth.require_verified', true);
 
+        // Wrong password for unverified user must still return 401 (no pre-auth enumeration oracle).
+        $this->postJson('/api/auth/login', [
+            'email' => 'user@example.com',
+            'password' => 'WrongPassword123!',
+        ])->assertStatus(401)
+            ->assertJsonPath('error_code', 'INVALID_CREDENTIALS');
+
         $this->postJson('/api/auth/login', [
             'email' => 'user@example.com',
             'password' => 'Password123!',
         ])->assertStatus(403)
             ->assertJsonPath('error_code', 'EMAIL_NOT_VERIFIED');
+    }
+
+    public function test_login_rate_limiter_normalizes_email_case_and_handles_non_string_payloads(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $this->postJson('/api/auth/login', [
+                'email' => 'casecheck@example.com',
+                'password' => 'WrongPassword!',
+            ])->assertStatus(401);
+        }
+
+        $this->postJson('/api/auth/login', [
+            'email' => 'CaseCheck@EXAMPLE.com',
+            'password' => 'WrongPassword!',
+        ])->assertStatus(429)
+            ->assertJsonPath('error_code', 'TOO_MANY_REQUESTS');
+
+        $this->postJson('/api/auth/login', [
+            'email' => ['not-a-string'],
+            'password' => ['not-a-string'],
+        ])->assertStatus(422);
+    }
+
+    public function test_suspended_user_cannot_login(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'suspended@example.com',
+            'password' => Hash::make('Password123!'),
+        ]);
+        $user->forceFill(['suspended_at' => now()])->save();
+
+        $this->postJson('/api/auth/login', [
+            'email' => 'suspended@example.com',
+            'password' => 'Password123!',
+        ])->assertStatus(403)
+            ->assertJsonPath('error_code', 'ACCOUNT_SUSPENDED');
     }
 }

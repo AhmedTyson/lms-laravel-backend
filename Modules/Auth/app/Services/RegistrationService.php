@@ -5,21 +5,26 @@ namespace Modules\Auth\Services;
 use App\Enums\ApprovalStatus;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class RegistrationService
 {
     public function create(array $attributes, string $role): User
     {
-        $user = User::create($attributes);
+        $user = DB::transaction(function () use ($attributes, $role): User {
+            $user = User::create($attributes);
 
-        // Students carry no approval lifecycle (SCOPE-004); unapproved instructors park at null manager (RULE-002).
-        $user->forceFill([
-            'manager_id' => null,
-            'approval_status' => $this->initialApprovalStatus($role),
-        ])->save();
+            // Students carry no approval lifecycle (SCOPE-004); unapproved instructors park at null manager (RULE-002).
+            $user->forceFill([
+                'manager_id' => null,
+                'approval_status' => $this->initialApprovalStatus($role),
+            ])->save();
 
-        $this->assignRoleIfExists($user, $role);
+            $this->assignRoleIfExists($user, $role);
+
+            return $user;
+        });
 
         event(new Registered($user));
 
@@ -39,7 +44,14 @@ class RegistrationService
             return false;
         }
 
-        $user->assignRole($role);
+        $previousTeamId = getPermissionsTeamId();
+        setPermissionsTeamId(0);
+
+        try {
+            $user->assignRole($role);
+        } finally {
+            setPermissionsTeamId($previousTeamId);
+        }
 
         return true;
     }
