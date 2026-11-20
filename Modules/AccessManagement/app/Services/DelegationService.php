@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\AccessManagement\Enums\LedgerAction;
 use Modules\AccessManagement\Exceptions\NotSubordinateException;
 use Modules\AccessManagement\Exceptions\PermissionCeilingException;
+use Modules\AccessManagement\Models\Group;
 use Modules\AccessManagement\Models\PermissionGrant;
 use Modules\AccessManagement\Models\UserPermission;
 
@@ -22,14 +23,16 @@ class DelegationService
 
         return DB::transaction(function () use ($data, $granter, $ledgerAction) {
             $grantee = User::findOrFail($data['grantee_id']);
+            $groupId = (int) $data['group_id'];
 
             $this->ensureSubordinate($granter, $grantee);
-            $this->ensureCeiling($granter, $data['permission_name'], $data['group_id']);
+            $this->ensureGroupBoundary($granter, $groupId);
+            $this->ensureCeiling($granter, $data['permission_name'], $groupId);
 
             $grant = PermissionGrant::create([
                 'granter_id' => $granter->id,
                 'grantee_id' => $grantee->id,
-                'group_id' => $data['group_id'],
+                'group_id' => $groupId,
                 'permission_name' => $data['permission_name'],
                 'action' => $ledgerAction,
                 'granted_at' => $ledgerAction === 'granted' ? now() : null,
@@ -37,6 +40,17 @@ class DelegationService
             ]);
 
             $this->sync->syncFromGrant($grant);
+
+            activity('access-management')
+                ->causedBy($granter)
+                ->withProperties([
+                    'grant_id' => $grant->id,
+                    'grantee_id' => $grantee->id,
+                    'group_id' => $groupId,
+                    'permission_name' => $data['permission_name'],
+                    'action' => $ledgerAction,
+                ])
+                ->log("permission.{$ledgerAction}");
 
             return $grant;
         });
@@ -47,6 +61,27 @@ class DelegationService
     {
         if (! ManagerChain::contains($grantee, $granter->id)) {
             throw new NotSubordinateException("User {$grantee->id} is not subordinate to {$granter->id}.");
+        }
+    }
+
+    // Granter must own the target group or belong to it while holding users.manage_roles.
+    private function ensureGroupBoundary(User $granter, int $groupId): void
+    {
+        $group = Group::findOrFail($groupId);
+
+        if ((int) $group->owner_id === (int) $granter->id) {
+            return;
+        }
+
+        $isMember = $group->members()->where('user_id', $granter->id)->exists();
+        $canManageRoles = UserPermission::where('user_id', $granter->id)
+            ->where('permission_name', 'users.manage_roles')
+            ->where(fn ($query) => $query->where('group_id', $groupId)->orWhereNull('group_id'))
+            ->exists()
+            || $granter->can('users.manage_roles', $group);
+
+        if (! $isMember || ! $canManageRoles) {
+            throw new PermissionCeilingException("User {$granter->id} lacks delegation authority in group {$groupId}.");
         }
     }
 

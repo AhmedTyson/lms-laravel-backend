@@ -18,6 +18,8 @@ class ManagerAssignmentService
         }
 
         DB::transaction(function () use ($user, $newManager) {
+            User::whereIn('id', [$user->id, $newManager->id])->lockForUpdate()->get();
+
             if (ManagerChain::contains($newManager, $user->id)) {
                 throw new CircularManagerAssignmentException("Assigning user {$newManager->id} as manager to user {$user->id} creates a circular chain.");
             }

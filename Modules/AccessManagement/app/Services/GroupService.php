@@ -2,10 +2,13 @@
 
 namespace Modules\AccessManagement\Services;
 
+use App\Enums\ApprovalStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Modules\AccessManagement\Models\Group;
 use Modules\AccessManagement\Models\GroupMember;
+use Spatie\Permission\Models\Role;
 
 class GroupService
 {
@@ -60,12 +63,47 @@ class GroupService
         });
     }
 
-    // Manager first (RULE-012), else oldest surviving user; successor joins if needed.
+    // Manager first (RULE-012), else any Admin (or oldest non-student eligible user); successor joins if needed.
     private function resolveSuccessorId(int $removedOwnerId): ?int
     {
         $managerId = User::find($removedOwnerId)?->manager?->id;
 
-        return $managerId ?? User::whereKeyNot($removedOwnerId)->oldest('id')->value('id');
+        if ($managerId !== null) {
+            return $managerId;
+        }
+
+        if (Schema::hasTable('roles') && Schema::hasTable('model_has_roles')) {
+            $adminRoleId = Role::where('name', 'admin')->where('guard_name', 'api')->value('id');
+            if ($adminRoleId !== null) {
+                $roledAdminId = User::whereKeyNot($removedOwnerId)
+                    ->whereNull('suspended_at')
+                    ->whereIn('id', DB::table('model_has_roles')
+                        ->where('role_id', $adminRoleId)
+                        ->where('model_type', (new User)->getMorphClass())
+                        ->pluck('model_id'))
+                    ->oldest('id')
+                    ->value('id');
+
+                if ($roledAdminId !== null) {
+                    return $roledAdminId;
+                }
+            }
+
+            $studentRoleId = Role::where('name', 'student')->where('guard_name', 'api')->value('id');
+            if ($studentRoleId !== null) {
+                return User::whereKeyNot($removedOwnerId)
+                    ->whereNull('suspended_at')
+                    ->where(fn ($query) => $query->whereNull('approval_status')->orWhere('approval_status', ApprovalStatus::Approved))
+                    ->whereNotIn('id', DB::table('model_has_roles')
+                        ->where('role_id', $studentRoleId)
+                        ->where('model_type', (new User)->getMorphClass())
+                        ->pluck('model_id'))
+                    ->oldest('id')
+                    ->value('id');
+            }
+        }
+
+        return User::whereKeyNot($removedOwnerId)->oldest('id')->value('id');
     }
 
     public function delete(Group $group): void

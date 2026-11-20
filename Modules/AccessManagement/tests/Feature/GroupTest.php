@@ -5,6 +5,7 @@ namespace Modules\AccessManagement\Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Modules\AccessManagement\Services\GroupService;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class GroupTest extends TestCase
@@ -99,5 +100,34 @@ class GroupTest extends TestCase
         $this->withHeaders($headers)
             ->postJson("/api/groups/{$group->id}/members", ['user_id' => $outsider->id])
             ->assertStatus(403);
+    }
+
+    public function test_student_cannot_create_group_and_owner_succession_skips_student_for_admin(): void
+    {
+        Role::firstOrCreate(['name' => 'student', 'guard_name' => 'api']);
+        Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'api']);
+
+        $student = User::factory()->create();
+        $admin = User::factory()->create();
+        $owner = User::factory()->create();
+
+        setPermissionsTeamId(0);
+        $student->assignRole('student');
+        $admin->assignRole('admin');
+
+        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($student))
+            ->postJson('/api/groups', ['name' => 'StudentGroup'])
+            ->assertStatus(403);
+
+        $group = app(GroupService::class)->create(['name' => 'Cohort'], $owner);
+
+        $this->withHeader('Authorization', 'Bearer '.$this->tokenFor($owner))
+            ->deleteJson("/api/groups/{$group->id}/members/{$owner->id}")
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('groups', [
+            'id' => $group->id,
+            'owner_id' => $admin->id,
+        ]);
     }
 }

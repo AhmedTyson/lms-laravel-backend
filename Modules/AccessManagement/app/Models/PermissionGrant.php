@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use LogicException;
 
 class PermissionGrant extends Model
 {
@@ -25,6 +26,20 @@ class PermissionGrant extends Model
             'revoked_at' => 'datetime',
             'created_at' => 'datetime',
         ];
+    }
+
+    public function save(array $options = []): bool
+    {
+        if ($this->exists) {
+            throw new LogicException('PermissionGrant ledger rows are append-only and cannot be updated (RULE-005).');
+        }
+
+        return parent::save($options);
+    }
+
+    public function delete(): ?bool
+    {
+        throw new LogicException('PermissionGrant ledger rows are append-only and cannot be deleted (RULE-005).');
     }
 
     public function granter(): BelongsTo

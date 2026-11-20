@@ -9,7 +9,7 @@ use App\Models\User;
 // traversal rule lives once and reads as a question, not a loop.
 class ManagerChain
 {
-    private const MAX_DEPTH = 32;
+    private const MAX_DEPTH = 256;
 
     public static function contains(User $start, int $targetId): bool
     {

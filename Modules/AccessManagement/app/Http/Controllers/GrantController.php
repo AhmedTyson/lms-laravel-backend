@@ -18,7 +18,11 @@ class GrantController extends Controller
     public function store(DelegationRequest $request, DelegationService $service): JsonResponse
     {
         try {
-            $grant = $service->record($request->validated(), $request->user('api'), LedgerAction::Grant);
+            $grant = $service->record(
+                $request->safe()->only(['grantee_id', 'permission_name', 'group_id']),
+                $request->user('api'),
+                LedgerAction::Grant
+            );
         } catch (NotSubordinateException|PermissionCeilingException) {
             return ApiResponse::error('Grant not permitted.', 'GRANT_FORBIDDEN', 403);
         } catch (ModelNotFoundException) {
@@ -31,7 +35,11 @@ class GrantController extends Controller
     public function revoke(DelegationRequest $request, DelegationService $service): JsonResponse
     {
         try {
-            $grant = $service->record($request->validated(), $request->user('api'), LedgerAction::Revoke);
+            $grant = $service->record(
+                $request->safe()->only(['grantee_id', 'permission_name', 'group_id']),
+                $request->user('api'),
+                LedgerAction::Revoke
+            );
         } catch (NotSubordinateException|PermissionCeilingException) {
             return ApiResponse::error('Revoke not permitted.', 'REVOKE_FORBIDDEN', 403);
         } catch (ModelNotFoundException) {

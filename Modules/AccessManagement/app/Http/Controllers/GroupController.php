@@ -27,7 +27,9 @@ class GroupController extends Controller
 
     public function store(StoreGroupRequest $request, GroupService $service): JsonResponse
     {
-        $group = $service->create($request->validated(), $request->user('api'));
+        Gate::authorize('create', Group::class);
+
+        $group = $service->create($request->safe()->only(['name']), $request->user('api'));
 
         return ApiResponse::success('Group created.', new GroupResource($group), 201);
     }
